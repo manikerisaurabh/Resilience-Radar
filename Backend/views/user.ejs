@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add post</title>
+  </head>
+  <body>
+    <h1>Welcome to add user page</h1>
+
+    <form method="post" action="/test">
+      User Name :
+      <input type="text" name="userName" placeholder="user name" id="" />
+      User latitude :
+      <input type="text" name="latitude" placeholder="enter lati" /><br /><br />
+      Email longitude :
+      <input
+        type="text"
+        name="longitude"
+        placeholder="enter longi"
+      /><br /><br />
+      <button type="submit">Submit</button>
+    </form>
+    <h1>Get Current Location</h1>
+    <button id="getLocationBtn">Get Location</button>
+    <p id="locationDisplay"></p>
+    <script>
+      document
+        .getElementById("getLocationBtn")
+        .addEventListener("click", () => {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                document.getElementById(
+                  "locationDisplay"
+                ).textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+              },
+              (error) => {
+                console.error("Error getting location:", error.message);
+                document.getElementById("locationDisplay").textContent =
+                  "Error getting location. Please try again.";
+              }
+            );
+          } else {
+            document.getElementById("locationDisplay").textContent =
+              "Geolocation is not supported by this browser.";
+          }
+        });
+    </script>
+  </body>
+</html>
