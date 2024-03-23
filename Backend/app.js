@@ -165,7 +165,9 @@ app.post('/query', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`sercer is listening on port ${port}`);
+
+    console.log(`Server is listening on port number ${port}`);
+
 });
 
 async function getLocationData(latitude, longitude) {
