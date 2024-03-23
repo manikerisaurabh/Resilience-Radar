@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    userName: {
-        type: String,
-        required: true
+const querySchema = new Schema({
+    raisedBy: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
-    address: {
+    location: {
         village: {
             type: String,
         },
@@ -25,15 +25,14 @@ const userSchema = new Schema({
             required: true
         }
     },
-    email: {
-        type: String,
-        required: true
+    description: {
+        type: String
     },
-    password: {
+    img: {
         type: String,
         required: true
     }
 });
 
-const user = mongoose.model("User", userSchema);
-module.exports = user;
+const query = mongoose.model("Query", querySchema);
+module.exports = query;

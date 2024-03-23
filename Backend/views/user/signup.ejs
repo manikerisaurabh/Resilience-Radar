@@ -6,9 +6,12 @@
     <title>Add post</title>
   </head>
   <body>
+    <% if (currUser) { %>
+    <h1><%= currUser.userName %></h1>
+    <% } %>
     <h1>Welcome to add user page</h1>
 
-    <form method="post" action="/test">
+    <form method="post" action="/signup">
       User Name :
       <input type="text" name="userName" placeholder="user name" id="" />
       User latitude :
@@ -19,11 +22,15 @@
         name="longitude"
         placeholder="enter longi"
       /><br /><br />
+
+      <input type="email" name="email" placeholder="email" id="" />
+      <input type="password" name="password" placeholder="password" id="" />
       <button type="submit">Submit</button>
     </form>
     <h1>Get Current Location</h1>
     <button id="getLocationBtn">Get Location</button>
     <p id="locationDisplay"></p>
+
     <script>
       document
         .getElementById("getLocationBtn")
