@@ -1,14 +1,22 @@
-import React, { useRef, useState } from "react";
-import MobileMenuBar from "./MobileMenuBar";
+import React, { useState, useEffect } from "react";
+import { useInView } from 'react-intersection-observer';
+import MobileMenuBar from './MobileMenuBar';
+import { Link } from "react-router-dom";
 
 const Navbar = ({ dabba_ve }) => {
-  let menuRef = useRef(null);
   let [clicked, setClicked] = useState(false);
+  const [ref, inView] = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    setClicked(inView);
+  }, [inView]);
 
   {console.log("Navbar")}
   return (
     // <!-- Navbar -->
-    <nav className="bg-gray-800 border-b-[1px] border-b-black border-opacity-30 shadow-black">
+    <nav className="fixed top-0 left-0 w-full z-10 bg-gray-800 border-b-[1px] border-b-black border-opacity-30 shadow-black">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           {/* <!-- Mobile menu button--> */}
@@ -87,18 +95,9 @@ const Navbar = ({ dabba_ve }) => {
           </div>
           {/* <!-- Sign in and Login links --> */}
           <div className="hidden sm:block absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <a
-              href="/signin"
-              className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Sign In
-            </a>
-            <a
-              href="/login"
-              className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Login
-            </a>
+            <Link to="/Signup" className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            >Sign In</Link>
+            <Link to="/Login" className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</Link>
           </div>
         </div>
       </div>
