@@ -31,7 +31,7 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
     setOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.log(`http://localhost:8080/${mode}`);
@@ -43,6 +43,7 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
 
         // Create the user object
         const user = {
+          userName: username.value,
           latitude: latitude,
           longitude: longitude,
           email: email.value,

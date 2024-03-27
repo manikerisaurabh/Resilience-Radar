@@ -4,7 +4,7 @@ const Sidebar = ({ visible, setSidebar }) => {
 
   return (
     <>
-      <div className={`h-screen absolute top-[9vh] z-10 bg-gray-800 sm:w-1/4 w-full ${visible ? "translate-x-0" : "-translate-x-full"} transition duration-1000 ease-in-out`}>
+      <div className={`h-full fixed top-[8vh] z-10 bg-gray-800 sm:w-1/4 w-full ${visible ? "translate-x-0" : "-translate-x-full"} transition duration-1000 ease-in-out`}>
         <div className="text-right p-2 font-semibold">
           <button className="text-white close-btn rounded-md px-1 transition duration-500 border-1 border-gray-800 hover:border-white"
             onClick={setSidebar}
@@ -29,6 +29,7 @@ const Sidebar = ({ visible, setSidebar }) => {
             </a>
           </li>
         </ul>
+
       </div>
 
     </>
