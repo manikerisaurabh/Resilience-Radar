@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
 import Webcam from "react-webcam";
 
-const WebcamCapture = () => {
+const WebcamCapture = ({ onImageUpload }) => {
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
+  // const [imageUrl, setImageUrl] = useState(""); // Add a state for the image URL
 
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -30,6 +31,15 @@ const WebcamCapture = () => {
     });
   };
 
+  const handleUpload = async () => {
+    try {
+        const imageUrl = await uploadToCloudinary();
+        onImageUpload(imageUrl); // Pass the URL to Upload_issue
+    } catch (error) {
+        // Handle upload error
+    }
+  };
+
   return (
     <>
       <Webcam
@@ -41,7 +51,7 @@ const WebcamCapture = () => {
       {imgSrc && (
         <>
           <img src={imgSrc} alt="Captured" />
-          <button onClick={uploadToCloudinary}>Upload to Cloudinary</button>
+          <button onClick={handleUpload}>Upload to Cloudinary</button>
         </>
       )}
     </>

@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 const User = require('./models/user.js');
-
+const Query = require('./models/query.js');
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -52,7 +52,12 @@ app.use(passport.session());
 
 app.use((req, res, next) => {
     res.locals.currUser = req.session.currUser || null;
+    console.log(res.locals.currUser + " this person is logged in");
     next();
+});
+
+app.get('currUser', (req, res) => {
+    res.send({ currUser: res.locals.currUser });
 });
 
 app.get('/', (req, res) => {
@@ -60,13 +65,16 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/signup', (req, res) => {
+app.get('/Signup', (req, res) => {
     let currUser = ""
     res.render("user/signup.ejs", { currUser })
 })
 
-app.post('/signup', async (req, res) => {
+app.post('/Signup', async (req, res) => {
     console.log(req.body);
+    console.log("afjbhdb");
+    // res.send({ mess: "ok" });
+    // return;
     let { userName, latitude, longitude, email, password } = req.body;
     const ans = await getLocationData(latitude, longitude);
     // if (ans.country != "India") {
@@ -92,10 +100,10 @@ app.post('/signup', async (req, res) => {
             console.log(err)
         })
     console.log(user);
-    res.send("ok").status(200);
+    res.send({ message: "success" }).status(200);
 });
 
-app.get("/login", (req, res) => {
+app.get("/Login", (req, res) => {
     res.render("user/login.ejs")
 })
 
@@ -127,11 +135,13 @@ app.get("/login", (req, res) => {
 //     }
 // });
 
-app.post('/login', async (req, res) => {
+app.post('/Login', async (req, res) => {
     let { email, password } = req.body;
+    console.log(req.body);
+    // return;
     try {
-        let users = await User.find({ email: email });
-
+        let users = await User.find({ email: email, password: password });
+        console.log("found user : " + users)
         if (users.length > 0) {
             let user = users[0];
 
@@ -139,7 +149,9 @@ app.post('/login', async (req, res) => {
                 req.session.currUser = user; // Store currUser in the session
                 res.locals.currUser = user;
                 console.log(res.locals.currUser)
-                res.render('user/signup.ejs')
+
+                //res.render('user/signup.ejs', { currUser: res.locals.currUser, sessions: req.session.views })
+                res.send({ currUser: res.locals.currUser }).status(200);
             }
         }
 
