@@ -1,22 +1,25 @@
-const express = require("express");
+import express from 'express';
 const app = express();
 const port = 8080;
 
-const mongoose = require("mongoose");
-const cors = require("cors");
-const axios = require('axios');
-const session = require("express-session");
-const passport = require("passport")
 
-const path = require("path");
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+import mongoose from 'mongoose';
+import cors from 'cors';
+import axios from 'axios';
+import session from 'express-session';
+import passport from 'passport';
 
-const User = require('./models/user.js');
-const Query = require('./models/query.js');
+import path from 'path';
+// app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'views'));
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+import User from './models/user.js';
+import Query from './models/query.js';
+
+import authRoutes from './routes/auth.route.js';
+
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "views"));
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/resilience-radar"
 async function main() {
@@ -50,58 +53,59 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-    res.locals.currUser = req.session.currUser || null;
-    console.log(res.locals.currUser + " this person is logged in");
-    next();
-});
+// app.use((req, res, next) => {
+//     res.locals.currUser = req.session.currUser || null;
+//     console.log(res.locals.currUser + " this person is logged in");
+//     next();
+// });
 
-app.get('currUser', (req, res) => {
-    res.send({ currUser: res.locals.currUser });
-});
+// app.get('currUser', (req, res) => {
+//     res.send({ currUser: res.locals.currUser });
+// });
 
 app.get('/', (req, res) => {
     res.render("user/index.ejs");
 });
 
+app.use("/api/auth", authRoutes);
 
-app.get('/Signup', (req, res) => {
-    let currUser = ""
-    res.render("user/signup.ejs", { currUser })
-})
+// app.get('/Signup', (req, res) => {
+//     let currUser = ""
+//     res.render("user/signup.ejs", { currUser })
+// })
 
-app.post('/Signup', async (req, res) => {
-    console.log(req.body);
-    console.log("afjbhdb");
-    // res.send({ mess: "ok" });
-    // return;
-    let { userName, latitude, longitude, email, password } = req.body;
-    const ans = await getLocationData(latitude, longitude);
-    // if (ans.country != "India") {
-    //     res.send("not an indian user").status(400);
-    // }
-    let user = new User({
-        userName: userName,
-        address: {
-            village: ans.village,
-            county: ans.county,
-            district: ans.state_district,
-            state: ans.state,
-            country: ans.country
-        },
-        email: email,
-        password: password
+// app.post('/Signup', async (req, res) => {
+//     console.log(req.body);
+//     console.log("afjbhdb");
+//     // res.send({ mess: "ok" });
+//     // return;
+//     let { userName, latitude, longitude, email, password } = req.body;
+//     const ans = await getLocationData(latitude, longitude);
+//     // if (ans.country != "India") {
+//     //     res.send("not an indian user").status(400);
+//     // }
+//     let user = new User({
+//         userName: userName,
+//         address: {
+//             village: ans.village,
+//             county: ans.county,
+//             district: ans.state_district,
+//             state: ans.state,
+//             country: ans.country
+//         },
+//         email: email,
+//         password: password
 
-    });
-    user.save()
-        .then((result) => {
-            console.log(result)
-        }).catch((err) => {
-            console.log(err)
-        })
-    console.log(user);
-    res.send({ message: "success" }).status(200);
-});
+//     });
+//     user.save()
+//         .then((result) => {
+//             console.log(result)
+//         }).catch((err) => {
+//             console.log(err)
+//         })
+//     console.log(user);
+//     res.send({ message: "success" }).status(200);
+// });
 
 app.get("/Login", (req, res) => {
     res.render("user/login.ejs")
@@ -172,8 +176,34 @@ app.get('/query', (req, res) => {
 
 });
 
-app.post('/query', (req, res) => {
+app.post('/query', async (req, res) => {
+    console.log(req.body);
+    let { latitude, longitude, raisedBy, description, img } = req.body;
+    const ans = await getLocationData(latitude, longitude);
+    console.log("this is ans : " + ans.country)
+    //console.log("these are the info " + latitude)
+    let query = new Query({
+        raisedBy: raisedBy,
+        address: {
+            village: ans.village,
+            county: ans.county,
+            district: ans.state_district,
+            state: ans.state,
+            country: ans.country
+        },
+        description: description,
+        img: img
+    });
 
+    query.save()
+        .then((result) => {
+            console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        })
+    console.log(query);
+    res.send({ mess: "ok" });
+    return;
 });
 
 app.listen(port, () => {
@@ -182,8 +212,8 @@ app.listen(port, () => {
 
 });
 
-async function getLocationData(latitude, longitude) {
-    const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
-    const response = await axios.get(url);
-    return response.data.address;
-}
+// async function getLocationData(latitude, longitude) {
+//     const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+//     const response = await axios.get(url);
+//     return response.data.address;
+// }

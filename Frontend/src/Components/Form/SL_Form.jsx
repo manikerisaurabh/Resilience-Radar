@@ -65,7 +65,12 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           body: JSON.stringify(user),
         })
           .then((response) => response.json())
-          .then((data) => console.log(data))
+          .then((data) => {
+            console.log(data);
+            localStorage.setItem('currUser', JSON.stringify(data.currUser));
+            let user = localStorage.getItem("currUser");
+            console.log(JSON.parse(user));
+          })
           .catch((error) => {
             console.error("Error:", error);
           });
