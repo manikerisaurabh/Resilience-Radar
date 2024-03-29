@@ -95,9 +95,9 @@ const Navbar = ({ dabba_ve }) => {
           </div>
           {/* <!-- Sign in and Login links --> */}
           <div className="hidden sm:block absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <Link to="/Signup" className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            <Link to="/auth/Signup" className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >Sign In</Link>
-            <Link to="/Login" className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</Link>
+            <Link to="/auth/Login" className="no-underline text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</Link>
           </div>
         </div>
       </div>
