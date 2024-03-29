@@ -6,7 +6,7 @@ const Upload_issue = () => {
   const [imageUrl, setImageUrl] = useState("");
 
   return (
-    <div className='flex flex-col items-center min-h-fit p-10 justify-center'>
+    <div className='flex flex-col items-center bg-amber-200 min-h-fit p-10 justify-center'>
       <WebcamCapture onImageUpload={setImageUrl} />
       <QueryForm imageUrl={imageUrl} />
     </div>

@@ -14,7 +14,7 @@ const QueryForm = ({ imageUrl }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    imgUrl: "",
+    imgUrl: imageUrl,
     category: "",
     urgency: "",
     status: "",
@@ -41,16 +41,18 @@ const QueryForm = ({ imageUrl }) => {
     } else {
       console.error("Geolocation not available in this browser.");
     }
-  }, []);
+
+    setFormData({ ...formData, imgUrl: imageUrl });
+  }, [imageUrl]);
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   const handleFileUpload = (selectedFiles) => {
-    setFormData({ ...formData, attachments: selectedFiles });
+    setFormData({ ...formData, attachments: [...selectedFiles] });
   };
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -67,44 +69,44 @@ const QueryForm = ({ imageUrl }) => {
 
     data.append("imageUrl", imageUrl);
 
-    console.log(formData);
+    console.log(formData, data);
 
-    try {
-      const response = await fetch("http://localhost:8080/query", {
-        method: "POST",
-        body: data,
-      });
+    // try {
+    //   const response = await fetch("http://localhost:8080/query", {
+    //     method: "POST",
+    //     body: data,
+    //   });
 
-      if (response.ok) {
-        console.log("Query submitted successfully!");
-        // Clear the form after successful submission (optional)
-        setFormData({
-          email: "",
-          password: "",
-          imgUrl: "",
-          category: "",
-          urgency: "",
-          status: "",
-          description: "",
-          dateCreated: "",
-          estimatedImpact: "",
-          targetPopulation: "",
-          costEstimation: "",
-          proposedSolutions: "",
-          attachments: [],
-        });
-      } else {
-        console.error("Error submitting query:", response.statusText);
-        // Handle submission errors (optional)
-      }
-    } catch (error) {
-      console.error("Error submitting query:", error);
-      // Handle network or other errors (optional)
-    }
+    //   if (response.ok) {
+    //     console.log("Query submitted successfully!");
+    //     // Clear the form after successful submission (optional)
+    //     setFormData({
+    //       email: "",
+    //       password: "",
+    //       imgUrl: "",
+    //       category: "",
+    //       urgency: "",
+    //       status: "",
+    //       description: "",
+    //       dateCreated: "",
+    //       estimatedImpact: "",
+    //       targetPopulation: "",
+    //       costEstimation: "",
+    //       proposedSolutions: "",
+    //       attachments: [],
+    //     });
+    //   } else {
+    //     console.error("Error submitting query:", response.statusText);
+    //     // Handle submission errors (optional)
+    //   }
+    // } catch (error) {
+    //   console.error("Error submitting query:", error);
+    //   // Handle network or other errors (optional)
+    // }
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-md w-96">
+    <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-xl shadow-amber-300 w-96">
       <h2 className="text-2xl font-semibold mb-4">Report an Issue</h2>
       <form className="space-y-4 " onSubmit={handleSubmit}>
         <div className="flex items-center">
@@ -135,17 +137,15 @@ const QueryForm = ({ imageUrl }) => {
 
         <InputLabel>Image Url: </InputLabel>
         <TextField
-          label="Image Url"
           variant="standard"
           fullWidth
           size="small"
           name="imgUrl"
-          //   disabled // Make the field readonly
-          aria-readonly
-          value={imageUrl}
+          // disabled // Make the field readonly
+          value={formData.imgUrl}
           onChange={handleChange}
         />
-
+        
         <FormControl fullWidth size="small">
           <InputLabel>Category</InputLabel>
           <Select
@@ -267,6 +267,7 @@ const QueryForm = ({ imageUrl }) => {
           size="small"
           type="file"
           accept=".jpg, .jpeg, .png, .pdf"
+          multiple
           onChange={(e) => handleFileUpload(e.target.files)}
         />
         <div>
