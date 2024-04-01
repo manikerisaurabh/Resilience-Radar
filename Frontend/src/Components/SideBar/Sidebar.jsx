@@ -17,7 +17,7 @@ const Sidebar = ({ visible, setSidebar }) => {
         </div>
         <ul className="text-center p-0">
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-            <Link to="/upload_issue" className="text-decoration-none text-white">
+            <Link to="/query" className="text-decoration-none text-white">
               Upload Report
             </Link>
           </li>

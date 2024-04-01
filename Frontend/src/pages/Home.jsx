@@ -3,20 +3,23 @@ import Cards2 from '../Components/Cards/Cards2'
 import Footer from '../Components/Footer/Footer'
 import Navbar from '../Components/NavBar/Navbar'
 import Sidebar from '../Components/SideBar/Sidebar'
+import MapComponent from '../Components/MapComponent'
 
 const Home = () => {
   let [active, setActive] = useState(false);
 
   function setSidebar() {
     setActive(!active);
-  }  
+  }
 
   return (
     <>
       {console.log("App")}
-      <Navbar dabba_ve={setSidebar}/>
-      <Sidebar visible={active} setSidebar={setSidebar}/>
-      <Cards2 /> 
+      <Navbar dabba_ve={setSidebar} />
+      <Sidebar visible={active} setSidebar={setSidebar} />
+      <button className='absolute z-50 top-0 right-0 bg-slate-900 text-white' >add location</button>
+      <MapComponent />
+      <Cards2 />
       <Footer />
     </>
   )

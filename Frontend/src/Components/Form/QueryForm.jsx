@@ -8,9 +8,12 @@ import {
   InputLabel,
 } from "@mui/material"; // Material-UI components
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi"; // MUI icons
+import MapComponent from "../MapComponent";
 
 const QueryForm = ({ imageUrl }) => {
   const [geolocation, setGeolocation] = useState(null);
+  let [loc, setLoc] = useState(null);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -25,6 +28,7 @@ const QueryForm = ({ imageUrl }) => {
     costEstimation: "",
     proposedSolutions: "",
     attachments: [],
+    location: loc,
   });
 
   useEffect(() => {
@@ -42,8 +46,8 @@ const QueryForm = ({ imageUrl }) => {
       console.error("Geolocation not available in this browser.");
     }
 
-    setFormData({ ...formData, imgUrl: imageUrl });
-  }, [imageUrl]);
+    setFormData({ ...formData, imgUrl: imageUrl, location: loc });
+  }, [imageUrl, loc]);
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -52,7 +56,7 @@ const QueryForm = ({ imageUrl }) => {
   const handleFileUpload = (selectedFiles) => {
     setFormData({ ...formData, attachments: [...selectedFiles] });
   };
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -68,13 +72,14 @@ const QueryForm = ({ imageUrl }) => {
     }
 
     data.append("imageUrl", imageUrl);
+    data.append("location", loc)
 
     console.log(formData, data);
 
     // try {
     //   const response = await fetch("http://localhost:8080/query", {
     //     method: "POST",
-    //     body: data,
+    //     body: formData,
     //   });
 
     //   if (response.ok) {
@@ -108,6 +113,7 @@ const QueryForm = ({ imageUrl }) => {
   return (
     <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-xl shadow-amber-300 w-96">
       <h2 className="text-2xl font-semibold mb-4">Report an Issue</h2>
+      <MapComponent setLoc={setLoc} />
       <form className="space-y-4 " onSubmit={handleSubmit}>
         <div className="flex items-center">
           <HiOutlineMail className="text-gray-500 mr-2" />
@@ -145,7 +151,7 @@ const QueryForm = ({ imageUrl }) => {
           value={formData.imgUrl}
           onChange={handleChange}
         />
-        
+
         <FormControl fullWidth size="small">
           <InputLabel>Category</InputLabel>
           <Select
@@ -271,13 +277,7 @@ const QueryForm = ({ imageUrl }) => {
           onChange={(e) => handleFileUpload(e.target.files)}
         />
         <div>
-          <InputLabel>GeoLocation : </InputLabel>
-          {geolocation && (
-            <p>
-              Latitude: {geolocation.latitude}, Longitude:{" "}
-              {geolocation.longitude}
-            </p>
-          )}
+          <InputLabel>GeoLocation : {loc} </InputLabel>
         </div>
         <Button variant="contained" color="primary" type="submit" fullWidth>
           Submit
