@@ -41,6 +41,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ["male", "female"]
     },
+    totalQuery: {
+        type: Number,
+        default: 0
+    },
+    resolvedQueries: {
+        type: Number,
+        default: 0
+    },
 });
 
 const User = mongoose.model("User", userSchema);
