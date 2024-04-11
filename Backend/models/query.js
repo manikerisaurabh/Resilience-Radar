@@ -110,7 +110,11 @@ const querySchema = new Schema({
     },
     targetPopulation: { // New attribute (optional)
         type: Number
-    }
+    },
+    department: {
+        type: String,
+        required: true
+    },
 
 });
 

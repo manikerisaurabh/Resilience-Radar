@@ -19,6 +19,7 @@ import Query from './models/query.js';
 import authRoutes from './routes/auth.route.js';
 import queryRoutes from './routes/query.route.js';
 
+import govAuth from './routes/gov/auth.route.js';
 // app.set("view engine", "ejs");
 // app.set("views", path.join(__dirname, "views"));
 
@@ -65,13 +66,14 @@ app.use(passport.session());
 // });
 
 app.get('/', (req, res) => {
-    res.render("user/index.ejs");
+    res.status(200).json({ message: "this is home route" });
 });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/query", queryRoutes);
+app.use("/api/gov/auth", govAuth);
 // app.get('/Signup', (req, res) => {
-//     let currUser = ""
+//     let currUser = "" 
 //     res.render("user/signup.ejs", { currUser })
 // })
 
