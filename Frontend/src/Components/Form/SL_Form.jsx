@@ -6,22 +6,36 @@ import {
   TextField,
   Typography,
   Button,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
-// import VisuallyHidden from "./styles/StyledComponents"
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
 import { emailValidator, usernameValidator } from "../../utils/validator";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import { HiOutlineLockClosed, HiOutlineMail } from "react-icons/hi";
 
 const SL_Form = ({ isLogin, toggleLogin }) => {
   const email = useInputValidation("", emailValidator);
   const username = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
   const avatar = useFileHandler("single", 2);
+  const [gender, setGender] = useState("");
   const { mode } = useParams();
   const [open, setOpen] = useState(false);
+  const [location, setLocation] = useState(null);
+
+  React.useEffect(() => {
+    try {
+      const storedLocation = localStorage.getItem("userLocation");
+      setLocation(storedLocation ? JSON.parse(storedLocation) : null);
+    } catch (error) {
+      console.error("Error retrieving location from local storage:", error);
+      // Handle errors appropriately, e.g., display a fallback message
+    }
+  }, []);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -34,20 +48,21 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    localStorage.removeItem("userLocation");
+
     console.log(`http://localhost:8080/${mode}`);
 
     // Get user's current location
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords;
-
         // Create the user object
         const user = {
           userName: username.value,
-          latitude: latitude,
-          longitude: longitude,
+          latitude: location[1],
+          longitude: location[0],
           email: email.value,
           password: password.value,
+          gender: gender,
         };
         // Conditionally add the userName field
         if (mode === "signup") {
@@ -57,7 +72,7 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
         console.log(user);
 
         // Sending POST request
-        fetch(`http://localhost:8080/${mode}`, {
+        fetch(`http://localhost:8080/api/auth/${mode}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -67,7 +82,7 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            localStorage.setItem('currUser', JSON.stringify(data.currUser));
+            localStorage.setItem("currUser", JSON.stringify(data.currUser));
             let user = localStorage.getItem("currUser");
             console.log(JSON.parse(user));
           })
@@ -111,15 +126,14 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
                 bottom: "0",
                 right: "0",
                 color: "black",
-                bgColor: "rgba(0,0,0,0.5)",
+                bgColor: "rgba(0,0,0,0.8)",
                 ":hover": {
-                  bgColor: "rgba(0,0,0,0.7)",
+                  bgColor: "rgba(0,0,0,0.5)",
                 },
               }}
               component="label"
             >
               <>
-                {/* <VisuallyHidden>Upload Avatar</VisuallyHidden> */}
                 <CameraAltIcon />
                 <input
                   type="file"
@@ -180,6 +194,32 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           </Typography>
         )}
 
+        <div className="flex items-center">
+          <HiOutlineMail className="text-gray-500 mr-2" />
+          <TextField
+            label="Email"
+            variant="outlined"
+            fullWidth
+            size="small"
+            name="email"
+            value={email.value}
+            onChange={email.changeHandler}
+          />
+        </div>
+        <div className="flex items-center">
+          <HiOutlineLockClosed className="text-gray-500 mr-2" />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type="password"
+            fullWidth
+            size="small"
+            name="password"
+            value={password.value}
+            onChange={password.changeHandler}
+          />
+        </div>
+
         <TextField
           required
           fullWidth
@@ -210,6 +250,54 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
             {password.error}
           </Typography>
         )}
+
+        {!isLogin && (
+          <>
+            <label>
+              {" "}
+              Location :{" "}
+              {location
+                ? location[0] + " " + location[1]
+                : "Choose Your Location"}
+            </label>
+
+            <div className="border hover:border-blue-500 rounded w-fit">
+              <Link to="/Location" className="btn btn-close-white border-0">
+                Add Location
+              </Link>
+            </div>
+          </>
+        )}
+
+        <div>
+          <FormControlLabel
+            control={
+              <Radio
+                checked={gender === "male"}
+                onChange={() => setGender("male")}
+              />
+            }
+            label="Male"
+          />
+          <FormControlLabel
+            control={
+              <Radio
+                checked={gender === "female"}
+                onChange={() => setGender("female")}
+              />
+            }
+            label="Female"
+          />
+          <FormControlLabel
+            control={
+              <Radio
+                checked={gender === "other"}
+                onChange={() => setGender("other")}
+              />
+            }
+            label="Other"
+          />
+        </div>
 
         <Button
           sx={{
