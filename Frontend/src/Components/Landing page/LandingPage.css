@@ -35,7 +35,7 @@
   flex-wrap: wrap;
   justify-content: center;
   margin-bottom: 4rem;
-  background-color: coral;
+  
 }
 
 .feature {
@@ -47,6 +47,7 @@
   padding: 2rem;
   text-align: center;
   transition: transform 0.3s ease-in-out;
+  background-color: rgb(170, 239, 249);
 }
 
 .feature:hover {
