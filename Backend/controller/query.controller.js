@@ -75,7 +75,7 @@ export const editQuery = async (req, res) => {
         }
 
 
-        const { location, description, img, category, urgency, status, estimatedImpact, targetPopulation } = req.body;
+        const { location, description, img, category, urgency, status, targetPopulation } = req.body;
         const address = await getLocationData(location[0], location[1]);
         const updatedQuery = await Query.findOneAndUpdate(
             { _id: queryId }, // Match the document by its _id
@@ -93,8 +93,7 @@ export const editQuery = async (req, res) => {
                 img: img,
                 category: category,
                 urgency: urgency,
-                status: status, // You had a typo here, corrected it
-                estimatedImpact: estimatedImpact,
+                status: status,
                 targetPopulation: targetPopulation,
             },
             { new: true } // Set to true if you want to return the updated document
