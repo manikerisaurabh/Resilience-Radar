@@ -8,6 +8,7 @@ import "./App.css";
 import Navbar from "./Components/NavBar/Navbar";
 import Sidebar from "./Components/SideBar/Sidebar";
 import QueryForm from "./Components/Form/QueryForm";
+import LandPage from "./Components/Landing page/LandPage";
 
 function App() {
   let [active, setActive] = useState(false);
@@ -23,7 +24,8 @@ function App() {
         <Navbar dabba_ve={setSidebar} />
         <Sidebar visible={active} setSidebar={setSidebar} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<><LandPage/><Home /></>} />
+          
           <Route path="/CaptureImg" element={<WebcamCapture />} />
           <Route path="/:mode" element={<Login />} />
           <Route path="/query" element={<QueryForm />} />
