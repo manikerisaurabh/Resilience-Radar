@@ -15,11 +15,11 @@ const LandingPage = () => {
           <p>Contribute to a thriving community by reporting and mapping community challenges.</p>
         </div>
         <div className="feature">
-          <h3>Shine a light on issues:</h3>
+          <h3>Shine a light on issues</h3>
           <p>Report and map community challenges to raise awareness and prioritize solutions.</p>
         </div>
         <div className="feature">
-          <h3>Strength in numbers:</h3>
+          <h3>Strength in numbers</h3>
           <p>See what concerns your neighbors share and join forces to advocate for change.</p>
         </div>
         <div className="feature">
@@ -27,7 +27,7 @@ const LandingPage = () => {
           <p>Contribute to a thriving community by reporting and mapping community challenges.</p>
         </div>
         <div className="feature">
-          <h3>Data-driven decisions:</h3>
+          <h3>Data-driven decisions</h3>
           <p>Our platform leverages resident reports, open-source data, and expert insights to create a comprehensive picture of community needs.</p>
         </div>
         <div className="feature">
@@ -42,11 +42,12 @@ const LandingPage = () => {
         </div>
         <div className="get-involved">
           <h2>Get Involved</h2>
-          <ul>
-            <li>Report a Challenge</li>
-            <li>Stay Informed</li>
-            <li>Spread the Word</li>
-          </ul>
+          <div className='get div b'>
+          <p className='get div'>Report a Challenge</p>
+          <p className='get div'>Stay Informed</p>
+          <p className='get div'>Spread the Word</p>
+        </div>
+          
         </div>
       </div>
   );
