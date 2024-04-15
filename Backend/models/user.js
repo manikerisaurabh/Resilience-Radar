@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-
+const Schema = mongoose.Schema;
 const userSchema = new mongoose.Schema({
     userName: {
         type: String,
@@ -41,14 +41,18 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ["male", "female"]
     },
-    totalQuery: {
-        type: Number,
-        default: 0
-    },
-    resolvedQueries: {
-        type: Number,
-        default: 0
-    },
+    totalQuery: [{
+        type: Schema.Types.ObjectId,
+        ref: "Query"
+    }],
+    resolvedQueries: [{
+        type: Schema.Types.ObjectId,
+        ref: "Query"
+    }],
+    pendingToApprove: [{
+        type: Schema.Types.ObjectId,
+        ref: "Query"
+    }],
     isGovEmp: {
         type: String,
         required: true,

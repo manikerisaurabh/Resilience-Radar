@@ -105,12 +105,11 @@ const querySchema = new Schema({
         type: Date,
         default: Date.now
     },
+    completionDate: {
+        type: Date
+    },
     targetPopulation: { // New attribute (optional)
         type: Number
-    },
-    department: {
-        type: String,
-        required: true
     },
 
 });

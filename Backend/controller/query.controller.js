@@ -44,8 +44,8 @@ export const addQuery = async (req, res) => {
 
         res.send(savedQuery);
     } catch (error) {
-        console.log("error in addQuery controller");
-        return res.state(500).json({ error: "Internal Server Error" });
+        console.log("error in addQuery controller" + error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
