@@ -45,7 +45,8 @@ export const signup = async (req, res) => {
             email: email,
             password: hashedPassword,
             gender: gender,
-            profilepic: gender == "male" ? boyProfilepic : gitlProfilepic
+            profilepic: gender == "male" ? boyProfilepic : gitlProfilepic,
+            isGovEmp: false
         });
 
         if (newUser) {
@@ -54,7 +55,8 @@ export const signup = async (req, res) => {
             return res.status(201).json({
                 _id: newUser._id,
                 userName: newUser.userName,
-                profilepic: newUser.profilepic
+                profilepic: newUser.profilepic,
+                isGovEmp: newUser.isGovEmp
             });
         } else {
             res.status(400).json({ error: "Invalid user Data" });
@@ -81,7 +83,8 @@ export const login = async (req, res) => {
             userName: user.userName,
             email: user.email,
             profilepic: user.profilepic,
-            address: user.address
+            address: user.address,
+            isGovEmp: user.isGovEmp
         });
 
     } catch (error) {
