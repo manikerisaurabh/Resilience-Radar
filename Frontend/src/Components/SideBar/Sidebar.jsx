@@ -17,22 +17,22 @@ const Sidebar = ({ visible, setSidebar }) => {
         </div>
         <ul className="text-center p-0">
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-            <Link to="/query" className="text-decoration-none text-white">
+            <Link to="/query" className="text-decoration-none text-white" onClick={setSidebar}>
               Upload Report
             </Link>
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-            <a href="#reports" className="text-decoration-none text-white">
+            <a href="#reports" className="text-decoration-none text-white" onClick={setSidebar}>
               Reports
             </a>
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-            <a href="#completed" className="text-decoration-none text-white">
+            <a href="#completed" className="text-decoration-none text-white" onClick={setSidebar}>
               Completed
             </a>
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-            <a href="#pending" className="text-decoration-none text-white">
+            <a href="#pending" className="text-decoration-none text-white" onClick={setSidebar}>
               Pending
             </a>
           </li>
