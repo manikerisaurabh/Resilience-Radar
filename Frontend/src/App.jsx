@@ -53,7 +53,7 @@ function App() {
           <Route path="/CaptureImg" element={<WebcamCapture />} />
           <Route path="/auth/:mode" element={<Login />} />
           <Route path="/query" element={<Upload_issue />} />
-          <Route path="/DetailedCard" element={<DetailedCard/>} />
+          <Route path="/DetailedData" element={<DetailedCard/>} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/util/:location" element={<LoactionSelector />} />
           <Route path="*" element={<ErrorPage />} />
