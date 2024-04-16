@@ -8,6 +8,7 @@ import {
   Button,
   FormControlLabel,
   Radio,
+  Grid,
 } from "@mui/material";
 import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
@@ -56,17 +57,16 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         // Create the user object
-        const user = {
+        const user = !isLogin ? {
           userName: username.value,
           latitude: location[1],
           longitude: location[0],
           email: email.value,
           password: password.value,
           gender: gender,
-        };
-        // Conditionally add the userName field
-        if (mode === "signup") {
-          user.userName = username.value;
+        } : {
+          userName: username.value,
+          password: password.value,
         }
 
         console.log(user);
@@ -82,9 +82,9 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            localStorage.setItem("currUser", JSON.stringify(data.currUser));
+            localStorage.setItem("currUser", JSON.stringify(data));
             let user = localStorage.getItem("currUser");
-            console.log(JSON.parse(user));
+            //console.log(JSON.parse(user));
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -99,7 +99,11 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
 
   return (
     <>
-      <Typography variant="h5" letterSpacing={isLogin ? 2 : 1}>
+      <Typography
+        variant="h5"
+        letterSpacing={isLogin ? 2 : 1}
+        className="text-center "
+      >
         {isLogin ? "Login" : "Sign in"}
       </Typography>
       <form
@@ -177,50 +181,49 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           </MuiAlert>
         </Snackbar>
 
-        {!isLogin && (
-          <TextField
-            required
-            fullWidth
-            label="Username"
-            margin="normal"
-            variant="outlined"
-            value={username.value}
-            onChange={username.changeHandler}
-          />
-        )}
+
+        <TextField
+          required
+          fullWidth
+          label="Username"
+          margin="normal"
+          variant="outlined"
+          value={username.value}
+          onChange={username.changeHandler}
+        />
         {username.error && (
           <Typography color={"error"} variant="caption">
             {username.error}
           </Typography>
         )}
 
-        <div className="flex items-center">
-          <HiOutlineMail className="text-gray-500 mr-2" />
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            size="small"
-            name="email"
-            value={email.value}
-            onChange={email.changeHandler}
-          />
-        </div>
-        <div className="flex items-center">
-          <HiOutlineLockClosed className="text-gray-500 mr-2" />
-          <TextField
-            label="Password"
-            variant="outlined"
-            type="password"
-            fullWidth
-            size="small"
-            name="password"
-            value={password.value}
-            onChange={password.changeHandler}
-          />
-        </div>
+        {/* <div className="flex items-center">
+            <HiOutlineMail className="text-gray-500 mr-2" />
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              size="small"
+              name="email"
+              value={email.value}
+              onChange={email.changeHandler}
+            />
+          </div>
+          <div className="flex items-center">
+            <HiOutlineLockClosed className="text-gray-500 mr-2" />
+            <TextField
+              label="Password"
+              variant="outlined"
+              type="password"
+              fullWidth
+              size="small"
+              name="password"
+              value={password.value}
+              onChange={password.changeHandler}
+            />
+          </div> */}
 
-        <TextField
+        {!isLogin && <TextField
           required
           fullWidth
           label="Email"
@@ -228,7 +231,7 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           variant="outlined"
           value={email.value}
           onChange={email.changeHandler}
-        />
+        />}
         {email.error && (
           <Typography color={"error"} variant="caption">
             {email.error}
@@ -255,49 +258,66 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           <>
             <label>
               {" "}
-              Location :{" "}
-              {location
-                ? location[0] + " " + location[1]
-                : "Choose Your Location"}
+              {location ? (
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="caption" color="text.secondary">
+                    Latitude:
+                  </Typography>
+                  <Typography variant="body2">{location[0]}</Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Longitude:
+                  </Typography>
+                  <Typography variant="body2">{location[1]}</Typography>
+                </Stack>
+              ) : (
+                <Typography variant="caption" color="text.secondary">
+                  Choose Your Location
+                </Typography>
+              )}
             </label>
 
             <div className="border hover:border-blue-500 rounded w-fit">
-              <Link to="/Location" className="btn btn-close-white border-0">
-                Add Location
+              <Link
+                to="/util/Location"
+                className="btn btn-close-white border-0"
+              >
+                {location ? "Update Current Location" : "Add Location"}
               </Link>
             </div>
           </>
         )}
 
-        <div>
-          <FormControlLabel
-            control={
-              <Radio
-                checked={gender === "male"}
-                onChange={() => setGender("male")}
-              />
-            }
-            label="Male"
-          />
-          <FormControlLabel
-            control={
-              <Radio
-                checked={gender === "female"}
-                onChange={() => setGender("female")}
-              />
-            }
-            label="Female"
-          />
-          <FormControlLabel
-            control={
-              <Radio
-                checked={gender === "other"}
-                onChange={() => setGender("other")}
-              />
-            }
-            label="Other"
-          />
-        </div>
+        {!isLogin && (
+          <div>
+            <FormControlLabel
+              control={
+                <Radio
+                  checked={gender === "male"}
+                  onChange={() => setGender("male")}
+                />
+              }
+              label="Male"
+            />
+            <FormControlLabel
+              control={
+                <Radio
+                  checked={gender === "female"}
+                  onChange={() => setGender("female")}
+                />
+              }
+              label="Female"
+            />
+            <FormControlLabel
+              control={
+                <Radio
+                  checked={gender === "other"}
+                  onChange={() => setGender("other")}
+                />
+              }
+              label="Other"
+            />
+          </div>
+        )}
 
         <Button
           sx={{

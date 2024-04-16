@@ -20,9 +20,7 @@ const QueryForm = ({ imageUrl }) => {
     status: "",
     description: "",
     dateCreated: "",
-    estimatedImpact: "",
     targetPopulation: "",
-    costEstimation: "",
     proposedSolutions: "",
     attachments: [],
     location: loc,
@@ -172,17 +170,6 @@ const QueryForm = ({ imageUrl }) => {
             onChange={handleChange}
           />
 
-          <TextField
-            label="Estimated Impact"
-            variant="outlined"
-            type="number"
-            fullWidth
-            size="small"
-            name="estimatedImpact" // Added name attribute
-            value={formData.estimatedImpact}
-            onChange={handleChange}
-          />
-
           <InputLabel>Date Created : </InputLabel>
           <TextField
             variant="standard"
@@ -202,17 +189,6 @@ const QueryForm = ({ imageUrl }) => {
             size="small"
             name="targetPopulation" // Added name attribute
             value={formData.targetPopulation}
-            onChange={handleChange}
-          />
-
-          <TextField
-            label="Cost Estimation"
-            variant="outlined"
-            type="number"
-            fullWidth
-            size="small"
-            name="costEstimation" // Added name attribute
-            value={formData.costEstimation}
             onChange={handleChange}
           />
 

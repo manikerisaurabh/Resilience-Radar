@@ -3,8 +3,8 @@ import React from 'react';
 const LandPage = () => {
 
   return (
-    <div>
-      <h1 className='title my-[64px] text-center '><b><u>Residential - Radar</u></b></h1>
+    <div className='p-4'>
+      <h1 className='title my-[64px] text-center '><b><u>Resileince - Radar</u></b></h1>
       <p>
         Welcome to the Community Challenge Platform, a dynamic website designed to address various social challenges faced by our community. This platform is not only focused on water-related problems but also includes issues such as floods, droughts, road conditions, and other pressing concerns.
       </p>
@@ -17,6 +17,7 @@ const LandPage = () => {
         <li>Data-driven decisions: Our platform leverages resident reports, open-source data, and expert insights to create a comprehensive picture of community needs.</li>
         <li>This platform is a powerful tool to build a stronger, more informed community. </li>
         <li>Valuable Resource for Authorities</li>
+        <li>vaishii2</li>
       </ul>
       <h2>Get Involved</h2>
       <ul>
