@@ -6,7 +6,7 @@ const Sidebar = ({ visible, setSidebar }) => {
 
   return (
     <>
-      <div className={`h-full fixed top-[8vh] z-10 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${visible ? "translate-x-0" : "-translate-x-full"} transition duration-1000 ease-in-out`}>
+      <div className={`h-full fixed top-[8vh] z-20 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${visible ? "translate-x-0" : "-translate-x-full"} transition duration-1000 ease-in-out`}>
 
         <div className="text-right p-2 font-semibold">
           <button className="text-white close-btn rounded-md px-1 transition duration-500 border-1 border-gray-800 hover:border-white"
@@ -22,9 +22,9 @@ const Sidebar = ({ visible, setSidebar }) => {
             </Link>
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-            <a href="#reports" className="text-decoration-none text-white" onClick={setSidebar}>
+            <Link to="/reports" className="text-decoration-none text-white" onClick={setSidebar}>
               Reports
-            </a>
+            </Link>
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
             <a href="#completed" className="text-decoration-none text-white" onClick={setSidebar}>

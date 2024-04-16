@@ -3,7 +3,7 @@ import React from 'react';
 const LandPage = () => {
 
   return (
-    <div>
+    <div className='p-4'>
       <h1 className='title my-[64px] text-center '><b><u>Residential - Radar</u></b></h1>
       <p>
         Welcome to the Community Challenge Platform, a dynamic website designed to address various social challenges faced by our community. This platform is not only focused on water-related problems but also includes issues such as floods, droughts, road conditions, and other pressing concerns.

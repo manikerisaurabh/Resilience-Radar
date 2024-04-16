@@ -9,6 +9,7 @@ import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { Style, Icon } from "ol/style";
 import { useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const MapComponent = ({ loc, setLoc }) => {
   const mapRef = useRef(null);
@@ -87,18 +88,30 @@ const MapComponent = ({ loc, setLoc }) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="map mt-28 z-50 h-[68vh] w-[68vw] " ref={mapRef}></div>
-      <label> Marked Location : {TempLoc[0] + " " + TempLoc[1]}</label>
-      <label> Confirmed Location : {loc[0] + " " + loc[1]}</label>
-      <button
-        className="btn btn-primary bg-slate-900 w-fit text-white"
-        onClick={handleConfirm}
+    <div className="flex h-screen justify-center items-center p-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="bg-white rounded-lg shadow-lg overflow-hidden"
       >
-        Confirm Location
-      </button>
+        <div className="map h-[50vh] md:h-[68vh] w-full" ref={mapRef}></div>
+        <div className="p-4">
+          <div className="flex justify-between items-center mb-4">
+            <label className="text-gray-700">Marked Location: {TempLoc.join(", ")}</label>
+            <label className="text-gray-700">Confirmed Location: {loc.join(", ")}</label>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full bg-blue-600 text-white p-2 rounded"
+            onClick={handleConfirm}
+          >
+            Confirm Location
+          </motion.button>
+        </div>
+      </motion.div>
     </div>
   );
 };
-
 export default MapComponent;
