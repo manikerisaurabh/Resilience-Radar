@@ -43,7 +43,8 @@ export const signup = async (req, res) => {
             phoneNumber,
             password: hashedPassword,
             gender,
-            profilePic
+            profilePic,
+            isGovEmp: true
         });
 
         // Save new employee to database
@@ -55,7 +56,8 @@ export const signup = async (req, res) => {
         return res.status(201).json({
             _id: newEmployee._id,
             employeeName: newEmployee.name,
-            profilepic: newEmployee.profilePic
+            profilepic: newEmployee.profilePic,
+            isGovEmp: newEmployee.isGovEmp
         });
 
     } catch (error) {
@@ -81,6 +83,7 @@ export const login = async (req, res) => {
             name: employee.name,
             email: employee.email,
             profilepic: employee.profilePic,
+            isGovEmp: employee.isGovEmp
         });
 
     } catch (error) {

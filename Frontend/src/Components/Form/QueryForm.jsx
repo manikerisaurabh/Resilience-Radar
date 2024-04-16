@@ -8,44 +8,25 @@ import {
   InputLabel,
 } from "@mui/material"; // Material-UI components
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi"; // MUI icons
-import MapComponent from "../MapComponent";
+import MapComponent from "../Maps/MapComponent";
 
 const QueryForm = ({ imageUrl }) => {
-  const [geolocation, setGeolocation] = useState(null);
-  let [loc, setLoc] = useState(null);
+  let [loc, setLoc] = useState([74.3501, 16.2229]);
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
     imgUrl: imageUrl,
     category: "",
     urgency: "",
     status: "",
     description: "",
     dateCreated: "",
-    estimatedImpact: "",
     targetPopulation: "",
-    costEstimation: "",
     proposedSolutions: "",
     attachments: [],
     location: loc,
   });
 
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setGeolocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error("Error getting geolocation:", error.message);
-        }
-      );
-    } else {
-      console.error("Geolocation not available in this browser.");
-    }
-
     setFormData({ ...formData, imgUrl: imageUrl, location: loc });
   }, [imageUrl, loc]);
 
@@ -72,12 +53,12 @@ const QueryForm = ({ imageUrl }) => {
     }
 
     data.append("imageUrl", imageUrl);
-    data.append("location", loc)
+    data.append("location", loc);
 
     console.log(formData, data);
 
     // try {
-    //   const response = await fetch("http://localhost:8080/query", {
+    //   const response = await fetch("http://localhost:8080/api/query", {
     //     method: "POST",
     //     body: formData,
     //   });
@@ -111,179 +92,138 @@ const QueryForm = ({ imageUrl }) => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-xl shadow-amber-300 w-96">
-      <h2 className="text-2xl font-semibold mb-4">Report an Issue</h2>
-      <MapComponent setLoc={setLoc} />
-      <form className="space-y-4 " onSubmit={handleSubmit}>
-        <div className="flex items-center">
-          <HiOutlineMail className="text-gray-500 mr-2" />
+    <>
+      <MapComponent loc={loc} setLoc={setLoc} />
+      <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-xl shadow-amber-300 w-96">
+        <h2 className="text-2xl font-semibold mb-4">Report an Issue</h2>
+        <form className="space-y-4 " onSubmit={handleSubmit}>
+
+          <InputLabel>Image Url: </InputLabel>
           <TextField
-            label="Email"
-            variant="outlined"
+            variant="standard"
             fullWidth
             size="small"
-            name="email"
-            value={formData.email}
+            name="imgUrl"
+            // disabled // Make the field readonly
+            value={formData.imgUrl}
             onChange={handleChange}
+            label="img"
+            disabled
           />
-        </div>
-        <div className="flex items-center">
-          <HiOutlineLockClosed className="text-gray-500 mr-2" />
+
+          <FormControl fullWidth size="small">
+            <InputLabel>Category</InputLabel>
+            <Select
+              variant="standard"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+            >
+              <MenuItem value="Infrastructure">Infrastructure</MenuItem>
+              <MenuItem value="Education">Education</MenuItem>
+              <MenuItem value="Healthcare">Healthcare</MenuItem>
+              <MenuItem value="Environment">Environment</MenuItem>
+              <MenuItem value="Social Welfare">Social Welfare</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth size="small">
+            <InputLabel>Urgency</InputLabel>
+            <Select
+              variant="standard"
+              name="urgency"
+              value={formData.urgency}
+              onChange={handleChange}
+            >
+              <MenuItem value="Low">Low</MenuItem>
+              <MenuItem value="Medium">Medium</MenuItem>
+              <MenuItem value="High">High</MenuItem>
+              <MenuItem value="Critical">Critical</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth size="small">
+            <InputLabel>Status</InputLabel>
+            <Select
+              variant="standard"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+            >
+              <MenuItem value="New">New</MenuItem>
+              <MenuItem value="Under Investigation">
+                Under Investigation
+              </MenuItem>
+              <MenuItem value="Proposed Solution">Proposed Solution</MenuItem>
+              <MenuItem value="In Progress">In Progress</MenuItem>
+              <MenuItem value="Resolved">Resolved</MenuItem>
+            </Select>
+          </FormControl>
+
           <TextField
-            label="Password"
+            label="Description"
             variant="outlined"
-            type="password"
+            multiline
+            rows={4}
             fullWidth
             size="small"
-            name="password"
-            value={formData.password}
+            name="description" // Added name attribute
+            value={formData.description}
             onChange={handleChange}
           />
-        </div>
 
-        <InputLabel>Image Url: </InputLabel>
-        <TextField
-          variant="standard"
-          fullWidth
-          size="small"
-          name="imgUrl"
-          // disabled // Make the field readonly
-          value={formData.imgUrl}
-          onChange={handleChange}
-        />
-
-        <FormControl fullWidth size="small">
-          <InputLabel>Category</InputLabel>
-          <Select
+          <InputLabel>Date Created : </InputLabel>
+          <TextField
             variant="standard"
-            name="category"
-            value={formData.category}
+            type="date"
+            fullWidth
+            size="small"
+            name="dateCreated"
+            value={formData.dateCreated}
             onChange={handleChange}
-          >
-            <MenuItem value="Infrastructure">Infrastructure</MenuItem>
-            <MenuItem value="Education">Education</MenuItem>
-            <MenuItem value="Healthcare">Healthcare</MenuItem>
-            <MenuItem value="Environment">Environment</MenuItem>
-            <MenuItem value="Social Welfare">Social Welfare</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl fullWidth size="small">
-          <InputLabel>Urgency</InputLabel>
-          <Select
+          />
+
+          <TextField
+            label="Target Population"
+            variant="outlined"
+            type="number"
+            fullWidth
+            size="small"
+            name="targetPopulation" // Added name attribute
+            value={formData.targetPopulation}
+            onChange={handleChange}
+          />
+
+          <TextField
+            label="Proposed Solutions"
+            variant="outlined"
+            multiline
+            rows={4}
+            fullWidth
+            size="small"
+            name="proposedSolutions" // Added name attribute
+            value={formData.proposedSolutions}
+            onChange={handleChange}
+          />
+
+          <InputLabel>Attachments : </InputLabel>
+          <TextField
+            label="Attachments"
             variant="standard"
-            name="urgency"
-            value={formData.urgency}
-            onChange={handleChange}
-          >
-            <MenuItem value="Low">Low</MenuItem>
-            <MenuItem value="Medium">Medium</MenuItem>
-            <MenuItem value="High">High</MenuItem>
-            <MenuItem value="Critical">Critical</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl fullWidth size="small">
-          <InputLabel>Status</InputLabel>
-          <Select
-            variant="standard"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-          >
-            <MenuItem value="New">New</MenuItem>
-            <MenuItem value="Under Investigation">Under Investigation</MenuItem>
-            <MenuItem value="Proposed Solution">Proposed Solution</MenuItem>
-            <MenuItem value="In Progress">In Progress</MenuItem>
-            <MenuItem value="Resolved">Resolved</MenuItem>
-          </Select>
-        </FormControl>
-
-        <TextField
-          label="Description"
-          variant="outlined"
-          multiline
-          rows={4}
-          fullWidth
-          size="small"
-          name="description" // Added name attribute
-          value={formData.description}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Estimated Impact"
-          variant="outlined"
-          type="number"
-          fullWidth
-          size="small"
-          name="estimatedImpact" // Added name attribute
-          value={formData.estimatedImpact}
-          onChange={handleChange}
-        />
-
-        <InputLabel>Date Created : </InputLabel>
-        <TextField
-          variant="standard"
-          type="date"
-          fullWidth
-          size="small"
-          name="dateCreated"
-          value={formData.dateCreated}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Target Population"
-          variant="outlined"
-          type="number"
-          fullWidth
-          size="small"
-          name="targetPopulation" // Added name attribute
-          value={formData.targetPopulation}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Cost Estimation"
-          variant="outlined"
-          type="number"
-          fullWidth
-          size="small"
-          name="costEstimation" // Added name attribute
-          value={formData.costEstimation}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Proposed Solutions"
-          variant="outlined"
-          multiline
-          rows={4}
-          fullWidth
-          size="small"
-          name="proposedSolutions" // Added name attribute
-          value={formData.proposedSolutions}
-          onChange={handleChange}
-        />
-
-        <InputLabel>Attachments : </InputLabel>
-        <TextField
-          label="Attachments"
-          variant="standard"
-          fullWidth
-          size="small"
-          type="file"
-          accept=".jpg, .jpeg, .png, .pdf"
-          multiple
-          onChange={(e) => handleFileUpload(e.target.files)}
-        />
-        <div>
-          <InputLabel>GeoLocation : {loc} </InputLabel>
-        </div>
-        <Button variant="contained" color="primary" type="submit" fullWidth>
-          Submit
-        </Button>
-      </form>
-    </div>
+            fullWidth
+            size="small"
+            type="file"
+            accept=".jpg, .jpeg, .png, .pdf"
+            multiple
+            onChange={(e) => handleFileUpload(e.target.files)}
+          />
+          <div>
+            <InputLabel>GeoLocation : {loc} </InputLabel>
+          </div>
+          <Button variant="contained" color="primary" type="submit" fullWidth>
+            Submit
+          </Button>
+        </form>
+      </div>
+    </>
   );
 };
 

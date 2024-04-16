@@ -20,6 +20,7 @@ import authRoutes from './routes/auth.route.js';
 import queryRoutes from './routes/query.route.js';
 
 import govAuth from './routes/gov/auth.route.js';
+import govQuerys from './routes/gov/query.route.js';
 // app.set("view engine", "ejs");
 // app.set("views", path.join(__dirname, "views"));
 
@@ -72,6 +73,7 @@ app.get('/', (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/query", queryRoutes);
 app.use("/api/gov/auth", govAuth);
+app.use("/api/gov/query", govQuerys);
 // app.get('/Signup', (req, res) => {
 //     let currUser = "" 
 //     res.render("user/signup.ejs", { currUser })

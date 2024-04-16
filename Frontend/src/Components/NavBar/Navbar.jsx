@@ -16,7 +16,7 @@ const Navbar = ({ dabba_ve }) => {
   {console.log("Navbar")}
   return (
     // <!-- Navbar -->
-    <nav className="fixed top-0 left-0 w-full z-10 bg-gray-800 border-b-[1px] border-b-black border-opacity-30 shadow-black">
+    <nav className="fixed top-0 left-0 w-full z-20 bg-gray-800 border-b-[1px] border-b-black border-opacity-30 shadow-black">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           {/* <!-- Mobile menu button--> */}

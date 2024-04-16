@@ -101,19 +101,15 @@ const querySchema = new Schema({
         type: String,
         enum: ["New", "In Progress", "Resolved"]    //"Under Investigation", "Proposed Solution",
     },
-    estimatedImpact: { // New attribute (optional)
-        type: Number
-    },
     dateReported: { // New attribute (optional)
         type: Date,
         default: Date.now
     },
+    completionDate: {
+        type: Date
+    },
     targetPopulation: { // New attribute (optional)
         type: Number
-    },
-    department: {
-        type: String,
-        required: true
     },
 
 });

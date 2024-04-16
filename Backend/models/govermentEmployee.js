@@ -34,7 +34,16 @@ const governmentEmployeeSchema = new Schema({
     },
     profilePic: {
         type: String
-    }
+    },
+    isGovEmp: {
+        type: String,
+        required: true,
+        enum: ['true', 'false']
+    },
+    queryIncharge: [{
+        type: Schema.Types.ObjectId,
+        ref: "Query"
+    }],
     // You can add more fields as needed, such as address, role, etc.
 }, { timestamps: true });
 
