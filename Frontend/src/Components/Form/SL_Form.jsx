@@ -82,9 +82,9 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            localStorage.setItem("currUser", JSON.stringify(data.currUser));
+            localStorage.setItem("currUser", JSON.stringify(data));
             let user = localStorage.getItem("currUser");
-            console.log(JSON.parse(user));
+            //console.log(JSON.parse(user));
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -181,16 +181,16 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           </MuiAlert>
         </Snackbar>
 
-        
-          <TextField
-            required
-            fullWidth
-            label="Username"
-            margin="normal"
-            variant="outlined"
-            value={username.value}
-            onChange={username.changeHandler}
-          />
+
+        <TextField
+          required
+          fullWidth
+          label="Username"
+          margin="normal"
+          variant="outlined"
+          value={username.value}
+          onChange={username.changeHandler}
+        />
         {username.error && (
           <Typography color={"error"} variant="caption">
             {username.error}
