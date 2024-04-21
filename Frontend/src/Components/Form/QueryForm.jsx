@@ -10,7 +10,18 @@ import {
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi"; // MUI icons
 import MapComponent from "../Maps/MapComponent";
 
-const QueryForm = ({ imageUrl }) => {
+const QueryForm = ({
+  imageUrl,
+  category = "",
+  urgency = "",
+  status = "",
+  description = "",
+  dateCreated = "",
+  targetPopulation = "",
+  proposedSolutions = "",
+  attachments = [],
+  location,
+}) => {
   let [loc, setLoc] = useState([74.3501, 16.2229]);
 
   const [formData, setFormData] = useState({
@@ -97,7 +108,6 @@ const QueryForm = ({ imageUrl }) => {
       <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-xl shadow-amber-300 w-96">
         <h2 className="text-2xl font-semibold mb-4">Report an Issue</h2>
         <form className="space-y-4 " onSubmit={handleSubmit}>
-
           <InputLabel>Image Url: </InputLabel>
           <TextField
             variant="standard"
@@ -214,10 +224,13 @@ const QueryForm = ({ imageUrl }) => {
             accept=".jpg, .jpeg, .png, .pdf"
             multiple
             onChange={(e) => handleFileUpload(e.target.files)}
+            className="mt-0"
           />
+
           <div>
             <InputLabel>GeoLocation : {loc} </InputLabel>
           </div>
+
           <Button variant="contained" color="primary" type="submit" fullWidth>
             Submit
           </Button>

@@ -43,17 +43,23 @@ function App() {
             <Route
               path="/"
               element={
-                <>
+                <div className=""
+                onClick={() => {
+                  if(active) {
+                    setActive(visible => !visible);
+                  }
+                }}>
                   <LandPage />
                   <Home />
-                </>
+                </div>
               }
             />
           </Route>
           <Route path="/CaptureImg" element={<WebcamCapture />} />
           <Route path="/auth/:mode" element={<Login />} />
           <Route path="/query" element={<Upload_issue />} />
-          <Route path="/DetailedData" element={<DetailedCard/>} />
+          <Route path="/query/edit/:key" element={<Upload_issue />} />
+          <Route path="/DetailedData/:key" element={<DetailedCard/>} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/util/:location" element={<LoactionSelector />} />
           <Route path="*" element={<ErrorPage />} />

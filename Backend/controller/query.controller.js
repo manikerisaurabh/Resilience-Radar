@@ -105,3 +105,19 @@ export const editQuery = async (req, res) => {
         return res.state(500).json({ error: "Internal Server Error" });
     }
 }
+
+export const pendingQueries = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const pendingQueries = await Query.find({ raisedBy: id, status: 'In Progress' });
+
+        if (pendingQueries.length == 0) {
+            return res.status(200).json({ message: "No pending Queris" });
+        }
+
+        res.status(200).json(pendingQueries);
+    } catch (error) {
+        console.log("error in pendingQueries controller");
+        return res.state(500).json({ error: "Internal Server Error" });
+    }
+}

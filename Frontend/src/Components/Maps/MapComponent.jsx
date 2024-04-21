@@ -88,7 +88,7 @@ const MapComponent = ({ loc, setLoc }) => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center p-4">
+    <div className="flex h-screen justify-center items-center max-md:w-[100vw] p-3 md:p-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
