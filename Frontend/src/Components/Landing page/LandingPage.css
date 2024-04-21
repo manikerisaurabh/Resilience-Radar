@@ -1,0 +1,156 @@
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 0 2rem;
+  background-color:white;
+  margin-top: 80px;
+  background-image: url("./backImg.jpeg");
+  background-size: cover; /* This will make sure the image covers the entire div */
+  height: 100%; /* Set the height of the div */
+  width: 100%; /* Set the width of the div */
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #292828;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 4rem;
+  text-align: center;
+  background-color: rgb(240, 188, 120);
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 4rem;
+  
+}
+
+.feature {
+  width: calc(33.333% - 2rem);
+  margin: 1rem;
+  background-color: #fffcfc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  background-color: rgb(170, 239, 249);
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.feature p {
+  font-size: 1.3rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+.cta a {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.cta a:hover {
+  background-color: #3e8e41;
+}
+
+.cta a:active {
+  transform: translateY(2px);
+}
+
+@media (max-width: 768px) {
+  .feature {
+    width: calc(50% - 2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .feature {
+    width: 100%;
+  }
+}
+
+.get-involved {
+  text-align: center;
+  margin-bottom: 30px;
+  background-color: rgb(85, 83, 83);
+  width: 100%;
+  color: #fff;
+}
+
+.get-involved h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #eeee24;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+.get-involved .get-div b{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.get-involved .get-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  width: 80%;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.get-involved .get-div li {
+  margin: 10px 20px;
+  font-size: 24px;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.get-involved .get-div li:hover {
+  color: #333;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
