@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import CardModel from '../Cards/CardModel';
 import th from '/th.jpeg';
+import { useParams } from 'react-router-dom';
 
-const Reports = () => {
-  
+const PendingReports = () => {
     let DB = [
       {
         id: 0,
@@ -56,11 +56,13 @@ const Reports = () => {
     ];
       
   const [reports, setReports] = useState(DB);
+  const { category } = useParams;
+
   useEffect(() => {
     let user = localStorage.getItem("currUser");
     user = JSON.parse(user);
-    // fetch(`http://localhost:8080/api/query/edit/${user._id}`, {
-    //   method: 'GET',
+    // fetch(`http://localhost:8080/api/gov/query/${category}`, {
+    //   method: 'POST',
     //   headers: {
     //     'Content-Type': 'application/json',
     //     // Include other headers as necessary
@@ -98,5 +100,5 @@ const Reports = () => {
     );
   };
   
-  export default Reports;
+  export default PendingReports;
   

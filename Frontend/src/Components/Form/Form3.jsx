@@ -21,7 +21,7 @@ const Form3 = () => {
         backgroundImage:
           "linear-gradient(rgba(200,200,200,0.5), rgba(120,110,220,0.5))",
       }}
-      className={!isLogin ? "py-8" : ""}
+      className={!isLogin ? "py-8 h-screen overflow-auto" : "h-screen overflow-auto"}
     >
       <Container
         component={"main"}
@@ -32,7 +32,7 @@ const Form3 = () => {
           justifyContent: "center",
           alignItems: "center",
         }}
-        className={!isLogin ? "my-[10vh]" : ""}
+        className={!isLogin ? "my-[20vh]" : ""}
         >
         <Paper
           elevation={3}

@@ -9,10 +9,7 @@ const Upload_issue = () => {
   let { key } = useParams();
   console.log(key);
   return (
-    <div className='flex flex-col items-center bg-amber-200 min-h-fit p-10 justify-center'>
-      <WebcamCapture onImageUpload={setImageUrl} />
-      <QueryForm imageUrl={imageUrl}/>
-    </div>
+      <QueryForm imageUrl={imageUrl} />
   );
 };
 

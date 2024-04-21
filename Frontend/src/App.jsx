@@ -60,7 +60,7 @@ function App() {
           <Route path="/query" element={<Upload_issue />} />
           <Route path="/query/edit/:key" element={<Upload_issue />} />
           <Route path="/DetailedData/:key" element={<DetailedCard/>} />
-          <Route path="/reports" element={<Reports />} />
+          <Route path="/pending" element={<Reports />} />
           <Route path="/util/:location" element={<LoactionSelector />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>

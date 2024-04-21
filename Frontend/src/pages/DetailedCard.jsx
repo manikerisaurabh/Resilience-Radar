@@ -14,19 +14,34 @@ const DetailedCard = () => {
   const [error, setError] = useState(false);
   const [formData, setFormData] = useState({
     _id: "1",
+    raisedBy: "S39NKSLND99a",
+    queryId: "jksjddi8",
+    latitude: "16.18823123",
+    longitude: "74.46123123",
     imgUrl: th,
     category: "Education",
     urgency: "Medium",
     status: "Resolved",
     description: "Dummy",
-    dateCreated: "04-01-2004",
+    dateReported: "04-01-2004",
     targetPopulation: "01",
     proposedSolutions: "be Happy!!",
     attachments: [],
     location: [],
   });
-
+  let [userInfo, setUserInfo] = useState(null);
   let { key } = useParams();
+
+  useEffect(() => {
+    try {
+      const storedLocation = localStorage.getItem("userLocation");
+     setUserInfo(storedLocation ? JSON.parse(storedLocation) : null)
+    } catch (error) {
+      console.log(error);
+    }
+
+  }, [])
+
   useEffect(() => {
     // fetch(`http://localhost:8000/api/query/edit/${formData.id}`)
     //   .then((response) => {
@@ -49,6 +64,20 @@ const DetailedCard = () => {
 
   function onClose() {
     window.history.back();
+  }
+  
+  function assignTask() {
+    try {
+      fetch(`http://localhost:8000/api/gov/query/assign`, {
+        method: "POST",
+        body: {
+          queryId: userInfo.queryId, 
+          empId: userInfo.empId 
+        }
+      })
+    } catch (error) {
+      
+    }
   }
 
   if (loading) {
@@ -79,20 +108,20 @@ const DetailedCard = () => {
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
       <div className="bg-white h-screen w-[100vw] rounded-lg max-w-4xl overflow-auto">
         {/* Modal content */}
-          <div className="absolute right-0">
-            <button
-              onClick={onClose}
-              className=" btn w-[40px] btn-danger hover:text-white"
-            >
-              X
-            </button>
-            {/* <button onClick={onClose} className="text-white btn w-[70px] btn-danger ">Close</button> */}
-          </div> 
-          <img
-            src={formData.imgUrl}
-            alt="Report"
-            className="w-full h-64 object-cover"
-          />
+        <div className="absolute right-0">
+          <button
+            onClick={onClose}
+            className=" btn w-[40px] btn-danger hover:text-white"
+          >
+            X
+          </button>
+          {/* <button onClick={onClose} className="text-white btn w-[70px] btn-danger ">Close</button> */}
+        </div>
+        <img
+          src={formData.imgUrl}
+          alt="Report"
+          className="w-full h-64 object-cover"
+        />
         <div className="px-8 py-1">
           <div className="p-4">
             <h2 className="text-2xl font-bold mb-2">
@@ -138,14 +167,21 @@ const DetailedCard = () => {
               </div>
             )}
             <div className=" flex gap-2 items-center justify-center">
-              <Link
+              {!userInfo.isGovInfo && <Link
                 to={`/query/edit/${key}`}
                 className="text-white btn w-[70px] btn-primary col-3"
               >
                 <button onClick={onClose} className="">
                   Edit
                 </button>
-              </Link>
+              </Link>}
+              {userInfo.isGovInfo && <Link
+                className="text-white btn w-[70px] btn-primary col-3"
+              >
+                <button onClick={assignTask} className="">
+                  Assign
+                </button>
+              </Link>}
               <button
                 onClick={onClose}
                 className="text-white btn w-[70px] btn-danger col-3"

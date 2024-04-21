@@ -95,20 +95,26 @@ const MapComponent = ({ loc, setLoc }) => {
         transition={{ duration: 1 }}
         className="bg-white rounded-lg shadow-lg overflow-hidden"
       >
-        <div className="map h-[50vh] md:h-[68vh] w-full" ref={mapRef}></div>
+        <div className="map h-[50vh] md:h-[68vh] w-[100vw]" ref={mapRef}></div>
         <div className="p-4">
-          <div className="flex justify-between items-center mb-4">
-            <label className="text-gray-700">Marked Location: {TempLoc.join(", ")}</label>
-            <label className="text-gray-700">Confirmed Location: {loc.join(", ")}</label>
+          <div className="flex flex-col justify-between items-center mb-4">
+            <label className="text-gray-700">
+              Marked Location: {TempLoc.join(", ")}
+            </label>
+            <label className="text-gray-700">
+              Confirmed Location: {loc.join(", ")}
+            </label>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full bg-blue-600 text-white p-2 rounded"
-            onClick={handleConfirm}
-          >
-            Confirm Location
-          </motion.button>
+          <div className="flex justify-center">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="text-nowrap bg-blue-600 text-white py-2 px-4 rounded"
+              onClick={handleConfirm}
+            >
+              Confirm Location
+            </motion.button>
+          </div>
         </div>
       </motion.div>
     </div>

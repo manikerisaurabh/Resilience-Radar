@@ -17,6 +17,7 @@ import { Link, useParams } from "react-router-dom";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { HiOutlineLockClosed, HiOutlineMail } from "react-icons/hi";
+import GovernmentSignUp from "./GovernmentSignUp";
 
 const SL_Form = ({ isLogin, toggleLogin }) => {
   const email = useInputValidation("", emailValidator);
@@ -26,17 +27,49 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
   const [gender, setGender] = useState("");
   const { mode } = useParams();
   const [open, setOpen] = useState(false);
+  const [choose, setChoice] = useState(true);
+  const [isEmp, setIsEmp] = useState(false);
   const [location, setLocation] = useState(null);
+  const [formData, setFormData] = useState({
+    employeeId: "",
+    name: username.value,
+    department: "",
+    email: email.value,
+    phoneNumber: "",
+    password: password.value,
+    confirmPassword: "",
+    gender: gender,
+    avatar: avatar.file,
+  });
+  const [snackbarQueue, setSnackbarQueue] = useState([]);
 
   React.useEffect(() => {
     try {
       const storedLocation = localStorage.getItem("userLocation");
       setLocation(storedLocation ? JSON.parse(storedLocation) : null);
+      // Retrieve form data from local storage
+      const storedFormData = localStorage.getItem("formFields");
+      if (storedFormData) {
+        setFormData(JSON.parse(storedFormData));
+      }
     } catch (error) {
       console.error("Error retrieving location from local storage:", error);
       // Handle errors appropriately, e.g., display a fallback message
     }
   }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const addSnackbar = (message) => {
+    setSnackbarQueue((oldQueue) => [...oldQueue, message]);
+  };
+
+  const removeSnackbar = () => {
+    setSnackbarQueue((oldQueue) => oldQueue.slice(1));
+  };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -49,30 +82,48 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    localStorage.removeItem("userLocation");
+    // Check if password and confirm password are the same
+    if (password.value !== formData.confirmPassword) {
+      // Show Snackbar with error message
+      setOpen(true);
+      addSnackbar("Passwords do not match.");
+      setTimeout(() => {
+        setOpen(false);
+      }, 50000)
+      return;
+    }
 
-    console.log(`http://localhost:8080/${mode}`);
+    localStorage.removeItem("userLocation");
 
     // Get user's current location
     navigator.geolocation.getCurrentPosition(
       (position) => {
         // Create the user object
-        const user = !isLogin ? {
-          userName: username.value,
-          latitude: location[1],
-          longitude: location[0],
-          email: email.value,
-          password: password.value,
-          gender: gender,
-        } : {
-          userName: username.value,
-          password: password.value,
-        }
+        const user = !isLogin
+          ? {
+              userName: username.value,
+              latitude: location[1],
+              longitude: location[0],
+              email: email.value,
+              password: password.value,
+              gender: gender,
+            }
+          : {
+              userName: username.value,
+              password: password.value,
+            };
 
+        formData.email = email.value;
+        formData.gender = gender;
+        formData.password = password.value;
         console.log(user);
+        console.log(formData);
 
         // Sending POST request
-        fetch(`http://localhost:8080/api/auth/${mode}`, {
+        let ul = isEmp
+          ? `http://localhost:8080/api/gov/auth/${mode}`
+          : `http://localhost:8080/api/auth/${mode}`;
+        fetch(ul, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -83,7 +134,9 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           .then((data) => {
             console.log(data);
             localStorage.setItem("currUser", JSON.stringify(data));
-            let user = localStorage.getItem("currUser");
+            setTimeout(() => {
+              localStorage.removeItem("currUser");
+            }, 600000); // remove after 10 mins
             //console.log(JSON.parse(user));
           })
           .catch((error) => {
@@ -93,111 +146,143 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
       (error) => {
         // Handle error when user denies location permission
         setOpen(true);
+
+        // Add a snackbar
+        addSnackbar("Location is mandatory. Please allow location access.");
       }
     );
   };
 
   return (
     <>
-      <Typography
-        variant="h5"
-        letterSpacing={isLogin ? 2 : 1}
-        className="text-center "
-      >
-        {isLogin ? "Login" : "Sign in"}
-      </Typography>
-      <form
-        style={{
-          width: "100%",
-          marginTop: "1rem",
-        }}
-        onSubmit={handleSubmit}
-      >
-        {!isLogin && (
-          <Stack position={"relative"} width={"10rem"} margin={"auto"}>
-            <Avatar
-              sx={{
-                width: "10rem",
-                height: "10rem",
-                objectFit: "contain",
-              }}
-              src={avatar.preview}
-            />
-            {/* {avatar.file} */}
-            <IconButton
-              sx={{
-                position: "absolute",
-                bottom: "0",
-                right: "0",
-                color: "black",
-                bgColor: "rgba(0,0,0,0.8)",
-                ":hover": {
-                  bgColor: "rgba(0,0,0,0.5)",
-                },
-              }}
-              component="label"
-            >
-              <>
-                <CameraAltIcon />
-                <input
-                  type="file"
-                  style={{
-                    border: "0",
-                    clip: "rect(0 0 0 0)",
-                    height: "1",
-                    margin: "-1",
-                    overflow: "hidden",
-                    padding: "0",
-                    position: "absolute",
-                    whiteSpace: "nowrap",
-                    width: "1",
-                  }}
-                  onChange={avatar.changeHandler}
-                />
-              </>
-            </IconButton>
-          </Stack>
-        )}
-
-        {avatar.error && (
+      {choose ? (
+        <>
           <Typography
-            m={"1rem auto"}
-            width={"fit-content"}
-            display={"block"}
-            color={"error"}
-            variant="caption"
+            variant="h5"
+            letterSpacing={isLogin ? 2 : 1}
+            className="text-center "
           >
-            {avatar.error}
+            {isLogin ? "Login" : "Sign in"}
           </Typography>
-        )}
-
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <MuiAlert
-            onClose={handleClose}
-            severity="error"
-            sx={{ width: "100%" }}
+          <form
+            style={{
+              width: "100%",
+              marginTop: "1rem",
+            }}
+            onSubmit={handleSubmit}
           >
-            Location is mandatory. Please allow location access.
-          </MuiAlert>
-        </Snackbar>
+            {!isLogin && (
+              <Stack position={"relative"} width={"10rem"} margin={"auto"}>
+                <Avatar
+                  sx={{
+                    width: "10rem",
+                    height: "10rem",
+                    objectFit: "contain",
+                  }}
+                  src={avatar.preview}
+                />
+                {/* {avatar.file} */}
+                <IconButton
+                  sx={{
+                    position: "absolute",
+                    bottom: "0",
+                    right: "0",
+                    color: "black",
+                    bgColor: "rgba(0,0,0,0.8)",
+                    ":hover": {
+                      bgColor: "rgba(0,0,0,0.5)",
+                    },
+                  }}
+                  component="label"
+                >
+                  <>
+                    <CameraAltIcon />
+                    <input
+                      type="file"
+                      style={{
+                        border: "0",
+                        clip: "rect(0 0 0 0)",
+                        height: "1",
+                        margin: "-1",
+                        overflow: "hidden",
+                        padding: "0",
+                        position: "absolute",
+                        whiteSpace: "nowrap",
+                        width: "1",
+                      }}
+                      onChange={avatar.changeHandler}
+                    />
+                  </>
+                </IconButton>
+              </Stack>
+            )}
+            {avatar.error && (
+              <Typography
+                m={"1rem auto"}
+                width={"fit-content"}
+                display={"block"}
+                color={"error"}
+                variant="caption"
+              >
+                {avatar.error}
+              </Typography>
+            )}
+            {isEmp && (
+              <div className="flex flex-col gap-4 mb-2 mt-4">
+                <TextField
+                  required
+                  fullWidth
+                  label="Employee ID"
+                  name="employeeId"
+                  value={formData.employeeId}
+                  onChange={handleInputChange}
+                />
 
+                <TextField
+                  required
+                  fullWidth
+                  label="Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                />
 
-        <TextField
-          required
-          fullWidth
-          label="Username"
-          margin="normal"
-          variant="outlined"
-          value={username.value}
-          onChange={username.changeHandler}
-        />
-        {username.error && (
-          <Typography color={"error"} variant="caption">
-            {username.error}
-          </Typography>
-        )}
+                <TextField
+                  required
+                  fullWidth
+                  label="Department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                />
 
-        {/* <div className="flex items-center">
+                <TextField
+                  required
+                  fullWidth
+                  label="Phone Number"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                />
+              </div>
+            )}
+            {!isEmp && (
+              <TextField
+                required
+                fullWidth
+                label="Username"
+                margin="normal"
+                variant="outlined"
+                value={username.value}
+                onChange={username.changeHandler}
+              />
+            )}
+            {username.error && (
+              <Typography color={"error"} variant="caption">
+                {username.error}
+              </Typography>
+            )}
+            {/* <div className="flex items-center">
             <HiOutlineMail className="text-gray-500 mr-2" />
             <TextField
               label="Email"
@@ -222,129 +307,181 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
               onChange={password.changeHandler}
             />
           </div> */}
-
-        {!isLogin && <TextField
-          required
-          fullWidth
-          label="Email"
-          margin="normal"
-          variant="outlined"
-          value={email.value}
-          onChange={email.changeHandler}
-        />}
-        {email.error && (
-          <Typography color={"error"} variant="caption">
-            {email.error}
-          </Typography>
-        )}
-
-        <TextField
-          required
-          fullWidth
-          label="Password"
-          type="password"
-          margin="normal"
-          variant="outlined"
-          value={password.value}
-          onChange={password.changeHandler}
-        />
-        {password.error && (
-          <Typography color={"error"} variant="caption">
-            {password.error}
-          </Typography>
-        )}
-
-        {!isLogin && (
-          <>
-            <label>
-              {" "}
-              {location ? (
-                <Stack direction="row" spacing={1}>
-                  <Typography variant="caption" color="text.secondary">
-                    Latitude:
-                  </Typography>
-                  <Typography variant="body2">{location[0]}</Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Longitude:
-                  </Typography>
-                  <Typography variant="body2">{location[1]}</Typography>
-                </Stack>
-              ) : (
-                <Typography variant="caption" color="text.secondary">
-                  Choose Your Location
-                </Typography>
-              )}
-            </label>
-
-            <div className="border hover:border-blue-500 rounded w-fit">
-              <Link
-                to="/util/Location"
-                className="btn btn-close-white border-0"
-              >
-                {location ? "Update Current Location" : "Add Location"}
-              </Link>
-            </div>
-          </>
-        )}
-
-        {!isLogin && (
-          <div>
-            <FormControlLabel
-              control={
-                <Radio
-                  checked={gender === "male"}
-                  onChange={() => setGender("male")}
-                />
-              }
-              label="Male"
+            {!isLogin && (
+              <TextField
+                required
+                fullWidth
+                label="Email"
+                margin="normal"
+                variant="outlined"
+                value={email.value}
+                onChange={email.changeHandler}
+              />
+            )}
+            {email.error && (
+              <Typography color={"error"} variant="caption">
+                {email.error}
+              </Typography>
+            )}
+            <TextField
+              required
+              fullWidth
+              label="Password"
+              type="password"
+              margin="normal"
+              variant="outlined"
+              value={password.value}
+              onChange={password.changeHandler}
             />
-            <FormControlLabel
-              control={
-                <Radio
-                  checked={gender === "female"}
-                  onChange={() => setGender("female")}
+            {password.error && (
+              <Typography color={"error"} variant="caption">
+                {password.error}
+              </Typography>
+            )}
+            {!isLogin && <TextField
+              required
+              fullWidth
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              className="my-3"
+            />}
+            {!isLogin && (
+              <>
+                <label className="block">
+                  {" "}
+                  {location ? (
+                    <Stack direction="row" spacing={1}>
+                      <Typography variant="caption" color="text.secondary">
+                        Latitude:
+                      </Typography>
+                      <Typography variant="body2">{location[0]}</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Longitude:
+                      </Typography>
+                      <Typography variant="body2">{location[1]}</Typography>
+                    </Stack>
+                  ) : (
+                    <Typography variant="caption" color="text.secondary">
+                      Choose Your Location
+                    </Typography>
+                  )}
+                </label>
+
+                <div className="border hover:border-blue-500 rounded w-fit">
+                  <Link
+                    to="/util/Location"
+                    className="btn btn-close-white border-0"
+                  >
+                    {location ? "Update Current Location" : "Add Location"}
+                  </Link>
+                </div>
+              </>
+            )}
+            {!isLogin && (
+              <div>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      checked={gender === "male"}
+                      onChange={() => setGender("male")}
+                    />
+                  }
+                  label="Male"
                 />
-              }
-              label="Female"
-            />
-            <FormControlLabel
-              control={
-                <Radio
-                  checked={gender === "other"}
-                  onChange={() => setGender("other")}
+                <FormControlLabel
+                  control={
+                    <Radio
+                      checked={gender === "female"}
+                      onChange={() => setGender("female")}
+                    />
+                  }
+                  label="Female"
                 />
-              }
-              label="Other"
-            />
-          </div>
-        )}
+                <FormControlLabel
+                  control={
+                    <Radio
+                      checked={gender === "other"}
+                      onChange={() => setGender("other")}
+                    />
+                  }
+                  label="Other"
+                />
+              </div>
+            )}
+            <Button
+              sx={{
+                marginTop: "1rem",
+                marginBottom: "0.5rem",
+              }}
+              fullWidth
+              variant="contained"
+              color="primary"
+              type="submit"
+            >
+              {isLogin ? "Log in" : "sign in"}
+            </Button>
+            <Typography textAlign={"center"}>OR</Typography>
+            <Button
+              sx={{
+                marginTop: "0.5rem",
+              }}
+              fullWidth
+              variant="outlined"
+              onClick={toggleLogin}
+            >
+              {!isLogin ? "Log in instead" : "sign up instead"}
+            </Button>
+            {/* // In your render method */}
+            {snackbarQueue.length > 0 && (
+              <Snackbar open autoHideDuration={6000} onClose={removeSnackbar}>
+                <MuiAlert
+                  onClose={removeSnackbar}
+                  severity="error"
+                  sx={{ width: "100%" }}
+                >
+                  {snackbarQueue[0]}
+                </MuiAlert>
+              </Snackbar>
+            )}
+          </form>
+        </>
+      ) : (
+        <>
+          <Button
+            sx={{
+              marginTop: "1rem",
+              marginBottom: "0.5rem",
+            }}
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={(e) => {
+              setChoice((currCHoice) => !currCHoice);
+            }}
+          >
+            Public
+          </Button>
 
-        <Button
-          sx={{
-            marginTop: "1rem",
-            marginBottom: "0.5rem",
-          }}
-          fullWidth
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          {isLogin ? "Log in" : "sign in"}
-        </Button>
+          <Typography textAlign={"center"}>OR</Typography>
 
-        <Typography textAlign={"center"}>OR</Typography>
-
-        <Button
-          sx={{
-            marginTop: "0.5rem",
-          }}
-          fullWidth
-          variant="outlined"
-          onClick={toggleLogin}
-        >
-          {!isLogin ? "Log in instead" : "sign up instead"}
-        </Button>
-      </form>
+          <Button
+            sx={{
+              marginTop: "0.5rem",
+            }}
+            fullWidth
+            variant="contained"
+            color="success"
+            onClick={(e) => {
+              setChoice((currCHoice) => !currCHoice);
+            }}
+          >
+            Government Authority
+          </Button>
+        </>
+      )}
     </>
   );
 };

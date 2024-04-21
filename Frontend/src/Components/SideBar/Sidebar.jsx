@@ -22,8 +22,8 @@ const Sidebar = ({ visible, setSidebar }) => {
             </Link>
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-            <Link to="/reports" className="text-decoration-none text-white" onClick={setSidebar}>
-              Reports
+            <Link to="/pending" className="text-decoration-none text-white" onClick={setSidebar}>
+              Pending Report
             </Link>
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
@@ -33,7 +33,7 @@ const Sidebar = ({ visible, setSidebar }) => {
           </li>
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
             <a href="#pending" className="text-decoration-none text-white" onClick={setSidebar}>
-              Pending
+              Contact Us
             </a>
           </li>
         </ul>
