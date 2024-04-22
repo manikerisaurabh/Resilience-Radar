@@ -25,6 +25,7 @@ const Cards2 = () => {
       })
       .then((data) => {
         setCardsData(data);
+        console.log(data);
       })
       .catch((error) => {
         console.error(
@@ -33,13 +34,13 @@ const Cards2 = () => {
         );
       });
   }, []);
- 
+
   return (
     <div>
       <div className="row row-cols-1 row-cols row-cols-sm-2 row-cols-md-3  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2">
         {cardsData.map((card) => {
           return (
-            <CardModel key={card.id} {...card} _id={card.id} />
+            <CardModel key={card._id} {...card} _id={card._id} />
           )
         })}
       </div>

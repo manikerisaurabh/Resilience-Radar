@@ -3,7 +3,7 @@ import { Container, Paper } from "@mui/material";
 import SL_Form from "./SL_Form";
 import { useParams } from "react-router-dom";
 
-const Form3 = () => {
+const Form3 = ({ setSwitch, setLogged }) => {
   const [isLogin, setIsLogin] = useState(true);
   const { mode } = useParams();
 
@@ -33,7 +33,7 @@ const Form3 = () => {
           alignItems: "center",
         }}
         className={!isLogin ? "my-[20vh]" : ""}
-        >
+      >
         <Paper
           elevation={3}
           sx={{
@@ -43,9 +43,9 @@ const Form3 = () => {
             alignItems: "center",
             marginTop: "1rem",
           }}
-          // className={!isLogin ? "my-[10vh]" : ""}
+        // className={!isLogin ? "my-[10vh]" : ""}
         >
-          {<SL_Form isLogin={isLogin} toggleLogin={toggleLogin} />}
+          {<SL_Form isLogin={isLogin} toggleLogin={toggleLogin} setSwitch={setSwitch} setLogged={setLogged} />}
         </Paper>
       </Container>
     </div>

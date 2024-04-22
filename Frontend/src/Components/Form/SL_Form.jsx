@@ -19,7 +19,7 @@ import MuiAlert from "@mui/material/Alert";
 import { HiOutlineLockClosed, HiOutlineMail } from "react-icons/hi";
 import GovernmentSignUp from "./GovernmentSignUp";
 
-const SL_Form = ({ isLogin, toggleLogin }) => {
+const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
   const email = useInputValidation("", emailValidator);
   const username = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
@@ -40,6 +40,8 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
     confirmPassword: "",
     gender: gender,
     avatar: avatar.file,
+    latitude: "",
+    longitude: "",
   });
   const [snackbarQueue, setSnackbarQueue] = useState([]);
 
@@ -81,6 +83,7 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.target.disabled = true;
 
     // Check if password and confirm password are the same
     if (password.value !== formData.confirmPassword) {
@@ -94,6 +97,7 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
     }
 
     localStorage.removeItem("userLocation");
+    localStorage.removeItem("currUser");
 
     // Get user's current location
     navigator.geolocation.getCurrentPosition(
@@ -101,23 +105,27 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
         // Create the user object
         const user = !isLogin
           ? {
-              userName: username.value,
-              latitude: location[1],
-              longitude: location[0],
-              email: email.value,
-              password: password.value,
-              gender: gender,
-            }
+            userName: username.value,
+            latitude: location[1],
+            longitude: location[0],
+            email: email.value,
+            password: password.value,
+            gender: gender,
+          }
           : {
-              userName: username.value,
-              password: password.value,
-            };
+            username: username.value,
+            password: password.value,
+          };
 
         formData.email = email.value;
         formData.gender = gender;
         formData.password = password.value;
+        formData.userName = username.value;
+        formData.latitude = location[0];
+        formData.longitude = location[1];
         console.log(user);
         console.log(formData);
+        console.log(mode);
 
         // Sending POST request
         let ul = isEmp
@@ -128,16 +136,22 @@ const SL_Form = ({ isLogin, toggleLogin }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(user),
+          body: JSON.stringify(formData),
         })
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
+            if (data.error) {
+              return addSnackbar("User Already exists");
+            }
             localStorage.setItem("currUser", JSON.stringify(data));
+            window.history.back();
             setTimeout(() => {
               localStorage.removeItem("currUser");
             }, 600000); // remove after 10 mins
             //console.log(JSON.parse(user));
+            setSwitch(prev => !prev)
+            setLogged(true);
           })
           .catch((error) => {
             console.error("Error:", error);

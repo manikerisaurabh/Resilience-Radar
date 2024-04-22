@@ -11,6 +11,7 @@ import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi"; // MUI icon
 import { Link, useParams } from "react-router-dom";
 import MapComponent from "../Maps/MapComponent";
 import WebcamCapture from "../Media/WebcamCapture ";
+import th from "/th.jpeg";
 
 const QueryForm = ({
   category = "",
@@ -26,32 +27,54 @@ const QueryForm = ({
   let [loc, setLoc] = useState([74.3501, 16.2229]);
   let [cam, setCam] = useState(false);
   let [userInfo, setUserInfo] = useState(null);
-  const [formData, setFormData] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
+  const [formData, setFormData] = useState({
+    imgUrl: th,
+    category: "",
+    urgency: "",
+    status: "",
+    description: "",
+    dateCreated: "",
+    targetPopulation: "",
+    proposedSolutions: "",
+    attachments: [],
+    location: [1, 2],
+  });
+  const [imageUrl, setImageUrl] = useState(th);
   let { key } = useParams();
 
   useEffect(() => {
     try {
-      const storedLocation = localStorage.getItem("userLocation");
+      const storedLocation = localStorage.getItem("currUser");
       let userInfo = storedLocation ? JSON.parse(storedLocation) : null;
+      console.log(userInfo);
 
       setFormData(
         userInfo
           ? {
-              ...userInfo,
-            }
+            ...userInfo,
+            imgUrl: imageUrl,
+            category: category,
+            urgency: urgency,
+            status: status,
+            description: description,
+            dateCreated: dateCreated,
+            targetPopulation: targetPopulation,
+            proposedSolutions: proposedSolutions,
+            attachments: attachments,
+            location: loc,
+          }
           : {
-              imgUrl: imageUrl,
-              category: category,
-              urgency: urgency,
-              status: status,
-              description: description,
-              dateCreated: dateCreated,
-              targetPopulation: targetPopulation,
-              proposedSolutions: proposedSolutions,
-              attachments: attachments,
-              location: loc,
-            }
+            imgUrl: imageUrl,
+            category: category,
+            urgency: urgency,
+            status: status,
+            description: description,
+            dateCreated: dateCreated,
+            targetPopulation: targetPopulation,
+            proposedSolutions: proposedSolutions,
+            attachments: attachments,
+            location: loc,
+          }
       );
     } catch (error) {
       console.log(error);
@@ -97,42 +120,42 @@ const QueryForm = ({
     console.log(formData, data);
 
     let ul = key
-      ? `http://localhost:8080/api/query/edit/${formData._id}`
-      : `http://localhost:8080/api/query/add/${formData._id}`;
+      ? `http://localhost:8080/api/query/edit/${userInfo._id}`
+      : `http://localhost:8080/api/query/add/${userInfo._id}`;
     let method = key ? "PUT" : "POST";
 
-    // try {
-    //   const response = await fetch(key, {
-    //     method: method,
-    //     body: formData,
-    //   });
+    try {
+      const response = await fetch(ul, {
+        method: method,
+        body: userInfo,
+      });
 
-    //   if (response.ok) {
-    //     console.log("Query submitted successfully!");
-    //     // Clear the form after successful submission (optional)
-    //     setFormData({
-    //       email: "",
-    //       password: "",
-    //       imgUrl: "",
-    //       category: "",
-    //       urgency: "",
-    //       status: "",
-    //       description: "",
-    //       dateCreated: "",
-    //       estimatedImpact: "",
-    //       targetPopulation: "",
-    //       costEstimation: "",
-    //       proposedSolutions: "",
-    //       attachments: [],
-    //     });
-    //   } else {
-    //     console.error("Error submitting query:", response.statusText);
-    //     // Handle submission errors (optional)
-    //   }
-    // } catch (error) {
-    //   console.error("Error submitting query:", error);
-    //   // Handle network or other errors (optional)
-    // }
+      if (response.ok) {
+        console.log("Query submitted successfully!");
+        // Clear the form after successful submission (optional)
+        setFormData({
+          email: "",
+          password: "",
+          imgUrl: "",
+          category: "",
+          urgency: "",
+          status: "",
+          description: "",
+          dateCreated: "",
+          estimatedImpact: "",
+          targetPopulation: "",
+          costEstimation: "",
+          proposedSolutions: "",
+          attachments: [],
+        });
+      } else {
+        console.error("Error submitting query:", response.statusText);
+        // Handle submission errors (optional)
+      }
+    } catch (error) {
+      console.error("Error submitting query:", error);
+      // Handle network or other errors (optional)
+    }
   };
 
   return (
@@ -164,7 +187,7 @@ const QueryForm = ({
                 variant="contained"
                 color="primary"
                 type="button"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 upload Image
               </Button>

@@ -35,7 +35,8 @@ const DetailedCard = () => {
   useEffect(() => {
     try {
       const storedLocation = localStorage.getItem("userLocation");
-     setUserInfo(storedLocation ? JSON.parse(storedLocation) : null)
+      console.log(storedLocation);
+      setUserInfo(storedLocation ? JSON.parse(storedLocation) : null)
     } catch (error) {
       console.log(error);
     }
@@ -43,40 +44,40 @@ const DetailedCard = () => {
   }, [])
 
   useEffect(() => {
-    // fetch(`http://localhost:8000/api/query/edit/${formData.id}`)
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setFormData(data);
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Fetch error:', error);
-    //     setLoading(false);
-    //     setError(true);
-    //   });
+    fetch(`http://localhost:8000/api/query/edit/${formData.id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setFormData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        setLoading(false);
+        setError(true);
+      });
     setLoading(false);
   }, []);
 
   function onClose() {
     window.history.back();
   }
-  
+
   function assignTask() {
     try {
       fetch(`http://localhost:8000/api/gov/query/assign`, {
         method: "POST",
         body: {
-          queryId: userInfo.queryId, 
-          empId: userInfo.empId 
+          queryId: userInfo.queryId,
+          empId: userInfo.empId
         }
       })
     } catch (error) {
-      
+
     }
   }
 
@@ -120,7 +121,7 @@ const DetailedCard = () => {
         <img
           src={formData.imgUrl}
           alt="Report"
-          className="w-full h-64 object-cover"
+          className="w-full h-[50%] object-cover"
         />
         <div className="px-8 py-1">
           <div className="p-4">
@@ -167,7 +168,7 @@ const DetailedCard = () => {
               </div>
             )}
             <div className=" flex gap-2 items-center justify-center">
-              {!userInfo.isGovInfo && <Link
+              {/* {!userInfo.isGovEmp && <Link
                 to={`/query/edit/${key}`}
                 className="text-white btn w-[70px] btn-primary col-3"
               >
@@ -175,13 +176,13 @@ const DetailedCard = () => {
                   Edit
                 </button>
               </Link>}
-              {userInfo.isGovInfo && <Link
+              {userInfo.isGovEmp && <Link
                 className="text-white btn w-[70px] btn-primary col-3"
               >
                 <button onClick={assignTask} className="">
                   Assign
                 </button>
-              </Link>}
+              </Link>} */}
               <button
                 onClick={onClose}
                 className="text-white btn w-[70px] btn-danger col-3"
