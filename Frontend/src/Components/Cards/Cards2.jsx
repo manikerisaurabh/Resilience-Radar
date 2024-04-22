@@ -8,8 +8,8 @@ const Cards2 = () => {
   const [cardsData, setCardsData] = useState(cardDB);
 
   useEffect(() => {
-    // Replace 'your-api-route' with the actual route to your API
-    fetch("http://localhost:8080/api/query", {
+    try {
+      fetch("http://localhost:8080/api/query", {
       method: "GET", // or 'POST'
       headers: {
         "Content-Type": "application/json",
@@ -33,11 +33,14 @@ const Cards2 = () => {
           error
         );
       });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
-    <div>
-      <div className="row row-cols-1 row-cols row-cols-sm-2 row-cols-md-3  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2">
+    <div className="mt-[80px]">
+      <div className="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-xl-5  gap-4 items-center justify-center my-4 p-2 ">
         {cardsData.map((card) => {
           return (
             <CardModel key={card._id} {...card} _id={card._id} />

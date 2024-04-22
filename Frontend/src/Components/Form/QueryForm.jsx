@@ -28,6 +28,7 @@ const QueryForm = ({
   let [cam, setCam] = useState(false);
   let [userInfo, setUserInfo] = useState(null);
   const [formData, setFormData] = useState({
+    _id: "1",
     imgUrl: th,
     category: "",
     urgency: "",
@@ -44,10 +45,10 @@ const QueryForm = ({
 
   useEffect(() => {
     try {
-      const storedLocation = localStorage.getItem("currUser");
-      let userInfo = storedLocation ? JSON.parse(storedLocation) : null;
-      console.log(userInfo);
-
+      const userData = localStorage.getItem("currUser");
+      const storedLoaction = localStorage.getItem("userLocation");
+      setUserInfo(userData ? JSON.parse(userData) : null);
+      setLoc(storedLoaction ? JSON.parse(storedLoaction) : null);
       setFormData(
         userInfo
           ? {
@@ -64,6 +65,7 @@ const QueryForm = ({
             location: loc,
           }
           : {
+            _id: "1",
             imgUrl: imageUrl,
             category: category,
             urgency: urgency,
@@ -76,6 +78,8 @@ const QueryForm = ({
             location: loc,
           }
       );
+      console.log(userInfo);
+      console.log(formData);
     } catch (error) {
       console.log(error);
     }
@@ -89,7 +93,7 @@ const QueryForm = ({
 
   useEffect(() => {
     let storedLocation = localStorage.getItem("userLocation");
-    setUserInfo(storedLocation ? JSON.parse(storedLocation) : null);
+    setLoc(storedLocation ? JSON.parse(storedLocation) : null);
   }, []);
 
   const handleChange = (event) => {
@@ -103,37 +107,24 @@ const QueryForm = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const data = new FormData();
-    for (const key in formData) {
-      if (key === "attachments") {
-        for (const file of formData.attachments) {
-          data.append("attachments", file);
-        }
-      } else {
-        data.append(key, formData[key]);
-      }
-    }
-
-    data.append("imageUrl", imageUrl);
-    data.append("location", loc);
-
-    console.log(formData, data);
+    console.log(formData, userInfo);
 
     let ul = key
-      ? `http://localhost:8080/api/query/edit/${userInfo._id}`
-      : `http://localhost:8080/api/query/add/${userInfo._id}`;
+      ? `http://localhost:8080/api/query/edit/${formData._id}`
+      : `http://localhost:8080/api/query/add/${formData._id}`;
     let method = key ? "PUT" : "POST";
 
     try {
       const response = await fetch(ul, {
         method: method,
-        body: userInfo,
+        body: formData,
       });
 
       if (response.ok) {
         console.log("Query submitted successfully!");
         // Clear the form after successful submission (optional)
         setFormData({
+          _id: "",
           email: "",
           password: "",
           imgUrl: "",
