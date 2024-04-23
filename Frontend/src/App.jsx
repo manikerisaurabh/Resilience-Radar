@@ -95,7 +95,7 @@ function App() {
                   }
                   setDisplayQueryType={setDisplayQueryType}
                 />
-                <Sidebar isEmp={false} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
+                <Sidebar isEmp={isGovEmp} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
                 <Outlet />
                 <Footer />
               </>
@@ -115,7 +115,7 @@ function App() {
                   {logged ? (
                     <div className="mt-[80px] mb-[100px]">
                       {displayQueryType.totalQueries && <Cards2 ul={(!user.isGovEmp ? `http://localhost:8080/api/query/${userid}/total` : "http://localhost:8080/api/query")} />}
-                      {displayQueryType.pendingQueries && <Cards2 ul={(!user.isGovEmp ? `http://localhost:8080/api/query/pending/${userid}` : `http://localhost:8080/api/gov/query/${userid}/pending`)} />}
+                      {displayQueryType.pendingQueries && <Cards2 ul={(isGovEmp ? `http://localhost:8080/api/query/pending/${userid}` : `http://localhost:8080/api/gov/query/${userid}/pending`)} />}
                       {displayQueryType.departmentQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${user.department}`)} />}
                       {displayQueryType.assignedQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${userid}/inCharge`)} canCommit={true} />}
                       {displayQueryType.toApproveQueries && <Cards2 ul={(`http://localhost:8080/api/query/${userid}/approvation`)} />}

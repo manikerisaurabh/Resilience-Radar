@@ -173,7 +173,7 @@ export const pendingToApprove = async (req, res) => {
         let { id } = req.params;
         let employee = await GovernmentEmployee.findById(id).populate("queryIncharge");
         if (!employee) {
-            return res.status(400).json({ error: "Invalid User" });
+            return res.status(400).json({ error: "Invalid Employee" });
         }
         if (employee.queryIncharge.length == 0) {
             return res.status(200).json({ message: "No Queirs to approve" });

@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Sidebar = ({ isEmp, visible, setSidebar, setDisplayQueryType }) => {
-  console.log("sidebar");
+const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
+  let user = localStorage.getItem("currUser");
+  const [isEmp, setIsEmp] = useState(false)
+  user = JSON.parse(user);
+  console.log(user);
+  useEffect(() => {
+    if (user && user.isGovEmp) {
+      setIsEmp(true);
+    } else {
+      setIsEmp(false);
+    }
+  }, [user]);
 
   return (
     <>
       <div
-        className={`h-full fixed top-[64px] z-20 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${
-          visible ? "translate-x-0" : "-translate-x-full"
-        } transition duration-400 ease-in`}
+        className={`h-full fixed top-[64px] z-20 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${visible ? "translate-x-0" : "-translate-x-full"
+          } transition duration-400 ease-in`}
       >
         <div className="text-right p-2 font-semibold">
           <button

@@ -15,6 +15,7 @@ const Cards2 = ({ ul, canCommit }) => {
     setOpen(false);
   };
 
+  console.log("this is url : " + ul)
   useEffect(() => {
     try {
       fetch(ul, {
@@ -32,7 +33,11 @@ const Cards2 = ({ ul, canCommit }) => {
         })
         .then((data) => {
           // Check if data.message exists and show error if true
-          if (data.message) {
+          console.log(data)
+          if (data.error) {
+            setErrorMessage(data.error);
+            setOpen(true);
+          } else if (data.message) {
             setErrorMessage(data.message);
             setOpen(true);
           } else {
