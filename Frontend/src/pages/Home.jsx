@@ -5,9 +5,8 @@ const Home = () => {
 
   return (
     <>
-      {console.log("App")}
       <Cards2 />
-      
+
     </>
   )
 }
