@@ -12,6 +12,7 @@ const governmentEmployeeSchema = new Schema({
     },
     department: {
         type: String,
+        enum: ["Infrastructure", "Education", "Healthcare", "Environment", "Social Welfare"],
         required: true
     },
     email: {
