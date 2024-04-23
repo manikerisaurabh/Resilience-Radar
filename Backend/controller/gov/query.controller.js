@@ -64,7 +64,7 @@ export const takeChargeOnTask = async (req, res) => {
 };
 
 
-export const commitOfResolvation = async (req, res) => {
+export const commitOfResolvation = async (req, res) => { 
     try {
         let { originalQueryId, location, description, img } = req.body;
         let { id } = req.params;
