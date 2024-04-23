@@ -44,9 +44,7 @@ function App() {
       console.log("this is curr Usrt : " + user)
       if (user) {
 
-        async () => {
-          await setUser(user);
-        }
+        setUser(user);
         setLogged(true);
         console.log("Logged in");
         console.log(user);
@@ -85,7 +83,7 @@ function App() {
                   }
                   setDisplayQueryType={setDisplayQueryType}
                 />
-                <Sidebar isEmp={false} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
+                <Sidebar isEmp={true} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
                 <Outlet />
                 <Footer />
               </>
