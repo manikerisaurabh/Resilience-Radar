@@ -4,13 +4,13 @@ import th from "/th.jpeg";
 import { cardDB } from "../../Temp/cardsData";
 import CardModel from "./CardModel";
 
-const Cards2 = (ul=`http://localhost:8080/api/query`, canCommit) => {
+const Cards2 = ({ ul, canCommit }) => {
   const [cardsData, setCardsData] = useState(cardDB);
-
+  console.log("this is ul : " + ul)
   useEffect(() => {
     try {
       fetch(ul, {
-        method: "GET", 
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
@@ -19,13 +19,17 @@ const Cards2 = (ul=`http://localhost:8080/api/query`, canCommit) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }
-          console.log(response.body);
-          return JSON.parse(response.body);
+          console.log(response);
+          return response.json();
         })
         .then((data) => {
-          setCardsData(data);
-          console.log(1);
-          console.log(data);
+          // Remove extra quotes from img attribute
+          const formattedData = data.map((item) => ({
+            ...item,
+            img: item.img.replace(/"/g, ""), // Remove all quotes from img attribute
+          }));
+          setCardsData(formattedData);
+          console.log(formattedData);
         })
         .catch((error) => {
           console.error(
@@ -36,7 +40,7 @@ const Cards2 = (ul=`http://localhost:8080/api/query`, canCommit) => {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [ul]);
 
   console.log(cardsData);
 

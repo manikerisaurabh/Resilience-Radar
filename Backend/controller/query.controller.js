@@ -18,7 +18,7 @@ export const addQuery = async (req, res) => {
         let { id } = req.params;
         console.log(id);
         let { location, description, img, category, urgency, status, estimatedImpact, targetPopulation } = req.body;
-        console.log(req.body)
+        console.log("this is img : " + img)
         let address = await getLocationData(location[0], location[1]);
 
         const newQuery = new Query({

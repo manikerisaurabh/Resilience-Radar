@@ -24,8 +24,9 @@ import PendingReports from "./Components/Reportss/PendingReports";
 
 function App() {
   let [active, setActive] = useState(false);
-  let [logged, setLogged] = useState(true);
+  let [logged, setLogged] = useState(false);
   let [switchh, setSwitch] = useState(false);
+  let [userid, setUserId] = useState("");
   let [displayQueryType, setDisplayQueryType] = useState({
     totalQueries: true,
     pendingQueries: false,
@@ -39,7 +40,8 @@ function App() {
   useEffect(() => {
     try {
       const currUser = localStorage.getItem("currUser");
-      const user = JSON.parse(currUser);
+      const user = currUser;
+      console.log("this is curr Usrt : " + user)
       if (user) {
 
         async () => {
@@ -58,8 +60,9 @@ function App() {
     setActive(!active);
   }
 
-  console.log(displayQueryType, user, user.isGovEmp);
-
+  console.log(displayQueryType, user, user.isGovEmp, userid);
+  const id = user.id;
+  console.log(id);
   return (
     <Router>
       <>
@@ -76,13 +79,13 @@ function App() {
                     user
                       ? user
                       : {
-                          userName: "X",
-                          profilepic: th,
-                        }
+                        userName: "X",
+                        profilepic: th,
+                      }
                   }
                   setDisplayQueryType={setDisplayQueryType}
                 />
-                <Sidebar isEmp={false} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType}/>
+                <Sidebar isEmp={false} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
                 <Outlet />
                 <Footer />
               </>
@@ -100,13 +103,13 @@ function App() {
                   }}
                 >
                   {logged ? (
-                    <div className="mt-[80px] mb-[100px]"> 
-                      {displayQueryType.totalQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/${user._id}/total` : "http://localhost:8080/api/query") : "http://localhost:8080/api/query"} />}
-                      {displayQueryType.pendingQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/pending/${user._id}` : `http://localhost:8080/api/gov/query/${user._id}/pending`) : "http://localhost:8080/api/query"} />}
+                    <div className="mt-[80px] mb-[100px]">
+                      {displayQueryType.totalQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/${userid}/total` : "http://localhost:8080/api/query") : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.pendingQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/pending/${userid}` : `http://localhost:8080/api/gov/query/${userid}/pending`) : "http://localhost:8080/api/query"} />}
                       {displayQueryType.departmentQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${user.department}`) : "http://localhost:8080/api/query"} />}
-                      {displayQueryType.assignedQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${user._id}/inCharge`) : "http://localhost:8080/api/query"} canCommit={true}/>}
-                      {displayQueryType.toApproveQueries && <Cards2 ul={user ? (`http://localhost:8080/api/query/${user._id}/approvation`) : "http://localhost:8080/api/query"} />}
-                      {displayQueryType.completedQuerirs && <Cards2 ul={user ? (`http://localhost:8080/api/query/${user._id}/completed`) : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.assignedQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${userid}/inCharge`) : "http://localhost:8080/api/query"} canCommit={true} />}
+                      {displayQueryType.toApproveQueries && <Cards2 ul={user ? (`http://localhost:8080/api/query/${userid}/approvation`) : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.completedQuerirs && <Cards2 ul={user ? (`http://localhost:8080/api/query/${userid}/completed`) : "http://localhost:8080/api/query"} />}
                     </div>
                   ) : (
                     <LandPage />
@@ -118,7 +121,7 @@ function App() {
           <Route path="/CaptureImg" element={<WebcamCapture />} />
           <Route
             path="/auth/:mode"
-            element={<Login setSwitch={setSwitch} setLogged={setLogged} />}
+            element={<Login setSwitch={setSwitch} setLogged={setLogged} setUserId={setUserId}/>}
           />
           <Route path="/query" element={<Upload_issue />} />
           <Route path="/query/edit/:key" element={<Upload_issue />} />
