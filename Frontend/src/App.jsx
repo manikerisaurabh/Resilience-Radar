@@ -41,7 +41,10 @@ function App() {
       const currUser = localStorage.getItem("currUser");
       const user = JSON.parse(currUser);
       if (user) {
-        setUser(user);
+
+        async () => {
+          await setUser(user);
+        }
         setLogged(true);
         console.log("Logged in");
         console.log(user);
@@ -55,7 +58,7 @@ function App() {
     setActive(!active);
   }
 
-  console.log(displayQueryType);
+  console.log(displayQueryType, user, user.isGovEmp);
 
   return (
     <Router>
@@ -98,7 +101,7 @@ function App() {
                 >
                   {logged ? (
                     <div className="mt-[80px] mb-[100px]"> 
-                      {displayQueryType.totalQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/:${user._id}/total` : "http://localhost:8080/api/query") : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.totalQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/${user._id}/total` : "http://localhost:8080/api/query") : "http://localhost:8080/api/query"} />}
                       {displayQueryType.pendingQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/pending/${user._id}` : `http://localhost:8080/api/gov/query/${user._id}/pending`) : "http://localhost:8080/api/query"} />}
                       {displayQueryType.departmentQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${user.department}`) : "http://localhost:8080/api/query"} />}
                       {displayQueryType.assignedQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${user._id}/inCharge`) : "http://localhost:8080/api/query"} canCommit={true}/>}

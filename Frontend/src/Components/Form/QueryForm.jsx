@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   TextField,
@@ -48,53 +49,47 @@ const QueryForm = ({
   useEffect(() => {
     try {
       const userData = localStorage.getItem("currUser");
-      const storedLoaction = localStorage.getItem("userLocation");
+      console.log(JSON.parse(userData));
       setUserInfo(
         userData
           ? JSON.parse(userData)
           : {
-              _id: "1",
-              imgUrl: th,
-              category: "",
-              urgency: "",
-              status: "",
-              description: "",
-              dateCreated: "",
-              targetPopulation: "",
-              proposedSolutions: "",
-              attachments: [],
-              location: [1, 2],
-            }
+            _id: "1",
+            imgUrl: th,
+          }
       );
-      setLoc(storedLoaction ? JSON.parse(storedLoaction) : [74.3501, 16.2229]);
+          let storedLocation = localStorage.getItem("userLocation");
+    console.log(JSON.parse(storedLocation));
+    console.log(storedLocation ? JSON.parse(storedLocation) : [74.3501, 16.2229]);
+    setLoc(storedLocation ? JSON.parse(storedLocation) : [74.3501, 16.2229]);
       setFormData(
         userInfo
           ? {
-              ...userInfo,
-              imgUrl: imageUrl,
-              category: category,
-              urgency: urgency,
-              status: status,
-              description: description,
-              dateCreated: dateCreated,
-              targetPopulation: targetPopulation,
-              proposedSolutions: proposedSolutions,
-              attachments: attachments,
-              location: loc,
-            }
+            ...userInfo,
+            imgUrl: imageUrl,
+            category: category,
+            urgency: urgency,
+            status: status,
+            description: description,
+            dateCreated: dateCreated,
+            targetPopulation: targetPopulation,
+            proposedSolutions: proposedSolutions,
+            attachments: attachments,
+            location: loc,
+          }
           : {
-              _id: "1",
-              imgUrl: imageUrl,
-              category: category,
-              urgency: urgency,
-              status: status,
-              description: description,
-              dateCreated: dateCreated,
-              targetPopulation: targetPopulation,
-              proposedSolutions: proposedSolutions,
-              attachments: attachments,
-              location: loc,
-            }
+            _id: "1",
+            imgUrl: imageUrl,
+            category: category,
+            urgency: urgency,
+            status: status,
+            description: description,
+            dateCreated: dateCreated,
+            targetPopulation: targetPopulation,
+            proposedSolutions: proposedSolutions,
+            attachments: attachments,
+            location: loc,
+          }
       );
       console.log(userInfo);
       console.log(formData);
@@ -112,6 +107,7 @@ const QueryForm = ({
   useEffect(() => {
     let storedLocation = localStorage.getItem("userLocation");
     console.log(JSON.parse(storedLocation));
+    console.log(storedLocation ? JSON.parse(storedLocation) : [74.3501, 16.2229]);
     setLoc(storedLocation ? JSON.parse(storedLocation) : [74.3501, 16.2229]);
   }, []);
 
@@ -137,6 +133,9 @@ const QueryForm = ({
       const response = await fetch(ul, {
         method: method,
         body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (response.ok) {
@@ -200,7 +199,7 @@ const QueryForm = ({
 
             <div>
               <InputLabel className="">
-                GeoLocation : {loc[0] + " " + loc[1]}{" "}
+                 GeoLocation : {loc[0] + " " + loc[1]}{" "} 
               </InputLabel>
 
               <div className="border hover:border-blue-500 rounded w-fit">

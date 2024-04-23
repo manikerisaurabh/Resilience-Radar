@@ -19,11 +19,12 @@ const Cards2 = (ul=`http://localhost:8080/api/query`, canCommit) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }
-          console.log(response);
-          return response.json();
+          console.log(response.body);
+          return JSON.parse(response.body);
         })
         .then((data) => {
           setCardsData(data);
+          console.log(1);
           console.log(data);
         })
         .catch((error) => {
