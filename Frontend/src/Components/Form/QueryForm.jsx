@@ -49,7 +49,7 @@ const QueryForm = ({
   useEffect(() => {
     try {
       const userData = localStorage.getItem("currUser");
-      const storedLoaction = localStorage.getItem("userLocation");
+      console.log(JSON.parse(userData));
       setUserInfo(
         userData
           ? JSON.parse(userData)
@@ -112,7 +112,8 @@ const QueryForm = ({
 
   useEffect(() => {
     let storedLocation = localStorage.getItem("userLocation");
-    console.log(storedLocation);
+    console.log(JSON.parse(storedLocation));
+    console.log(storedLocation ? JSON.parse(storedLocation) : [74.3501, 16.2229]);
     setLoc(storedLocation ? JSON.parse(storedLocation) : [74.3501, 16.2229]);
   }, []);
 
@@ -132,10 +133,11 @@ const QueryForm = ({
     setFormData({ ...formData, img: imageUrl });
     console.log("thus is form data : " + formData)
     let ul = key
-      ? `http://localhost:8080/api/query/edit/${userInfo._id}`
-      : `http://localhost:8080/api/query/add/${userInfo._id}`;
+    ? `http://localhost:8080/api/query/edit/${userInfo._id}`
+    : `http://localhost:8080/api/query/add/${userInfo._id}`;
     let method = key ? "PUT" : "POST";
-
+    
+    console.log(formData, userInfo, JSON.stringify(formData), key, ul, method);
     try {
       const response = await fetch(ul, {
         method: method,

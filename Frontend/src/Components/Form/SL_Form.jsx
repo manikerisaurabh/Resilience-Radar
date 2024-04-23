@@ -19,7 +19,7 @@ import MuiAlert from "@mui/material/Alert";
 import { HiOutlineLockClosed, HiOutlineMail } from "react-icons/hi";
 import GovernmentSignUp from "./GovernmentSignUp";
 
-const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
+const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
   const email = useInputValidation("", emailValidator);
   const username = useInputValidation("", usernameValidator);
   const password = useStrongPassword();
@@ -158,6 +158,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
             //console.log(JSON.parse(user));
             setSwitch(prev => !prev)
             setLogged(true);
+            setUserId(data._id);
           })
           .catch((error) => {
             console.error("Error:", error);
