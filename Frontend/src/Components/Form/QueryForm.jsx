@@ -11,6 +11,7 @@ import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi"; // MUI icon
 import { Link, useParams } from "react-router-dom";
 import MapComponent from "../Maps/MapComponent";
 import WebcamCapture from "../Media/WebcamCapture ";
+import CheckIcon from '@mui/icons-material/Check';
 import th from "/th.jpeg";
 
 const QueryForm = ({
@@ -41,6 +42,7 @@ const QueryForm = ({
     location: [1, 2],
   });
   const [imageUrl, setImageUrl] = useState(th);
+  // const [imageUrl, setImageUrl] = useState(th);
   let { key } = useParams();
 
   useEffect(() => {
@@ -87,9 +89,9 @@ const QueryForm = ({
 
   useEffect(() => {
     const uImg = localStorage.getItem("imageURL");
-    setFormData({ ...formData, imgUrl: imageUrl, location: loc });
+    setFormData({ ...formData, imgUrl: imageUrl});
     setImageUrl(uImg);
-  }, [imageUrl, loc]);
+  }, [imageUrl]);
 
   useEffect(() => {
     let storedLocation = localStorage.getItem("userLocation");
@@ -161,7 +163,7 @@ const QueryForm = ({
         <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-xl shadow-amber-300 w-96">
           <h2 className="text-2xl font-semibold mb-4">Report an Issue</h2>
           <form className="space-y-4 " onSubmit={handleSubmit}>
-            <InputLabel>Image Url: </InputLabel>
+            {/* <InputLabel>Image Url: </InputLabel> */}
             <TextField
               variant="standard"
               fullWidth
@@ -169,7 +171,7 @@ const QueryForm = ({
               name="imgUrl"
               value={formData.imgUrl}
               onChange={handleChange}
-              label="img"
+              label="Image Url"
               className="mt-0 mb-1"
               disabled
             />
@@ -178,11 +180,25 @@ const QueryForm = ({
                 variant="contained"
                 color="primary"
                 type="button"
-                onClick={() => { }}
               >
                 upload Image
               </Button>
             </Link>
+            
+            <div>
+              <InputLabel className="">
+                GeoLocation : {loc[0] + " " + loc[1]}{" "}
+              </InputLabel>
+
+              <div className="border hover:border-blue-500 rounded w-fit">
+                <Link
+                  to="/util/Location"
+                  className="btn btn-close-white border-0"
+                >
+                  {location ? "Update Current Location" : "Add Location"}
+                </Link>
+              </div>
+            </div>
 
             <FormControl fullWidth size="small">
               <InputLabel>Category</InputLabel>
@@ -289,21 +305,6 @@ const QueryForm = ({
               onChange={(e) => handleFileUpload(e.target.files)}
               className="mt-0"
             />
-
-            <div>
-              <InputLabel className="">
-                GeoLocation : {loc[0] + " " + loc[1]}{" "}
-              </InputLabel>
-
-              <div className="border hover:border-blue-500 rounded w-fit">
-                <Link
-                  to="/util/Location"
-                  className="btn btn-close-white border-0"
-                >
-                  {location ? "Update Current Location" : "Add Location"}
-                </Link>
-              </div>
-            </div>
 
             <Button variant="contained" color="primary" type="submit" fullWidth>
               Submit

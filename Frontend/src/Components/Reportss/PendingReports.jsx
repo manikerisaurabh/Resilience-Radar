@@ -85,7 +85,7 @@ const PendingReports = () => {
     // });
   }, []); // The empty dependency array ensures this effect runs once after the initial render
     return (
-      <div className="row row-cols-1 row-cols row-cols-sm-2 row-cols-md-3  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2">
+      <div className=" row row-cols-1 row-cols row-cols-sm-2 row-cols-md-3  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2">
         {reports.length > 0 ? (
           reports.map((report) => {
             return <CardModel key={report.id} {...report} _id={report.id} />;

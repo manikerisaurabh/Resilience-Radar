@@ -41,7 +41,7 @@ export const addQuery = async (req, res) => {
         });
 
         let savedQuery = await newQuery.save();
-
+        console.log("this is saved query : " + savedQuery)
         res.send(savedQuery);
     } catch (error) {
         console.log("error in addQuery controller" + error);
@@ -68,6 +68,10 @@ export const editQuery = async (req, res) => {
 
         let { id } = req.params;
         let { raisedBy, queryId } = req.body;
+        let query = await Query.findById(queryId);
+        if (!query) {
+            return res.status(400).json({ error: "Query not found" });
+        }
         console.log("this is owner : " + id);
         console.log("this is query : " + raisedBy);
         if (id !== raisedBy) {
@@ -119,5 +123,92 @@ export const pendingQueries = async (req, res) => {
     } catch (error) {
         console.log("error in pendingQueries controller");
         return res.state(500).json({ error: "Internal Server Error" });
+    }
+}
+export const totalQueris = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const allQueries = await Query.find({ raisedBy: id });
+        if (allQueries.length == 0) {
+            return res.status(200).json({ message: "No Queries" });
+        }
+
+        res.status(200).json(allQueries);
+    } catch (error) {
+        console.log("error in totalQueris controller");
+        return res.state(500).json({ error: "Internal Server Error" });
+    }
+
+}
+
+export const completedQueries = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const completedQuery = await Query.find({ raisedBy: id, status: 'Resolved' });
+
+        if (completedQuery.length == 0) {
+            return res.status(200).json({ message: "No Queris" });
+        }
+
+        res.status(200).json(completedQuery);
+    } catch (error) {
+        console.log("error in completedQueries controller");
+        return res.state(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const pendinfForApprovationQueriess = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const pendingQueries = await Query.find({ raisedBy: id, status: 'Commit' });
+
+        if (pendingQueries.length == 0) {
+            return res.status(200).json({ message: "No Queris" });
+        }
+
+        res.status(200).json(pendingQueries);
+    } catch (error) {
+        console.log("error in pendinfForApprovationQueriess controller");
+        return res.state(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const approveCommit = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userId } = req.body;
+
+        // Find the query by ID
+        let query = await Query.findById(id);
+
+        // If the query doesn't exist, return 404 Not Found
+        if (!query) {
+            return res.status(404).json({ error: "Query not found" });
+        }
+
+        // Check if the user is authorized to approve the query
+        if (query.raisedBy != userId) {
+            return res.status(400).json({ error: "You can't approve this query" });
+        }
+
+        if (query.status == "Resolved") {
+            return res.status(200).json({ message: "Query is already approved" });
+        }
+        // Update the status of the query
+        query.status = "Resolved";
+
+        // Save the updated query
+        await query.save();
+
+        // Return success message
+        return res.status(200).json({
+            message: "Query approved successfully",
+            query: query
+        });
+
+    } catch (error) {
+        // Log and return internal server error if any error occurs
+        console.log("Error in pendingForApprovalQueries controller:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 }

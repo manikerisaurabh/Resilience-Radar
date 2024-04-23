@@ -14,7 +14,7 @@ export const getAllqueriesRelatedToDepartment = async (req, res) => {
         let queries = await Query.find({ category: category });
 
         if (queries.length === 0) {
-            return res.status(200).json({ message: `There are no queries belonging to the ${category} category` });
+            return res.status(200).json({ error: `There are no queries belonging to the ${category} category` });
         }
 
         console.log(queries);
@@ -80,36 +80,45 @@ export const commitOfResolvation = async (req, res) => {
         // Get address data
         let address = await getLocationData(location[0], location[1]);
 
-        // Create a new ResolvedQuery instance
-        let newQuery = new ResolvedQuery({
-            resolverId: id,
-            location: {
-                village: address.village,
-                county: address.county,
-                district: address.district,
-                state: address.state,
-                country: address.country
-            },
-            latitude: location[0],
-            longitude: location[1],
-            description: description,
-            img: img
-        });
-
         // Find the original query and populate the 'raisedBy' field
         let originalQuery = await Query.findById(originalQueryId).populate("raisedBy");
         if (!originalQuery) {
             return res.status(400).json({ error: "the specified query you are solving is not valid" });
         }
 
-        // Create a new resolved query
-        newQuery = await newQuery.save();
+        if (originalQuery.location.address != address.location) {
+            return res.status(400).json({ error: "cant commit the query because address does not match" });
+        }
+
+        originalQuery.status = "Commit";
+        originalQuery.save();
+
+        // // Create a new ResolvedQuery instance
+        // let newQuery = new ResolvedQuery({
+        //     resolverId: id,
+        //     location: {
+        //         village: address.village,
+        //         county: address.county,
+        //         district: address.district,
+        //         state: address.state,
+        //         country: address.country
+        //     },
+        //     latitude: location[0],
+        //     longitude: location[1],
+        //     description: description,
+        //     img: img
+        // });
+
+
+
+        // // Create a new resolved query
+        // newQuery = await newQuery.save();
 
         let originalQueryAuthor = await User.findOne({ _id: originalQuery.raisedBy._id });
 
         console.log(originalQueryAuthor);
 
-        // Initialize 'pendingToApprove' array if it doesn't exist
+        //Initialize 'pendingToApprove' array if it doesn't exist
         if (!originalQueryAuthor) {
             return res.status(400).json({ error: "User who raised the query not found" });
         }
@@ -117,16 +126,56 @@ export const commitOfResolvation = async (req, res) => {
         originalQueryAuthor.pendingToApprove = originalQueryAuthor.pendingToApprove || [];
 
         // Push the new resolved query ID to 'pendingToApprove'
-        originalQueryAuthor.pendingToApprove.push(newQuery._id);
+        originalQueryAuthor.pendingToApprove.push(originalQuery._id);
 
         // Save the updated originalQueryAuthor document
         await originalQueryAuthor.save();
 
 
-        res.status(200).json(newQuery);
+        res.status(200).json(originalQuery);
 
     } catch (error) {
         console.log("Error in gov --> query --> commitOfResolvation controller", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+
+export const allAssignedQueries = async (req, res) => {
+    try {
+        let { id } = req.params;
+        let empployee = await GovernmentEmployee.findById(id).populate("queryIncharge");
+        if (!empployee) {
+            return res.status(400).json({ error: "Invalid Employee" })
+        }
+        let assignedQueries = empployee.queryIncharge;
+
+        if (assignedQueries.length == 0) {
+            return res.status(200).json({ message: "No Querys found" });
+        }
+
+        res.status(200).json(assignedQueries);
+
+    } catch (error) {
+        console.log("Error in gov --> query --> allAssignedQueries controller", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+export const pendingToApprove = async (req, res) => {
+    try {
+        let { id } = req.params;
+        let employee = await GovernmentEmployee.findById(id).populate("queryIncharge");
+        if (!employee) {
+            return res.status(400).json({ error: "Invalid User" });
+        }
+        if (employee.queryIncharge.length == 0) {
+            return res.status(200).json({ message: "No Queirs to approve" });
+        }
+
+        res.status(200).json(employee.queryIncharge);
+    } catch (error) {
+        console.log("Error in gov --> query --> pendingToApprove controller", error);
         res.status(500).json({ error: "Internal server error" });
     }
 }

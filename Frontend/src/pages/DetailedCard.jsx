@@ -104,9 +104,10 @@ const DetailedCard = () => {
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
-      <div className="bg-white h-screen w-[100vw] rounded-lg max-w-4xl overflow-auto">
+      <img src={formData.imgUrl} alt="" className="w-full opacity-85" />
+      <div className="absolute bg-white h-screen w-[100vw] rounded-lg max-w-4xl overflow-auto scrollbar-fade">
         {/* Modal content */}
-        <div className="absolute right-0">
+        <div className="fixed right-0">
           <button
             onClick={onClose}
             className=" btn w-[40px] btn-danger hover:text-white"
@@ -148,6 +149,8 @@ const DetailedCard = () => {
                 {`${formData.location.village}, ${formData.location.state}, ${formData.location.country}`}
               </li>
             </ul>
+            h
+            h<br></br>h<br/> h
             {formData.attachments.length > 0 && (
               <div className="p-4">
                 <h3 className="text-2xl font-bold mb-2">Attachments:</h3>
