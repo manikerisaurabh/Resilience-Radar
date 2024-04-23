@@ -16,20 +16,31 @@ import LandPage from "./Components/Landing page/LandPage";
 import Navbar from "./Components/NavBar/Navbar";
 import Sidebar from "./Components/SideBar/Sidebar";
 import Reports from "./Components/Reportss/Reports";
-import th from "/th.jpeg"
+import Footer from "./Components/Footer/Footer";
+import Cards2 from "./Components/Cards/Cards2";
+import th from "/th.jpeg";
 import "./App.css";
+import PendingReports from "./Components/Reportss/PendingReports";
 
 function App() {
   let [active, setActive] = useState(false);
-  let [logged, setLogged] = useState(false);
+  let [logged, setLogged] = useState(true);
   let [switchh, setSwitch] = useState(false);
+  let [displayQueryType, setDisplayQueryType] = useState({
+    totalQueries: true,
+    pendingQueries: false,
+    departmentQueries: false,
+    assignedQueries: false,
+    toApproveQueries: false,
+    completedQuerirs: false,
+  });
   let [user, setUser] = useState(false);
 
   useEffect(() => {
     try {
       const currUser = localStorage.getItem("currUser");
       const user = JSON.parse(currUser);
-      if(user) {
+      if (user) {
         setUser(user);
         setLogged(true);
         console.log("Logged in");
@@ -43,6 +54,8 @@ function App() {
   function setSidebar() {
     setActive(!active);
   }
+
+  console.log(displayQueryType);
 
   return (
     <Router>
@@ -64,9 +77,11 @@ function App() {
                           profilepic: th,
                         }
                   }
+                  setDisplayQueryType={setDisplayQueryType}
                 />
-                <Sidebar visible={active} setSidebar={setSidebar} />
+                <Sidebar isEmp={false} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType}/>
                 <Outlet />
+                <Footer />
               </>
             }
           >
@@ -81,7 +96,18 @@ function App() {
                     }
                   }}
                 >
-                  {logged ? <Home /> : <LandPage />}
+                  {logged ? (
+                    <div className="mt-[80px] mb-[100px]"> 
+                      {displayQueryType.totalQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/:${user._id}/total` : "http://localhost:8080/api/query") : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.pendingQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/pending/${user._id}` : `http://localhost:8080/api/gov/query/${user._id}/pending`) : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.departmentQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${user.department}`) : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.assignedQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${user._id}/inCharge`) : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.toApproveQueries && <Cards2 ul={user ? (`http://localhost:8080/api/query/${user._id}/approvation`) : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.completedQuerirs && <Cards2 ul={user ? (`http://localhost:8080/api/query/${user._id}/completed`) : "http://localhost:8080/api/query"} />}
+                    </div>
+                  ) : (
+                    <LandPage />
+                  )}
                 </div>
               }
             />
@@ -94,7 +120,7 @@ function App() {
           <Route path="/query" element={<Upload_issue />} />
           <Route path="/query/edit/:key" element={<Upload_issue />} />
           <Route path="/DetailedData/:key" element={<DetailedCard />} />
-          <Route path="/pending" element={<Reports />} />
+          <Route path="/pending" element={<PendingReports />} />
           <Route path="/util/:location" element={<LoactionSelector />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>

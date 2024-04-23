@@ -1,0 +1,18 @@
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .scrollbar-fade::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-fade::-webkit-scrollbar-thumb {
+    background-color: grey; /* Customize with your preferred color */
+    border-radius: 9999px;
+    animation: fade-in 1s ease-in-out infinite alternate;
+  }
+
+  .scrollbar-fade::-webkit-scrollbar-track {
+    background: transparent;
+  }

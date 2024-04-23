@@ -15,7 +15,7 @@ import {
   Alert
 } from "@mui/material";
 
-const WebcamCapture = ({ srcc = "" }) => {
+const WebcamCapture = ({ srcc = "", se }) => {
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(srcc);
   const [imageUrl, setImageUrl] = useState(""); // State for the uploaded image URL
