@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
-  let user = localStorage.getItem("currUser");
+
   const [isEmp, setIsEmp] = useState(false)
-  user = JSON.parse(user);
-  console.log(user);
+
   useEffect(() => {
-    if (user && user.isGovEmp) {
+    let user = localStorage.getItem("currUser");
+    user = JSON.parse(user);
+    console.log(user);
+    if (user.isGovEmp == true) {
       setIsEmp(true);
     } else {
       setIsEmp(false);
     }
-  }, [user]);
+  }, []);
 
   return (
     <>
@@ -174,3 +176,5 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
 };
 
 export default Sidebar;
+
+

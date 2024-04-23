@@ -131,12 +131,12 @@ const QueryForm = ({
     console.log(formData, userInfo);
     console.log("this is image url : " + imageUrl);
     setFormData({ ...formData, img: imageUrl });
-    console.log("thus is form data : " + formData)
     let ul = key
-    ? `http://localhost:8080/api/query/edit/${userInfo._id}`
-    : `http://localhost:8080/api/query/add/${userInfo._id}`;
+      ? `http://localhost:8080/api/query/edit/${userInfo._id}`
+      : `http://localhost:8080/api/query/add/${userInfo._id}`;
     let method = key ? "PUT" : "POST";
-    
+    console.log("thus is  url: " + ul)
+
     console.log(formData, userInfo, JSON.stringify(formData), key, ul, method);
     try {
       const response = await fetch(ul, {

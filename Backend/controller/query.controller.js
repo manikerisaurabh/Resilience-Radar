@@ -19,11 +19,11 @@ export const addQuery = async (req, res) => {
         console.log(id);
         let { location, description, img, category, urgency, status, estimatedImpact, targetPopulation } = req.body;
 
-        if (!location || !description || !img || !category || !urgency || !estimatedImpact || !targetPopulation) {
-            return res.status({ error: "all fields are required" });
-        }
+        // if (!location || !description || !img || !category || !urgency || !estimatedImpact || !targetPopulation) {
+        //     return res.status({ error: "all fields are required" });
+        // }
         let address = await getLocationData(location[0], location[1]);
-
+        console.log(address)
         const newQuery = new Query({
             raisedBy: id,
             location: {
