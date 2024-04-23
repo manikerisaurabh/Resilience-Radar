@@ -41,7 +41,7 @@ export const addQuery = async (req, res) => {
         });
 
         let savedQuery = await newQuery.save();
-
+        console.log("this is saved query : " + savedQuery)
         res.send(savedQuery);
     } catch (error) {
         console.log("error in addQuery controller" + error);
@@ -120,4 +120,19 @@ export const pendingQueries = async (req, res) => {
         console.log("error in pendingQueries controller");
         return res.state(500).json({ error: "Internal Server Error" });
     }
+}
+export const totalQueris = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const allQueries = await Query.find({ raisedBy: id });
+        if (allQueries.length == 0) {
+            return res.status(200).json({ message: "No Queris" });
+        }
+
+        res.status(200).json(allQueries);
+    } catch (error) {
+        console.log("error in totalQueris controller");
+        return res.state(500).json({ error: "Internal Server Error" });
+    }
+
 }

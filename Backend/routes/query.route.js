@@ -14,4 +14,6 @@ router.put("/edit/:id", isValidUser, editQuery);
 
 router.get("/pending/:id", isValidUser, pendingQueries);
 
+router.get("/:id/total",);
+
 export default router;

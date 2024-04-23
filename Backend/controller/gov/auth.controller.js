@@ -57,7 +57,8 @@ export const signup = async (req, res) => {
             _id: newEmployee._id,
             employeeName: newEmployee.name,
             profilepic: newEmployee.profilePic,
-            isGovEmp: newEmployee.isGovEmp
+            isGovEmp: newEmployee.isGovEmp,
+            department: newEmployee.department
         });
 
     } catch (error) {
