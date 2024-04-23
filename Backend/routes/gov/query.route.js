@@ -1,7 +1,7 @@
 import express from 'express';
 import { allAssignedQueries, commitOfResolvation, getAllqueriesRelatedToDepartment, pendingToApprove, takeChargeOnTask } from '../../controller/gov/query.controller.js';
 
-const router = express.Router();
+const router = express.Router(); 
 
 
 //get all the queris releted to employees experties(department)

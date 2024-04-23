@@ -43,7 +43,8 @@ const MapComponent = ({ loc, setLoc }) => {
       const clickedCoord = mapObj.getCoordinateFromPixel(event.pixel);
       const lonLat = toLonLat(clickedCoord);
       console.log("Clicked position (lon, lat):", lonLat);
-      setTempLoc(lonLat);
+      let location = [ lonLat[1], lonLat[0] ];
+      setTempLoc(location);
 
       const marker = new Feature({
         geometry: new Point(clickedCoord),

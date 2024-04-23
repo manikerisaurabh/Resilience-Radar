@@ -30,13 +30,15 @@ const DetailedCard = () => {
     location: [],
   });
   let [userInfo, setUserInfo] = useState(null);
-  let { key } = useParams();
+  let { key, md } = useParams();
+
+  console.log("key, md :", key, md);
 
   useEffect(() => {
     try {
       const storedLocation = localStorage.getItem("userLocation");
       console.log(storedLocation);
-      setUserInfo(storedLocation ? JSON.parse(storedLocation) : null)
+      setUserInfo(storedLocation ? JSON.parse(storedLocation) : null);
     } catch (error) {
       console.log(error);
     }
@@ -44,7 +46,7 @@ const DetailedCard = () => {
     fetch(`http://localhost:8000/api/query/edit/${key}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
@@ -53,7 +55,7 @@ const DetailedCard = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error('Fetch error:', error);
+        console.error("Fetch error:", error);
         setLoading(false);
         setError(true);
       });
@@ -70,11 +72,27 @@ const DetailedCard = () => {
         method: "POST",
         body: {
           queryId: userInfo.queryId,
-          empId: userInfo.empId
-        }
-      })
+          empId: userInfo.empId,
+        },
+      });
     } catch (error) {
+      console.log(error);
+    }
+  }
 
+  function CommitTask() {
+    try {
+      fetch(`http://localhost:8000/api/gov/query/${formData._id}/commit`, {
+        method: "POST",
+        body: {
+          originalQueryId : formData._id,
+          location : formData.location,
+          description : formData.description,
+          img : formData.imgUrl,
+        },
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -149,8 +167,6 @@ const DetailedCard = () => {
                 {`${formData.location.village}, ${formData.location.state}, ${formData.location.country}`}
               </li>
             </ul>
-            h
-            h<br></br>h<br/> h
             {formData.attachments.length > 0 && (
               <div className="p-4">
                 <h3 className="text-2xl font-bold mb-2">Attachments:</h3>
@@ -168,21 +184,30 @@ const DetailedCard = () => {
               </div>
             )}
             <div className=" flex gap-2 items-center justify-center">
-              {!userInfo.isGovEmp && <Link
-                to={`/query/edit/${key}`}
-                className="text-white btn w-[70px] btn-primary col-3"
-              >
-                <button onClick={onClose} className="">
-                  Edit
-                </button>
-              </Link>}
-              {userInfo.isGovEmp && <div
-                className="text-white btn w-[70px] btn-primary col-3"
-              >
-                <button onClick={assignTask} className="">
-                  Assign
-                </button>
-              </div>}
+              {!userInfo.isGovEmp && (
+                <Link
+                  to={`/query/edit/${key}`}
+                  className="text-white btn w-[70px] btn-primary col-3"
+                >
+                  <button onClick={onClose} className="">
+                    Edit
+                  </button>
+                </Link>
+              )}
+              {userInfo.isGovEmp && md !== "CommitReport" && (
+                <div className="text-white btn w-[70px] btn-warning col-3">
+                  <button onClick={assignTask} className="">
+                    Assign
+                  </button>
+                </div>
+              )}
+              {md === "CommitReport" && (
+                <div className="text-white btn w-[70px] btn-success col-3">
+                  <button onClick={CommitTask} className="">
+                    Completed
+                  </button>
+                </div>
+              )}
               <button
                 onClick={onClose}
                 className="text-white btn w-[70px] btn-danger col-3"
