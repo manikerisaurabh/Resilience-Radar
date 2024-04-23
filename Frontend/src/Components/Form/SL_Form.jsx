@@ -27,7 +27,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
   const [gender, setGender] = useState("");
   const { mode } = useParams();
   const [open, setOpen] = useState(false);
-  const [choose, setChoice] = useState(true);
+  const [choose, setChoice] = useState(false);
   const [isEmp, setIsEmp] = useState(false);
   const [location, setLocation] = useState(null);
   const [formData, setFormData] = useState({
@@ -45,7 +45,13 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
   });
   const [snackbarQueue, setSnackbarQueue] = useState([]);
 
+  console.log("isEmp :",isEmp);
+
   React.useEffect(() => {
+    if(mode === "login") {
+      setChoice(true);
+    } 
+    console.log(isLogin);
     try {
       const storedLocation = localStorage.getItem("userLocation");
       setLocation(storedLocation ? JSON.parse(storedLocation) : null);
@@ -169,7 +175,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
 
   return (
     <>
-      {choose ? (
+      {(choose) ? (
         <>
           <Typography
             variant="h5"
@@ -463,6 +469,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
           </form>
         </>
       ) : (
+        !isLogin && 
         <>
           <Button
             sx={{
@@ -474,8 +481,9 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
             color="primary"
             onClick={(e) => {
               setChoice((currCHoice) => !currCHoice);
+              setIsEmp(false);
             }}
-          >
+            >
             Public
           </Button>
 
@@ -490,6 +498,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged }) => {
             color="success"
             onClick={(e) => {
               setChoice((currCHoice) => !currCHoice);
+              setIsEmp(true);
             }}
           >
             Government Authority

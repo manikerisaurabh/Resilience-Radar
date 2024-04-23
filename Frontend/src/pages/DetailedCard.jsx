@@ -41,10 +41,7 @@ const DetailedCard = () => {
       console.log(error);
     }
 
-  }, [])
-
-  useEffect(() => {
-    fetch(`http://localhost:8000/api/query/edit/${formData.id}`)
+    fetch(`http://localhost:8000/api/query/edit/${key}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -89,19 +86,19 @@ const DetailedCard = () => {
     );
   }
 
-  if (error) {
-    // setTimeout(() => {
-    //   window.history.back();
-    // }, 8000)
-    return (
-      <Alert severity="error">
-        <AlertTitle>Error</AlertTitle>
-        Something went wrong — please try again later.
-        <ArrowLeftRounded></ArrowLeftRounded>
-        redirecting to the home page...
-      </Alert>
-    );
-  }
+  // if (error) {
+  //   setTimeout(() => {
+  //     window.history.back();
+  //   }, 8000)
+  //   return (
+  //     <Alert severity="error">
+  //       <AlertTitle>Error</AlertTitle>
+  //       Something went wrong — please try again later.
+  //       <ArrowLeftRounded></ArrowLeftRounded>
+  //       redirecting to the home page...
+  //     </Alert>
+  //   );
+  // }
 
   console.log(key);
 
@@ -168,7 +165,7 @@ const DetailedCard = () => {
               </div>
             )}
             <div className=" flex gap-2 items-center justify-center">
-              {/* {!userInfo.isGovEmp && <Link
+              {!userInfo.isGovEmp && <Link
                 to={`/query/edit/${key}`}
                 className="text-white btn w-[70px] btn-primary col-3"
               >
@@ -176,13 +173,13 @@ const DetailedCard = () => {
                   Edit
                 </button>
               </Link>}
-              {userInfo.isGovEmp && <Link
+              {userInfo.isGovEmp && <div
                 className="text-white btn w-[70px] btn-primary col-3"
               >
                 <button onClick={assignTask} className="">
                   Assign
                 </button>
-              </Link>} */}
+              </div>}
               <button
                 onClick={onClose}
                 className="text-white btn w-[70px] btn-danger col-3"
