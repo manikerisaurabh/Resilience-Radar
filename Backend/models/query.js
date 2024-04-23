@@ -56,8 +56,7 @@ const querySchema = new Schema({
     },
     location: {
         village: {
-            type: String,
-            required: true
+            type: String
         },
         county: {
             type: String

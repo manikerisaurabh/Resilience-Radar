@@ -31,7 +31,7 @@ const QueryForm = ({
   let [userInfo, setUserInfo] = useState(null);
   const [formData, setFormData] = useState({
     _id: "1",
-    imgUrl: th,
+    img: "",
     category: "",
     urgency: "",
     status: "",
@@ -40,7 +40,7 @@ const QueryForm = ({
     targetPopulation: "",
     proposedSolutions: "",
     attachments: [],
-    location: [1, 2],
+    location: loc,
   });
   const [imageUrl, setImageUrl] = useState(th);
   // const [imageUrl, setImageUrl] = useState(th);
@@ -55,7 +55,7 @@ const QueryForm = ({
           ? JSON.parse(userData)
           : {
             _id: "1",
-            imgUrl: th,
+            img: imageUrl,
             category: "",
             urgency: "",
             status: "",
@@ -64,15 +64,15 @@ const QueryForm = ({
             targetPopulation: "",
             proposedSolutions: "",
             attachments: [],
-            location: [1, 2],
+            location: loc,
           }
       );
-      setLoc(storedLoaction ? JSON.parse(storedLoaction) : [74.3501, 16.2229]);
+      setLoc(storedLoaction ? JSON.parse(storedLoaction) : loc);
       setFormData(
         userInfo
           ? {
             ...userInfo,
-            imgUrl: imageUrl,
+            img: imageUrl,
             category: category,
             urgency: urgency,
             status: status,
@@ -85,7 +85,7 @@ const QueryForm = ({
           }
           : {
             _id: "1",
-            imgUrl: imageUrl,
+            img: imageUrl,
             category: category,
             urgency: urgency,
             status: status,
@@ -106,8 +106,8 @@ const QueryForm = ({
 
   useEffect(() => {
     const uImg = localStorage.getItem("imageURL");
-    setFormData({ ...formData, imgUrl: imageUrl });
     setImageUrl(uImg);
+    setFormData({ ...formData, img: uImg, location: loc });
   }, [imageUrl]);
 
   useEffect(() => {
@@ -128,7 +128,9 @@ const QueryForm = ({
     event.preventDefault();
 
     console.log(formData, userInfo);
-
+    console.log("this is image url : " + imageUrl);
+    setFormData({ ...formData, img: imageUrl });
+    console.log("thus is form data : " + formData)
     let ul = key
       ? `http://localhost:8080/api/query/edit/${userInfo._id}`
       : `http://localhost:8080/api/query/add/${userInfo._id}`;
@@ -145,6 +147,7 @@ const QueryForm = ({
 
       if (response.ok) {
         console.log("Query submitted successfully!");
+        window.history.back();
         // Clear the form after successful submission (optional)
         setFormData({
           _id: "",
@@ -205,6 +208,11 @@ const QueryForm = ({
             <div>
               <InputLabel className="">
                 {/* GeoLocation : {loc[0] + " " + loc[1]}{" "} */}
+                {loc[0] &&
+                  <>
+                    GeoLocation : {loc[0] + " " + loc[1]}{" "}
+                  </>
+                }
               </InputLabel>
 
               <div className="border hover:border-blue-500 rounded w-fit">
