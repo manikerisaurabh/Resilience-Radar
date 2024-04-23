@@ -24,7 +24,7 @@ import PendingReports from "./Components/Reportss/PendingReports";
 
 function App() {
   let [active, setActive] = useState(false);
-  let [logged, setLogged] = useState(false);
+  let [logged, setLogged] = useState(true);
   let [switchh, setSwitch] = useState(false);
   let [displayQueryType, setDisplayQueryType] = useState({
     totalQueries: true,

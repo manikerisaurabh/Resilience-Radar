@@ -11,7 +11,7 @@ import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi"; // MUI icon
 import { Link, useParams } from "react-router-dom";
 import MapComponent from "../Maps/MapComponent";
 import WebcamCapture from "../Media/WebcamCapture ";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 import th from "/th.jpeg";
 
 const QueryForm = ({
@@ -49,36 +49,52 @@ const QueryForm = ({
     try {
       const userData = localStorage.getItem("currUser");
       const storedLoaction = localStorage.getItem("userLocation");
-      setUserInfo(userData ? JSON.parse(userData) : null);
-      setLoc(storedLoaction ? JSON.parse(storedLoaction) : null);
+      setUserInfo(
+        userData
+          ? JSON.parse(userData)
+          : {
+              _id: "1",
+              imgUrl: th,
+              category: "",
+              urgency: "",
+              status: "",
+              description: "",
+              dateCreated: "",
+              targetPopulation: "",
+              proposedSolutions: "",
+              attachments: [],
+              location: [1, 2],
+            }
+      );
+      setLoc(storedLoaction ? JSON.parse(storedLoaction) : [74.3501, 16.2229]);
       setFormData(
         userInfo
           ? {
-            ...userInfo,
-            imgUrl: imageUrl,
-            category: category,
-            urgency: urgency,
-            status: status,
-            description: description,
-            dateCreated: dateCreated,
-            targetPopulation: targetPopulation,
-            proposedSolutions: proposedSolutions,
-            attachments: attachments,
-            location: loc,
-          }
+              ...userInfo,
+              imgUrl: imageUrl,
+              category: category,
+              urgency: urgency,
+              status: status,
+              description: description,
+              dateCreated: dateCreated,
+              targetPopulation: targetPopulation,
+              proposedSolutions: proposedSolutions,
+              attachments: attachments,
+              location: loc,
+            }
           : {
-            _id: "1",
-            imgUrl: imageUrl,
-            category: category,
-            urgency: urgency,
-            status: status,
-            description: description,
-            dateCreated: dateCreated,
-            targetPopulation: targetPopulation,
-            proposedSolutions: proposedSolutions,
-            attachments: attachments,
-            location: loc,
-          }
+              _id: "1",
+              imgUrl: imageUrl,
+              category: category,
+              urgency: urgency,
+              status: status,
+              description: description,
+              dateCreated: dateCreated,
+              targetPopulation: targetPopulation,
+              proposedSolutions: proposedSolutions,
+              attachments: attachments,
+              location: loc,
+            }
       );
       console.log(userInfo);
       console.log(formData);
@@ -89,7 +105,7 @@ const QueryForm = ({
 
   useEffect(() => {
     const uImg = localStorage.getItem("imageURL");
-    setFormData({ ...formData, imgUrl: imageUrl});
+    setFormData({ ...formData, imgUrl: imageUrl });
     setImageUrl(uImg);
   }, [imageUrl]);
 
@@ -176,15 +192,11 @@ const QueryForm = ({
               disabled
             />
             <Link to="/CaptureImg" className="">
-              <Button
-                variant="contained"
-                color="primary"
-                type="button"
-              >
+              <Button variant="contained" color="primary" type="button">
                 upload Image
               </Button>
             </Link>
-            
+
             <div>
               <InputLabel className="">
                 GeoLocation : {loc[0] + " " + loc[1]}{" "}
