@@ -111,7 +111,8 @@ const QueryForm = ({
 
   useEffect(() => {
     let storedLocation = localStorage.getItem("userLocation");
-    setLoc(storedLocation ? JSON.parse(storedLocation) : null);
+    console.log(JSON.parse(storedLocation));
+    setLoc(storedLocation ? JSON.parse(storedLocation) : [74.3501, 16.2229]);
   }, []);
 
   const handleChange = (event) => {
@@ -125,17 +126,17 @@ const QueryForm = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log(formData, userInfo);
-
+    
     let ul = key
-      ? `http://localhost:8080/api/query/edit/${formData._id}`
-      : `http://localhost:8080/api/query/add/${formData._id}`;
+    ? `http://localhost:8080/api/query/edit/${userInfo._id}`
+    : `http://localhost:8080/api/query/add/${userInfo._id}`;
     let method = key ? "PUT" : "POST";
-
+    
+    console.log(formData, userInfo, JSON.stringify(formData), key, ul, method);
     try {
       const response = await fetch(ul, {
         method: method,
-        body: formData,
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {

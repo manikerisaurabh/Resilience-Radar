@@ -9,29 +9,29 @@ const Cards2 = (ul=`http://localhost:8080/api/query`, canCommit) => {
 
   useEffect(() => {
     try {
-      // fetch(ul, {
-      //   method: "GET", 
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // })
-      //   .then((response) => {
-      //     if (!response.ok) {
-      //       throw new Error("Network response was not ok");
-      //     }
-      //     console.log(response);
-      //     return response.json();
-      //   })
-      //   .then((data) => {
-      //     setCardsData(data);
-      //     console.log(data);
-      //   })
-      //   .catch((error) => {
-      //     console.error(
-      //       "There has been a problem with your fetch operation:",
-      //       error
-      //     );
-      //   });
+      fetch(ul, {
+        method: "GET", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          console.log(response);
+          return response.json();
+        })
+        .then((data) => {
+          setCardsData(data);
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error(
+            "There has been a problem with your fetch operation:",
+            error
+          );
+        });
     } catch (error) {
       console.log(error);
     }

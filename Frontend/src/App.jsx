@@ -117,7 +117,7 @@ function App() {
             path="/auth/:mode"
             element={<Login setSwitch={setSwitch} setLogged={setLogged} />}
           />
-          <Route path="/query/" element={<Upload_issue />} />
+          <Route path="/query" element={<Upload_issue />} />
           <Route path="/query/edit/:key" element={<Upload_issue />} />
           <Route path="/DetailedData/:key/:md" element={<DetailedCard />} />
           <Route path="/pending" element={<PendingReports />} />
