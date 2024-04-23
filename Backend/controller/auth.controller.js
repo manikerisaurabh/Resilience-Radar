@@ -7,7 +7,9 @@ export const signup = async (req, res) => {
     try {
         let { userName, latitude, longitude, email, password, confirmPassword, gender } = req.body;
 
-        console.log(req.body);
+        if (!userName || !latitude || !longitude || !email || !password || !confirmPassword || !gender) {
+            return res.status(400).json({ error: "all fields are required check for userName, latitude, longitude, email, password, confirmPassword, gender" })
+        }
         //verifing password
         if (password !== confirmPassword) {
             console.log(password);
@@ -73,6 +75,9 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         let { userName, password } = req.body;
+        if (!userName || !password) {
+            return res.status(400).json({ error: "password and userName is required" });
+        }
         let user = await User.findOne({ userName });
         let isPasswordCorrect = await bcrypt.compare(password, user.password || "");
 

@@ -29,6 +29,9 @@ export const getAllqueriesRelatedToDepartment = async (req, res) => {
 export const takeChargeOnTask = async (req, res) => {
     const { queryId, empId } = req.body;
 
+    if (!queryId || !empId) {
+        return res.status(400).json({ error: "queryId and empId are required" });
+    }
     try {
         // Find the query
         const query = await Query.findById(queryId);
@@ -64,9 +67,12 @@ export const takeChargeOnTask = async (req, res) => {
 };
 
 
-export const commitOfResolvation = async (req, res) => { 
+export const commitOfResolvation = async (req, res) => {
     try {
         let { originalQueryId, location, description, img } = req.body;
+        if (!originalQueryId || !location || !description || !img) {
+            return res.status(400).json({ error: "all fields are required check for originalQueryId, location, description, img " })
+        }
         let { id } = req.params;
 
         let employee = await GovernmentEmployee.findById(id);
