@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
+import th from "/th.jpeg"
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -24,7 +25,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 
-const Navbar = ({ logged, dabba_ve, user }) => {
+const Navbar = ({ logged, dabba_ve, user}) => {
   // let [clicked, setClicked] = useState(false);
   let [showProfile, setShowProfile] = useState(false);
   let [showDialog, setShowDialog] = useState(false);
@@ -41,7 +42,7 @@ const Navbar = ({ logged, dabba_ve, user }) => {
     setOpen(true);
   };
 
-  { console.log("Navbar") }
+  console.log("Navbar");
   console.log(user);
   return (
     // <!-- Navbar -->

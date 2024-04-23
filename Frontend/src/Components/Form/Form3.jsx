@@ -8,7 +8,7 @@ const Form3 = ({ setSwitch, setLogged }) => {
   const { mode } = useParams();
 
   useEffect(() => {
-    setIsLogin(mode === "Login");
+    setIsLogin(mode === "login");
   }, [mode]);
 
   function toggleLogin() {
