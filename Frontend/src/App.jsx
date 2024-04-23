@@ -29,6 +29,7 @@ function App() {
   let [userid, setUserId] = useState("");
   let [displayQueryType, setDisplayQueryType] = useState({
     totalQueries: true,
+    postedQueries: false,
     pendingQueries: false,
     departmentQueries: false,
     assignedQueries: false,
@@ -36,18 +37,29 @@ function App() {
     completedQuerirs: false,
   });
   let [user, setUser] = useState(false);
-
+  const [isGovEmp, setIsGovEmp] = useState(false);
   useEffect(() => {
     try {
       const currUser = localStorage.getItem("currUser");
-      const user = currUser;
+      let user = currUser;
       console.log("this is curr Usrt : " + user)
       if (user) {
 
-        setUser(user);
+        () => {
+          setUser(user);
+        }
         setLogged(true);
         console.log("Logged in");
-        console.log(user);
+        console.log(JSON.parse(user));
+        user = JSON.parse(user);
+        if (user.isGovEmp == true) {
+          setIsGovEmp(true);
+        } else {
+          setIsGovEmp(false);
+        }
+
+        console.log(user._id);
+        setUserId(user._id)
       }
     } catch (error) {
       console.log("Error while retrieving data from localStorage", error);
@@ -57,6 +69,7 @@ function App() {
   function setSidebar() {
     setActive(!active);
   }
+  console.log(`http://localhost:8080/api/query/${userid}/total`);
 
   console.log(displayQueryType, user, user.isGovEmp, userid);
   const id = user.id;
@@ -83,7 +96,7 @@ function App() {
                   }
                   setDisplayQueryType={setDisplayQueryType}
                 />
-                <Sidebar isEmp={true} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
+                <Sidebar isEmp={isGovEmp} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
                 <Outlet />
                 <Footer />
               </>
@@ -102,12 +115,13 @@ function App() {
                 >
                   {logged ? (
                     <div className="mt-[80px] mb-[100px]">
-                      {displayQueryType.totalQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/${userid}/total` : "http://localhost:8080/api/query") : "http://localhost:8080/api/query"} />}
-                      {displayQueryType.pendingQueries && <Cards2 ul={user ? (!user.isGovEmp ? `http://localhost:8080/api/query/pending/${userid}` : `http://localhost:8080/api/gov/query/${userid}/pending`) : "http://localhost:8080/api/query"} />}
-                      {displayQueryType.departmentQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${user.department}`) : "http://localhost:8080/api/query"} />}
-                      {displayQueryType.assignedQueries && <Cards2 ul={user ? (`http://localhost:8080/api/gov/query/${userid}/inCharge`) : "http://localhost:8080/api/query"} canCommit={true} />}
-                      {displayQueryType.toApproveQueries && <Cards2 ul={user ? (`http://localhost:8080/api/query/${userid}/approvation`) : "http://localhost:8080/api/query"} />}
-                      {displayQueryType.completedQuerirs && <Cards2 ul={user ? (`http://localhost:8080/api/query/${userid}/completed`) : "http://localhost:8080/api/query"} />}
+                      {displayQueryType.totalQueries && <Cards2 ul="http://localhost:8080/api/query" />}
+                      {displayQueryType.postedQueries && <Cards2 ul={`http://localhost:8080/api/query/${userid}/total`} />}
+                      {displayQueryType.pendingQueries && <Cards2 ul={(isGovEmp ? `http://localhost:8080/api/query/pending/${userid}` : `http://localhost:8080/api/gov/query/${userid}/pending`)} />}
+                      {displayQueryType.departmentQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${user.department}`)} />}
+                      {displayQueryType.assignedQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${userid}/inCharge`)} canCommit={true} tooApprove={false}/>}
+                      {displayQueryType.toApproveQueries && <Cards2 ul={(`http://localhost:8080/api/query/${userid}/approvation`)} canCommit={false} tooApprove={true}/>}
+                      {displayQueryType.completedQuerirs && <Cards2 ul={(`http://localhost:8080/api/query/${userid}/completed`)} />}
                     </div>
                   ) : (
                     <LandPage />
@@ -119,7 +133,7 @@ function App() {
           <Route path="/CaptureImg" element={<WebcamCapture />} />
           <Route
             path="/auth/:mode"
-            element={<Login setSwitch={setSwitch} setLogged={setLogged} setUserId={setUserId}/>}
+            element={<Login setSwitch={setSwitch} setLogged={setLogged} setUserId={setUserId} />}
           />
           <Route path="/query" element={<Upload_issue />} />
           <Route path="/query/edit/:key" element={<Upload_issue />} />

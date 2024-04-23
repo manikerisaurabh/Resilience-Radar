@@ -18,9 +18,12 @@ export const addQuery = async (req, res) => {
         let { id } = req.params;
         console.log(id);
         let { location, description, img, category, urgency, status, estimatedImpact, targetPopulation } = req.body;
-        console.log("this is img : " + img)
-        let address = await getLocationData(location[0], location[1]);
 
+        // if (!location || !description || !img || !category || !urgency || !estimatedImpact || !targetPopulation) {
+        //     return res.status({ error: "all fields are required" });
+        // }
+        let address = await getLocationData(location[0], location[1]);
+        console.log(address)
         const newQuery = new Query({
             raisedBy: id,
             location: {
@@ -69,6 +72,11 @@ export const editQuery = async (req, res) => {
 
         let { id } = req.params;
         let { raisedBy, queryId } = req.body;
+
+        if (!raisedBy || !queryId) {
+            return res.status(400).json({ error: "raisedBy and queryId are required fields" });
+        }
+
         let query = await Query.findById(queryId);
         if (!query) {
             return res.status(400).json({ error: "Query not found" });
