@@ -38,7 +38,7 @@ const DetailedCard = () => {
     try {
       const storedLocation = localStorage.getItem("userLocation");
       console.log(storedLocation);
-      setUserInfo(storedLocation ? JSON.parse(storedLocation) : null);
+      setUserInfo( ...prev, (storedLocation ? JSON.parse(storedLocation) : null));
     } catch (error) {
       console.log(error);
     }
@@ -52,6 +52,7 @@ const DetailedCard = () => {
       })
       .then((data) => {
         setFormData(data);
+        setUserInfo({...prev, data})
         setLoading(false);
       })
       .catch((error) => {
@@ -68,6 +69,7 @@ const DetailedCard = () => {
 
   function assignTask() {
     try {
+
       fetch(`http://localhost:8000/api/gov/query/assign`, {
         method: "POST",
         body: {
@@ -93,6 +95,22 @@ const DetailedCard = () => {
       });
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  function ApproveTask() {
+    try {
+      fetch(`http://localhost:8000/api/gov/query/${formData._id}/approvation`, {
+        method: "PUT",
+        body: {
+          originalQueryId : formData._id,
+          location : formData.location,
+          description : formData.description,
+          img : formData.imgUrl,
+        },
+      });
+    } catch (error) {
+      
     }
   }
 
@@ -184,27 +202,34 @@ const DetailedCard = () => {
               </div>
             )}
             <div className=" flex gap-2 items-center justify-center">
-              {!userInfo.isGovEmp && (
+              {(userInfo.isGovEmp == false) && (
                 <Link
                   to={`/query/edit/${key}`}
                   className="text-white btn w-[70px] btn-primary col-3"
                 >
-                  <button onClick={onClose} className="">
+                  <button className="">
                     Edit
                   </button>
                 </Link>
               )}
-              {userInfo.isGovEmp && md !== "CommitReport" && (
+              {(userInfo.isGovEmp == true) && (md !== "CommitReport")&& (
                 <div className="text-white btn w-[70px] btn-warning col-3">
                   <button onClick={assignTask} className="">
                     Assign
                   </button>
                 </div>
               )}
-              {md === "CommitReport" && (
+              {(md === "CommitReport") && (
                 <div className="text-white btn w-[70px] btn-success col-3">
                   <button onClick={CommitTask} className="">
                     Completed
+                  </button>
+                </div>
+              )}
+              {(userInfo.isGovEmp == false) && (md === "ApproveRequest")&& (
+                <div className="text-white btn w-[70px] btn-success col-3">
+                  <button onClick={ApproveTask} className="">
+                    Approve
                   </button>
                 </div>
               )}
