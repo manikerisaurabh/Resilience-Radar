@@ -7,12 +7,15 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
 
   useEffect(() => {
     let user = localStorage.getItem("currUser");
-    user = JSON.parse(user);
-    console.log(user);
-    if (user.isGovEmp == true) {
-      setIsEmp(true);
-    } else {
-      setIsEmp(false);
+    if (user) {
+
+      user = JSON.parse(user);
+      console.log(user);
+      if (user.isGovEmp == true) {
+        setIsEmp(true);
+      } else {
+        setIsEmp(false);
+      }
     }
   }, []);
 
