@@ -69,7 +69,9 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
+        console.log("login encountered")
         let { email, password } = req.body;
+        console.log(email, password);
         const employee = await GovernmentEmployee.findOne({ email });
         let isPasswordCorrect = await bcrypt.compare(password, employee.password || "");
 
@@ -84,7 +86,8 @@ export const login = async (req, res) => {
             name: employee.name,
             email: employee.email,
             profilepic: employee.profilePic,
-            isGovEmp: employee.isGovEmp
+            isGovEmp: employee.isGovEmp,
+            department: employee.department
         });
 
     } catch (error) {

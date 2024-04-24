@@ -28,7 +28,7 @@ export const getAllqueriesRelatedToDepartment = async (req, res) => {
 
 export const takeChargeOnTask = async (req, res) => {
     const { queryId, empId } = req.body;
-
+    console.log(queryId, empId);
     if (!queryId || !empId) {
         return res.status(400).json({ error: "queryId and empId are required" });
     }
@@ -69,34 +69,38 @@ export const takeChargeOnTask = async (req, res) => {
 
 export const commitOfResolvation = async (req, res) => {
     try {
-        let { originalQueryId, location, description, img } = req.body;
-        if (!originalQueryId || !location || !description || !img) {
-            return res.status(400).json({ error: "all fields are required check for originalQueryId, location, description, img " })
-        }
+        let { originalQueryId } = req.body;
+        console.log(req.body);
+        // if (!originalQueryId || !location || !description || !img) {
+        //     return res.status(400).json({ error: "all fields are required check for originalQueryId, location, description, img " })
+        // }
         let { id } = req.params;
-
+        console.log(id);
         let employee = await GovernmentEmployee.findById(id);
+        console.log(employee);
         if (!employee) {
             return res.status(400).json({ error: "you are not a government employee" });
         }
 
         if (!employee.queryIncharge.includes(originalQueryId)) {
+            console.log("pppppppppppppp");
             return res.status(400).json({ error: "you are not a resolver of this query" });
         }
         // Get address data
-        let address = await getLocationData(location[0], location[1]);
+        //let address = await getLocationData(location[0], location[1]);
 
         // Find the original query and populate the 'raisedBy' field
+        console.log("------------------------");
         let originalQuery = await Query.findById(originalQueryId).populate("raisedBy");
         if (!originalQuery) {
             return res.status(400).json({ error: "the specified query you are solving is not valid" });
         }
-
-        if (originalQuery.location.address != address.location) {
-            return res.status(400).json({ error: "cant commit the query because address does not match" });
-        }
+        // if (originalQuery.location.address != address.location) {
+        //     return res.status(400).json({ error: "cant commit the query because address does not match" });
+        // }
 
         originalQuery.status = "Commit";
+        console.log("this is originl q : " + originalQuery);
         originalQuery.save();
 
         // // Create a new ResolvedQuery instance
@@ -172,6 +176,7 @@ export const pendingToApprove = async (req, res) => {
     try {
         let { id } = req.params;
         let employee = await GovernmentEmployee.findById(id).populate("queryIncharge");
+        console.log(employee.queryIncharge)
         if (!employee) {
             return res.status(400).json({ error: "Invalid Employee" });
         }

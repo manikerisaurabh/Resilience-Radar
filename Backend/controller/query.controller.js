@@ -62,7 +62,7 @@ export const getEditQueryInfo = async (req, res) => {
         return res.status(200).json(foundQuery);
     } catch (error) {
         console.log("error in getEditQueryInfo controller");
-        return res.state(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
@@ -189,7 +189,7 @@ export const approveCommit = async (req, res) => {
 
         // Find the query by ID
         let query = await Query.findById(id);
-
+        console.log("this is qu : ======" + query);
         // If the query doesn't exist, return 404 Not Found
         if (!query) {
             return res.status(404).json({ error: "Query not found" });
@@ -197,6 +197,7 @@ export const approveCommit = async (req, res) => {
 
         // Check if the user is authorized to approve the query
         if (query.raisedBy != userId) {
+            console.log("------------------- : " + userId);
             return res.status(400).json({ error: "You can't approve this query" });
         }
 

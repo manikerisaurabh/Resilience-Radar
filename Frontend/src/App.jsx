@@ -21,12 +21,14 @@ import Cards2 from "./Components/Cards/Cards2";
 import th from "/th.jpeg";
 import "./App.css";
 import PendingReports from "./Components/Reportss/PendingReports";
-
+import useCurrentUser from "./hooks/UseCurrentUser";
 function App() {
+  const currentUser = useCurrentUser();
   let [active, setActive] = useState(false);
   let [logged, setLogged] = useState(false);
   let [switchh, setSwitch] = useState(false);
   let [userid, setUserId] = useState("");
+  let [dept, setDept] = useState("");
   let [displayQueryType, setDisplayQueryType] = useState({
     totalQueries: true,
     postedQueries: false,
@@ -52,13 +54,15 @@ function App() {
         console.log("Logged in");
         console.log(JSON.parse(user));
         user = JSON.parse(user);
-        if (user.isGovEmp == true) {
+        console.log(user.isGovEmp);
+        if (user.isGovEmp == "true") {
           setIsGovEmp(true);
         } else {
           setIsGovEmp(false);
         }
-
-        console.log(user._id);
+        console.log(user.isGovEmp)
+        console.log(user.department);
+        setDept(user.department);
         setUserId(user._id)
       }
     } catch (error) {
@@ -96,7 +100,7 @@ function App() {
                   }
                   setDisplayQueryType={setDisplayQueryType}
                 />
-                <Sidebar isEmp={isGovEmp} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
+                <Sidebar isEm={user.isGovEmp} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
                 <Outlet />
                 <Footer />
               </>
@@ -117,10 +121,10 @@ function App() {
                     <div className="mt-[80px] mb-[100px]">
                       {displayQueryType.totalQueries && <Cards2 ul="http://localhost:8080/api/query" />}
                       {displayQueryType.postedQueries && <Cards2 ul={`http://localhost:8080/api/query/${userid}/total`} />}
-                      {displayQueryType.pendingQueries && <Cards2 ul={(isGovEmp ? `http://localhost:8080/api/query/pending/${userid}` : `http://localhost:8080/api/gov/query/${userid}/pending`)} />}
-                      {displayQueryType.departmentQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${user.department}`)} />}
-                      {displayQueryType.assignedQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${userid}/inCharge`)} canCommit={true} tooApprove={false}/>}
-                      {displayQueryType.toApproveQueries && <Cards2 ul={(`http://localhost:8080/api/query/${userid}/approvation`)} canCommit={false} tooApprove={true}/>}
+                      {displayQueryType.pendingQueries && <Cards2 ul={(!isGovEmp ? `http://localhost:8080/api/query/pending/${userid}` : `http://localhost:8080/api/gov/query/${userid}/pending`)} />}
+                      {displayQueryType.departmentQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${dept}`)} />}
+                      {displayQueryType.assignedQueries && <Cards2 ul={(`http://localhost:8080/api/gov/query/${userid}/inCharge`)} canCommit={true} tooApprove={false} />}
+                      {displayQueryType.toApproveQueries && <Cards2 ul={(`http://localhost:8080/api/query/${userid}/approvation`)} canCommit={false} tooApprove={true} />}
                       {displayQueryType.completedQuerirs && <Cards2 ul={(`http://localhost:8080/api/query/${userid}/completed`)} />}
                     </div>
                   ) : (

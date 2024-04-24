@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CircularProgress, Alert, AlertTitle } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, json, useParams } from "react-router-dom";
 import th from "/th.jpeg";
 import {
   AlignVerticalBottomRounded,
@@ -30,20 +30,25 @@ const DetailedCard = () => {
     location: [],
   });
   let [userInfo, setUserInfo] = useState(null);
+  let [isEmp, setEmp] = useState(false);
   let { key, md } = useParams();
 
   console.log("key, md :", key, md);
 
   useEffect(() => {
-    try {
-      const storedLocation = localStorage.getItem("userLocation");
-      console.log(storedLocation);
-      setUserInfo( ...prev, (storedLocation ? JSON.parse(storedLocation) : null));
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const storedLocation = localStorage.getItem("userLocation");
+    //   console.log(storedLocation);
+    //   setUserInfo(prev => {
+    //     return {
+    //       ...prev, location: (storedLocation ? JSON.parse(storedLocation) : null)
+    //     }
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
-    fetch(`http://localhost:8000/api/query/edit/${key}`)
+    fetch(`http://localhost:8080/api/query/edit/${key}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -51,11 +56,19 @@ const DetailedCard = () => {
         return response.json();
       })
       .then((data) => {
-        setFormData(data);
-        setUserInfo({...prev, data})
+
+        console.log(data);
+        let currUser = localStorage.getItem("currUser");
+        currUser = JSON.parse(currUser);
+        data.img = data.img.replace(/"/g, "")
+        console.log(currUser);
+        setFormData(data)
+        console.log(formData);
+        console.log(currUser.isGovEmp == "true");
+        setEmp(currUser.isGovEmp == "true")
+        setUserInfo({ ...data, empId: currUser._id });
         setLoading(false);
-      })
-      .catch((error) => {
+      }).catch((error) => {
         console.error("Fetch error:", error);
         setLoading(false);
         setError(true);
@@ -63,36 +76,62 @@ const DetailedCard = () => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    console.log(isEmp);
+    console.log(userInfo);
+  }, [isEmp, userInfo])
+
   function onClose() {
     window.history.back();
   }
 
   function assignTask() {
     try {
-
-      fetch(`http://localhost:8000/api/gov/query/assign`, {
+      const body = {
+        queryId: userInfo._id,
+        empId: userInfo.empId,
+      }
+      console.log(body);
+      fetch(`http://localhost:8080/api/gov/query/assign`, {
         method: "POST",
-        body: {
-          queryId: userInfo.queryId,
-          empId: userInfo.empId,
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json", // Specify content type
         },
+      }).then((res) => {
+        console.log(res.json());
+      })
+      console.log({
+        queryId: userInfo._id,
+        empId: userInfo.empId,
       });
+      console.log("Successfull assigned");
+      // window.history.back();
     } catch (error) {
       console.log(error);
     }
   }
 
   function CommitTask() {
+    console.log(formData);
+    console.log(userInfo);
     try {
-      fetch(`http://localhost:8000/api/gov/query/${formData._id}/commit`, {
+      fetch(`http://localhost:8080/api/gov/query/${userInfo.empId}/commit`, {
         method: "POST",
-        body: {
-          originalQueryId : formData._id,
-          location : formData.location,
-          description : formData.description,
-          img : formData.imgUrl,
+        body: JSON.stringify({
+          originalQueryId: formData._id,
+          location: formData.location,
+          description: formData.description,
+          img: formData.img,
+        }),
+        headers: {
+          "Content-Type": "application/json", // Specify content type
         },
-      });
+      }).then((res) => {
+        console.log(res)
+      })
+      console.log("commited");
+      //window.history.back();
     } catch (error) {
       console.log(error);
     }
@@ -100,17 +139,21 @@ const DetailedCard = () => {
 
   function ApproveTask() {
     try {
-      fetch(`http://localhost:8000/api/gov/query/${formData._id}/approvation`, {
+      let currUser = localStorage.getItem("currUser");
+      currUser = JSON.parse(currUser);
+      console.log(currUser._id);
+      fetch(`http://localhost:8080/api/query/${formData._id}/approvation`, {
         method: "PUT",
-        body: {
-          originalQueryId : formData._id,
-          location : formData.location,
-          description : formData.description,
-          img : formData.imgUrl,
+        body: JSON.stringify({
+          userId: currUser._id
+        }),
+        headers: {
+          "Content-Type": "application/json", // Specify content type
         },
       });
+      //window.history.back();
     } catch (error) {
-      
+      console.log(error);
     }
   }
 
@@ -136,7 +179,7 @@ const DetailedCard = () => {
   //   );
   // }
 
-  console.log(key);
+  console.log(isEmp);
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
@@ -153,7 +196,7 @@ const DetailedCard = () => {
           {/* <button onClick={onClose} className="text-white btn w-[70px] btn-danger ">Close</button> */}
         </div>
         <img
-          src={formData.imgUrl}
+          src={formData.img}
           alt="Report"
           className="w-full h-[50%] object-cover"
         />
@@ -182,27 +225,12 @@ const DetailedCard = () => {
               </li>
               <li>
                 <strong>Location:</strong>{" "}
-                {`${formData.location.village}, ${formData.location.state}, ${formData.location.country}`}
+                {`${formData.location?.village}, ${formData.location?.state}, ${formData.location?.country}`}
               </li>
             </ul>
-            {formData.attachments.length > 0 && (
-              <div className="p-4">
-                <h3 className="text-2xl font-bold mb-2">Attachments:</h3>
-                {formData.attachments.map((attachment, index) => (
-                  <a
-                    key={index}
-                    href={attachment}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-600"
-                  >
-                    Attachment {index + 1}
-                  </a>
-                ))}
-              </div>
-            )}
+
             <div className=" flex gap-2 items-center justify-center">
-              {(userInfo.isGovEmp == false) && (
+              {(isEmp == false) && (
                 <Link
                   to={`/query/edit/${key}`}
                   className="text-white btn w-[70px] btn-primary col-3"
@@ -212,21 +240,21 @@ const DetailedCard = () => {
                   </button>
                 </Link>
               )}
-              {(userInfo.isGovEmp == true) && (md !== "CommitReport")&& (
+              {(isEmp == true) && (formData.status == "New") && (
                 <div className="text-white btn w-[70px] btn-warning col-3">
                   <button onClick={assignTask} className="">
                     Assign
                   </button>
                 </div>
               )}
-              {(md === "CommitReport") && (
+              {(isEmp == true) && (formData.status == "In Progress") && (
                 <div className="text-white btn w-[70px] btn-success col-3">
                   <button onClick={CommitTask} className="">
                     Completed
                   </button>
                 </div>
               )}
-              {(userInfo.isGovEmp == false) && (md === "ApproveRequest")&& (
+              {(isEmp == false) && (md === "ApproveRequest") && (
                 <div className="text-white btn w-[70px] btn-success col-3">
                   <button onClick={ApproveTask} className="">
                     Approve

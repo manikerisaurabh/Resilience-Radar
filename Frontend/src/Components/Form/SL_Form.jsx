@@ -45,12 +45,9 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
   });
   const [snackbarQueue, setSnackbarQueue] = useState([]);
 
-  console.log("isEmp :",isEmp);
+  console.log("isEmp :", isEmp);
 
   React.useEffect(() => {
-    if(mode === "login") {
-      setChoice(true);
-    } 
     console.log(isLogin);
     try {
       const storedLocation = localStorage.getItem("userLocation");
@@ -92,7 +89,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
     e.target.disabled = true;
 
     // Check if password and confirm password are the same
-    if (password.value !== formData.confirmPassword) {
+    if (!isLogin && (password.value !== formData.confirmPassword)) {
       // Show Snackbar with error message
       setOpen(true);
       addSnackbar("Passwords do not match.");
@@ -119,22 +116,26 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
             gender: gender,
           }
           : {
-            username: username.value,
+            email: email.value,
             password: password.value,
+            userName: username.value
           };
 
         formData.email = email.value;
         formData.gender = gender;
         formData.password = password.value;
         formData.userName = username.value;
-        formData.latitude = location[0];
-        formData.longitude = location[1];
+        if (!isLogin) {
+          formData.latitude = location[0];
+          formData.longitude = location[1];
+        }
         console.log(user);
         console.log(formData);
         console.log(mode);
-
+        console.log(isEmp);
+        console.log(isEmp == "true");
         // Sending POST request
-        let ul = isEmp
+        let ul = (isEmp)
           ? `http://localhost:8080/api/gov/auth/${mode}`
           : `http://localhost:8080/api/auth/${mode}`;
         fetch(ul, {
@@ -146,15 +147,12 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
+            console.log(data.error);
             if (data.error) {
               return addSnackbar("User Already exists");
             }
             localStorage.setItem("currUser", JSON.stringify(data));
             window.history.back();
-            setTimeout(() => {
-              localStorage.removeItem("currUser");
-            }, 600000); // remove after 10 mins
             //console.log(JSON.parse(user));
             setSwitch(prev => !prev)
             setLogged(true);
@@ -174,6 +172,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
     );
   };
 
+  console.log("Choice", choose);
   return (
     <>
       {(choose) ? (
@@ -248,7 +247,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                 {avatar.error}
               </Typography>
             )}
-            {isEmp && (
+            {(isEmp && !isLogin) && (
               <div className="flex flex-col gap-4 mb-2 mt-4">
                 <TextField
                   required
@@ -287,7 +286,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                 />
               </div>
             )}
-            {!isEmp && (
+            {(!isEmp && !isLogin) && (
               <TextField
                 required
                 fullWidth
@@ -328,7 +327,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
               onChange={password.changeHandler}
             />
           </div> */}
-            {!isLogin && (
+            {isLogin && (
               <TextField
                 required
                 fullWidth
@@ -470,7 +469,6 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
           </form>
         </>
       ) : (
-        !isLogin && 
         <>
           <Button
             sx={{
@@ -480,11 +478,11 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
             fullWidth
             variant="contained"
             color="primary"
-            onClick={(e) => {
+            onClick={() => {
               setChoice((currCHoice) => !currCHoice);
               setIsEmp(false);
             }}
-            >
+          >
             Public
           </Button>
 
@@ -497,7 +495,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
             fullWidth
             variant="contained"
             color="success"
-            onClick={(e) => {
+            onClick={() => {
               setChoice((currCHoice) => !currCHoice);
               setIsEmp(true);
             }}

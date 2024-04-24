@@ -20,7 +20,7 @@ router.get("/:id/total", isValidUser, totalQueris);
 
 router.get("/:id/completed", isValidUser, completedQueries);
 
+router.put("/:id/approvation", approveCommit);
 router.get("/:id/approvation", isValidUser, pendinfForApprovationQueriess);
 
-router.put("/:id/approvation", approveCommit);
 export default router;

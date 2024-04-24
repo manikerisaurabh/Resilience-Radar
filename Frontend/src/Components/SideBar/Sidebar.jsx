@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
+import useCurrentUser from "../../hooks/UseCurrentUser";
+const Sidebar = ({ isEm, visible, setSidebar, setDisplayQueryType }) => {
+  const currentUser = useCurrentUser();
   const [isEmp, setIsEmp] = useState(false);
 
-  useEffect(() => {
-    let user = localStorage.getItem("currUser");
-    if (user) {
+  function setEMP(value) {
+    setIsEmp(value);
+  }
 
-      user = JSON.parse(user);
-      console.log(user);
-      if (user.isGovEmp == true) {
-        setIsEmp(true);
-      } else {
-        setIsEmp(false);
-      }
+  useEffect(() => {
+    console.log('currentUser:', currentUser);
+    if (currentUser) {
+      console.log('isGovEmp:', currentUser.isGovEmp); // Check the value of currentUser.isGovEmp
+      console.log('condition:', currentUser.isGovEmp == "true"); // Check the value of currentUser.isGovEmp
+      setEMP(currentUser.isGovEmp == "true")
+      console.log('isEmp:', isEmp);
     }
-  }, []);
+  }, [currentUser, isEmp]);
+
+  useEffect(() => {
+    console.log(isEmp);
+  }, [isEmp]);
+
+
+
+
 
   return (
     <>
       <div
-        className={`h-full fixed top-[64px] z-20 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${
-          visible ? "translate-x-0" : "-translate-x-full"
-        } transition duration-400 ease-in`}
+        className={`h-full fixed top-[64px] z-20 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${visible ? "translate-x-0" : "-translate-x-full"
+          } transition duration-400 ease-in`}
       >
         <div className="text-right p-2 font-semibold">
           <button
