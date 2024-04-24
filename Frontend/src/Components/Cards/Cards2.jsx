@@ -3,7 +3,7 @@ import { Snackbar } from "@mui/material";
 import { cardDB } from "../../Temp/cardsData";
 import CardModel from "./CardModel";
 
-const Cards2 = ({ ul, canCommit }) => {
+const Cards2 = ({ ul, canCommit, tooApprove }) => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [cardsData, setCardsData] = useState(cardDB);
@@ -73,7 +73,7 @@ const Cards2 = ({ ul, canCommit }) => {
       <div className="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-5  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2 ">
         {cardsData.map((card) => {
           return (
-            <CardModel key={card._id} {...card} _id={card._id} canCommit={canCommit} />
+            <CardModel key={card._id} {...card} _id={card._id} canCommit={canCommit} tooApprove={tooApprove} />
           );
         })}
       </div>

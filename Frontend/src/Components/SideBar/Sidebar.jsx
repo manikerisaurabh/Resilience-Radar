@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
-
-  const [isEmp, setIsEmp] = useState(false)
+  const [isEmp, setIsEmp] = useState(false);
 
   useEffect(() => {
     let user = localStorage.getItem("currUser");
@@ -19,8 +18,9 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
   return (
     <>
       <div
-        className={`h-full fixed top-[64px] z-20 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${visible ? "translate-x-0" : "-translate-x-full"
-          } transition duration-400 ease-in`}
+        className={`h-full fixed top-[64px] z-20 bg-gray-800 sm:w-1/3 lg:w-1/4 w-full ${
+          visible ? "translate-x-0" : "-translate-x-full"
+        } transition duration-400 ease-in`}
       >
         <div className="text-right p-2 font-semibold">
           <button
@@ -31,15 +31,17 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
           </button>
         </div>
         <ul className="text-center p-0">
-          {!isEmp && <Link
-            to="/query"
-            className="text-decoration-none text-white"
-            onClick={setSidebar}
-          >
-            <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
-              Upload Report
-            </li>
-          </Link>}
+          {!isEmp && (
+            <Link
+              to="/query"
+              className="text-decoration-none text-white"
+              onClick={setSidebar}
+            >
+              <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
+                Upload Report
+              </li>
+            </Link>
+          )}
           <Link className="text-decoration-none text-white">
             <li
               className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
@@ -48,6 +50,7 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
                 setDisplayQueryType((prev) => {
                   return {
                     totalQueries: true,
+                    postedQueries: false,
                     pendingQueries: false,
                     departmentQueries: false,
                     assignedQueries: false,
@@ -60,6 +63,27 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
               Total Report
             </li>
           </Link>
+          {!isEmp && <Link className="text-decoration-none text-white">
+            <li
+              className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
+              onClick={() => {
+                setSidebar();
+                setDisplayQueryType((prev) => {
+                  return {
+                    totalQueries: false,
+                    postedQueries: true,
+                    pendingQueries: false,
+                    departmentQueries: false,
+                    assignedQueries: false,
+                    completedQuerirs: false,
+                    toApproveQueries: false,
+                  };
+                });
+              }}
+            >
+              Posted Report
+            </li>
+          </Link>}
           <Link className="text-decoration-none text-white">
             <li
               className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
@@ -67,6 +91,7 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
                 setSidebar();
                 setDisplayQueryType((prev) => {
                   return {
+                    postedQueries: false,
                     totalQueries: false,
                     pendingQueries: true,
                     departmentQueries: false,
@@ -80,86 +105,98 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
               Pending Report
             </li>
           </Link>
-          {isEmp && <Link className="text-decoration-none text-white">
-            <li
-              className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
-              onClick={() => {
-                setSidebar();
-                setDisplayQueryType((prev) => {
-                  return {
-                    totalQueries: false,
-                    pendingQueries: true,
-                    departmentQueries: true,
-                    assignedQueries: false,
-                    completedQuerirs: false,
-                    toApproveQueries: false,
-                  };
-                });
-              }}
-            >
-              Department Report
-            </li>
-          </Link>}
-          {!isEmp && <Link className="text-decoration-none text-white">
-            <li
-              className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
-              onClick={() => {
-                setSidebar();
-                setDisplayQueryType((prev) => {
-                  return {
-                    totalQueries: false,
-                    pendingQueries: false,
-                    departmentQueries: false,
-                    assignedQueries: false,
-                    completedQuerirs: false,
-                    toApproveQueries: true,
-                  };
-                });
-              }}
-            >
-              Approve Request
-            </li>
-          </Link>}
-          {isEmp && <Link className="text-decoration-none text-white">
-            <li
-              className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
-              onClick={() => {
-                setSidebar();
-                setDisplayQueryType((prev) => {
-                  return {
-                    totalQueries: false,
-                    pendingQueries: false,
-                    departmentQueries: false,
-                    assignedQueries: true,
-                    completedQuerirs: false,
-                    toApproveQueries: false,
-                  };
-                });
-              }}
-            >
-              Assigned Reports
-            </li>
-          </Link>}
-          {!isEmp && <Link className="text-decoration-none text-white">
-            <li
-              className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
-              onClick={() => {
-                setSidebar();
-                setDisplayQueryType((prev) => {
-                  return {
-                    totalQueries: false,
-                    pendingQueries: false,
-                    departmentQueries: false,
-                    assignedQueries: false,
-                    completedQuerirs: true,
-                    toApproveQueries: false,
-                  };
-                });
-              }}
-            >
-              Completed Report
-            </li>
-          </Link>}
+          {isEmp && (
+            <Link className="text-decoration-none text-white">
+              <li
+                className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
+                onClick={() => {
+                  setSidebar();
+                  setDisplayQueryType((prev) => {
+                    return {
+                      postedQueries: false,
+                      totalQueries: false,
+                      pendingQueries: true,
+                      departmentQueries: true,
+                      assignedQueries: false,
+                      completedQuerirs: false,
+                      toApproveQueries: false,
+                    };
+                  });
+                }}
+              >
+                Department Report
+              </li>
+            </Link>
+          )}
+          {!isEmp && (
+            <Link className="text-decoration-none text-white">
+              <li
+                className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
+                onClick={() => {
+                  setSidebar();
+                  setDisplayQueryType((prev) => {
+                    return {
+                      postedQueries: false,
+                      totalQueries: false,
+                      pendingQueries: false,
+                      departmentQueries: false,
+                      assignedQueries: false,
+                      completedQuerirs: false,
+                      toApproveQueries: true,
+                    };
+                  });
+                }}
+              >
+                Approve Request
+              </li>
+            </Link>
+          )}
+          {isEmp && (
+            <Link className="text-decoration-none text-white">
+              <li
+                className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
+                onClick={() => {
+                  setSidebar();
+                  setDisplayQueryType((prev) => {
+                    return {
+                      postedQueries: false,
+                      totalQueries: false,
+                      pendingQueries: false,
+                      departmentQueries: false,
+                      assignedQueries: true,
+                      completedQuerirs: false,
+                      toApproveQueries: false,
+                    };
+                  });
+                }}
+              >
+                Assigned Reports
+              </li>
+            </Link>
+          )}
+          {!isEmp && (
+            <Link className="text-decoration-none text-white">
+              <li
+                className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110"
+                onClick={() => {
+                  setSidebar();
+                  setDisplayQueryType((prev) => {
+                    return {
+                      postedQueries: false,
+                      totalQueries: false,
+                      pendingQueries: false,
+                      departmentQueries: false,
+                      assignedQueries: false,
+                      completedQuerirs: true,
+                      toApproveQueries: false,
+                    };
+                  });
+                }}
+              >
+                Completed Report
+              </li>
+            </Link>
+          )}
           <li className="py-4 text-xl border-gray-800 border-y-[1px] hover:border-white font-semibold transition duration-300 ease-in-out transform hover:scale-110">
             <a
               href="#pending"
@@ -176,5 +213,3 @@ const Sidebar = ({ visible, setSidebar, setDisplayQueryType }) => {
 };
 
 export default Sidebar;
-
-
