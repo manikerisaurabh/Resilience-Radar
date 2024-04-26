@@ -126,8 +126,8 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
         formData.password = password.value;
         formData.userName = username.value;
         if (!isLogin) {
-          formData.latitude = location[1];
-          formData.longitude = location[0];
+          formData.latitude = location[0];
+          formData.longitude = location[1];
         }
         console.log(user);
         console.log(formData);
@@ -327,7 +327,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
               onChange={password.changeHandler}
             />
           </div> */}
-            {(!isLogin) && (
+            {(!isLogin || isEmp) && (
               <TextField
                 required
                 fullWidth

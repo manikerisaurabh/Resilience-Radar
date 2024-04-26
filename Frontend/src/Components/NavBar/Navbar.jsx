@@ -12,6 +12,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import Badge from "@mui/material/Badge";
+import Tooltip from "@mui/material/Tooltip";
 import { motion } from "framer-motion";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -22,8 +23,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
   "& .MuiPaper-root": {
-    width: '80%', // Set your desired width percentage
-    maxHeight: '80vh', // Set your desired height percentage of viewport height
+    width: "80%", // Set your desired width percentage
+    maxHeight: "80vh", // Set your desired height percentage of viewport height
   },
 }));
 
@@ -36,8 +37,10 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
   let [pendingQuery, setPendingQuery] = useState("");
   let [resolvedQuery, setResolvedQuery] = useState("");
   let [totalQuery, setTotalQuery] = useState("");
-  let [isEmp, setIsEmp] = useState("");
-  const [avatar, setAvatar] = useState("https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=");
+  let [isEmp, setIsEmp] = useState(false);
+  const [avatar, setAvatar] = useState(
+    "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+  );
   const [open, setOpen] = React.useState(false);
   const [user, setUser] = React.useState({});
   const [address, setAddress] = React.useState({});
@@ -50,51 +53,63 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
     // let url = isEmp ? "http://localhost:8080/api/gov/auth/logout" : "http://localhost:8080/api/auth/logout"
 
     // fetch()
-    localStorage.removeItem("currUser")
-    setLogged(false)
+    localStorage.removeItem("currUser");
+    setLogged(false);
     handleClose();
   };
 
   const toggleProfile = () => {
-    fetch(`http://localhost:8080/api/auth/${userid}/profile`)
-      .then(res => {
-        return res.json()
+    let url = `http://localhost:8080/api/auth/${userid}/profile`;
+    fetch(url)
+      .then((res) => {
+        return res.json();
       })
-      .then(data => {
+      .then((data) => {
         console.log(data);
+        if (data?.error) {
+          console.log("error :", data?.error);
+        }
         setUser(data);
-        setAddress(data.address)
-        setPendingQuery(data.pendingToApprove.length)
-        setResolvedQuery(data.resolvedQueries.length)
-        setTotalQuery(data.totalQuery.length)
+        setAddress(data.address);
+        setPendingQuery(data.pendingToApprove.length);
+        setResolvedQuery(data.resolvedQueries.length);
+        setTotalQuery(data.totalQuery.length);
       })
+      .catch((error) => {
+        console.log(error);
+      });
     setShowProfile((prevState) => !prevState);
-    setShowDialog((prev) => !prev);
+    console.log(isEmp);
+    console.log(!(isEmp == "true"));
+    if (!(isEmp == "true")) setShowDialog((prev) => !prev);
     setOpen(true);
   };
 
   useEffect(() => {
-    if(logged) {
+    if (logged) {
       let currUser = localStorage.getItem("currUser");
       let user = JSON.parse(currUser);
       console.log(user);
       setUserId(user._id);
+      setIsEmp(user.isGovEmp);
     }
-  }, [logged])
+  }, [logged]);
 
   useEffect(() => {
-    
+    console.log(isEmp);
+  }, [isEmp == "true"]);
+
+  useEffect(() => {
     fetch(`http://localhost:8080/api/query/${userid}/approvationCount`)
-      .then(res => {
-        return res.json()
+      .then((res) => {
+        return res.json();
       })
-      .then(data => {
+      .then((data) => {
         console.log(data);
         setCount(data.count);
-        setAvatar(data.avatar)
-      })
-
-  }, [userid])
+        setAvatar(data.avatar);
+      });
+  }, [userid]);
 
   console.log("Navbar");
   // console.log(user);
@@ -105,50 +120,52 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
         <div className="relative flex items-center justify-between h-16">
           {/* <!-- Mobile menu button--> */}
           <div className="inset-y-0 left-0 flex items-center">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              aria-controls="mobile-menu"
-              aria-expanded="false"
-              // onClick={() => {setClicked(!clicked)}}
-              onClick={() => {
-                dabba_ve();
-              }}
-            >
-              <span className="sr-only">Open main menu</span>
-              {/* <!-- Icon for the menu bar on mobile --> */}
-              <svg
-                className="block h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
+            <Tooltip title={"Menu"} placement="bottom" arrow>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                aria-controls="mobile-menu"
+                aria-expanded="false"
+                // onClick={() => {setClicked(!clicked)}}
+                onClick={() => {
+                  dabba_ve();
+                }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-              {/* <!-- Icon for the close button on mobile --> */}
-              <svg
-                className="hidden h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+                <span className="sr-only">Open main menu</span>
+                {/* <!-- Icon for the menu bar on mobile --> */}
+                <svg
+                  className="block h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  />
+                </svg>
+                {/* <!-- Icon for the close button on mobile --> */}
+                <svg
+                  className="hidden h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </Tooltip>
           </div>
           {/* <!-- Logo --> */}
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
@@ -183,42 +200,62 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
               </Link>
             </div>
           )}
+
+          {/* <!-- Account Info and Notification --> */}
           {logged && (
             <div className="flex flex-row justify-center items-center gap-3">
-              <Link className="text-decoration-none text-white">
-                <div
-                  className="py-4 text-xl text-decoration-none"
-                  onClick={() => {
-                    setDisplayQueryType((prev) => {
-                      return {
-                        totalQueries: false,
-                        pendingQueries: false,
-                        departmentQueries: false,
-                        assignedQueries: false,
-                        completedQuerirs: false,
-                        toApproveQueries: true,
-                      };
-                    });
-                  }}
-                >
-                  <Badge
-                    badgeContent={approveRequestCount}
-                    color="secondary"
-                    max={4}
-                    overlap="circular"
+              <Tooltip
+                title="Approve requests"
+                placement="bottom"
+                arrow
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, -22], // move the tooltip 10px up
+                      },
+                    },
+                  ],
+                }}
+              >
+                <Link className="text-decoration-none text-white">
+                  <div
+                    className="py-4 text-xl text-decoration-none"
+                    onClick={() => {
+                      setDisplayQueryType((prev) => {
+                        return {
+                          totalQueries: false,
+                          pendingQueries: false,
+                          departmentQueries: false,
+                          assignedQueries: false,
+                          completedQuerirs: false,
+                          toApproveQueries: true,
+                        };
+                      });
+                    }}
                   >
-                    <CircleNotificationsIcon
-                      color={"warning"}
-                      fontSize="large"
-                    />
-                  </Badge>
-                </div>
-              </Link>
-              <Avatar
-                alt={user?.userName}
-                src={user.profilepic}
-                onClick={toggleProfile}
-              />
+                    <Badge
+                      badgeContent={approveRequestCount}
+                      color="secondary"
+                      max={4}
+                      overlap="circular"
+                    >
+                      <CircleNotificationsIcon
+                        color={"warning"}
+                        fontSize="large"
+                      />
+                    </Badge>
+                  </div>
+                </Link>
+              </Tooltip>
+              <Tooltip title={"Account Info"} placement="bottom" arrow>
+                <Avatar
+                  alt={user?.userName}
+                  src={user.profilepic}
+                  onClick={toggleProfile}
+                />
+              </Tooltip>
             </div>
           )}
         </div>
@@ -228,88 +265,99 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
           onClose={handleClose}
           aria-labelledby="customized-dialog-title"
           open={open}
+          sx={{
+            "& .MuiDialog-paper": {
+              backgroundColor: "#f5f5f5", // Soft background color for the modal
+              borderRadius: "10px", // Rounded corners for a modern look
+            },
+          }}
         >
-          <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+          <DialogTitle
+            sx={{
+              m: 0,
+              p: 2,
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "#1976d2",
+              color: "#fff",
+            }}
+          >
             <Avatar
               alt={user?.userName}
               src={user.profilepic}
-              style={{ marginRight: "10px" }}
+              sx={{ width: "105px", height: "105px", marginRight: "10px" }} // Increased avatar size with custom dimensions
             />
             {user.userName}'s Profile
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: "#fff",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
           </DialogTitle>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: theme => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <DialogContent dividers>
-            {/* Display user information */}
+          <DialogContent dividers sx={{ padding: "20px" }}>
+            {/* Display user information with motion effects */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 150 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <Typography gutterBottom>
+              <Typography gutterBottom sx={{ fontWeight: "bold" }}>
                 Username: {user.userName}
               </Typography>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 150 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <Typography gutterBottom>
-                Email: {user.email}
-              </Typography>
+              <Typography gutterBottom>Email: {user.email}</Typography>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              initial={{ opacity: 0, x: 150 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
             >
-              <Typography gutterBottom>
-                Gender: {user.gender}
-              </Typography>
+              <Typography gutterBottom>Gender: {user.gender}</Typography>
+            </motion.div>
+            {isEmp == "true" && (
+              <motion.div
+                initial={{ opacity: 0, x: 150 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Typography gutterBottom>
+                  Address: {address?.county}, {address?.district},{" "}
+                  {address?.state}, {address?.country}
+                </Typography>
+              </motion.div>
+            )}
+            <motion.div
+              initial={{ opacity: 0, x: 150 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Typography gutterBottom>Total Queries: {totalQuery}</Typography>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 150 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.7 }}
-            >
-              <Typography gutterBottom>
-                Address: {address.county}, {address.district},{" "}
-                {address.state}, {address.country}
-              </Typography>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              <Typography gutterBottom>
-                Total Queries: {totalQuery}
-              </Typography>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
             >
               <Typography gutterBottom>
                 Pending Queries: {pendingQuery}
               </Typography>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
+              initial={{ opacity: 0, x: 150 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8 }}
             >
               <Typography gutterBottom>
                 Resolved Queries: {resolvedQuery}
@@ -317,8 +365,16 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
             </motion.div>
             {/* Add more user information as needed */}
           </DialogContent>
-          <DialogActions>
-            <Button autoFocus onClick={logout}>
+          <DialogActions sx={{ justifyContent: "flex-start", padding: "20px" }}>
+            <Button
+              autoFocus
+              onClick={logout}
+              sx={{
+                backgroundColor: "#d32f2f",
+                color: "#fff",
+                "&:hover": { backgroundColor: "#9a0007" },
+              }}
+            >
               Log out
             </Button>
           </DialogActions>
