@@ -176,7 +176,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
   return (
     <>
       {(choose) ? (
-        <>
+        <div className="">
           <Typography
             variant="h5"
             letterSpacing={isLogin ? 2 : 1}
@@ -286,7 +286,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                 />
               </div>
             )}
-            {(!isEmp && !isLogin) && (
+            {(!isEmp) && (
               <TextField
                 required
                 fullWidth
@@ -327,7 +327,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
               onChange={password.changeHandler}
             />
           </div> */}
-            {isLogin && (
+            {(isEmp) && (
               <TextField
                 required
                 fullWidth
@@ -467,7 +467,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
               </Snackbar>
             )}
           </form>
-        </>
+        </div>
       ) : (
         <>
           <Button
