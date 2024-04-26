@@ -6,7 +6,7 @@ export const signup = async (req, res) => {
     try {
         let { employeeId, name, department, email, phoneNumber, password, confirmPassword, gender } = req.body;
         console.log(req.body);
-        //console.log(employeeId, name, department, email, phoneNumber, password, confirmPassword, gender);
+        console.log(employeeId, name, department, email, phoneNumber, password, confirmPassword, gender);
         // Check if all required fields are provided
         if (!employeeId || !name || !department || !email || !phoneNumber || !password || !confirmPassword || !gender) {
             return res.status(400).json({ error: "All fields are required" });

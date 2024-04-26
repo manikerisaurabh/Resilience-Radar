@@ -7,6 +7,8 @@ export const signup = async (req, res) => {
     try {
         let { userName, latitude, longitude, email, password, confirmPassword, gender } = req.body;
 
+        console.log(req.body);
+
         if (!userName || !latitude || !longitude || !email || !password || !confirmPassword || !gender) {
             return res.status(400).json({ error: "all fields are required check for userName, latitude, longitude, email, password, confirmPassword, gender" })
         }
@@ -115,7 +117,8 @@ export const logout = (req, res) => {
 export const getProfileinfo = async (req, res) => {
     try {
         let { id } = req.params;
-        const user = User.findById(id);
+        const user = await User.findById(id);
+        console.log(user);
         if (!user) {
             return res.status(400).json({ error: "not user" })
         }

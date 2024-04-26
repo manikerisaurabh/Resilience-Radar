@@ -90,6 +90,7 @@ function App() {
                 <Navbar
                   logged={logged}
                   dabba_ve={setSidebar}
+                  setLogged={setLogged}
                   user={
                     user
                       ? user
