@@ -4,7 +4,6 @@ import { useInView } from "react-intersection-observer";
 import "./LandingPage.css";
 
 const LandingPage = () => {
-  // Dummy data for demonstration
   const sections = [
     {
       title: "Be part of the solution",
@@ -66,6 +65,7 @@ const LandingPage = () => {
         {sections.map((section, index) => (
           <SectionBlock key={index} section={section} index={index} />
         ))}
+        </div>
       </div>
         </motion.div>
     </div>

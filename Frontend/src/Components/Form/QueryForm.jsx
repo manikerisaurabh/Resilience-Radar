@@ -187,6 +187,7 @@ const QueryForm = ({
 
       <div className="flex flex-col items-center bg-[#b7dce3cc] min-h-fit p-10 justify-center">
         <div className="bg-white p-8 rounded-lg sm:w-[68vw] lg:w-[48vw] my-8 shadow-2xl shadow-[#23a4bdd1] w-96">
+
           <h2 className="text-2xl font-semibold mb-4">Report an Issue</h2>
           <form className="space-y-4 " onSubmit={handleSubmit}>
             {/* <InputLabel>Image Url: </InputLabel> */}
