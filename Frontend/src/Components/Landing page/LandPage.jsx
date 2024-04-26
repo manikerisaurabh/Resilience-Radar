@@ -54,25 +54,25 @@ const LandingPage = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-           Welcome to the Community Challenge Platform, a dynamic website designed to address various social challenges faced by our community.
+          Welcome to the Community Challenge Platform, a dynamic website designed to address various social challenges faced by our community.
         </motion.div>
       </motion.div>
 
       <motion.div
         transition={{ delay: 5 }}
       >
-      <div className="sections">
-        {sections.map((section, index) => (
-          <SectionBlock key={index} section={section} index={index} />
-        ))}
+        <div className="sections">
+          {sections.map((section, index) => (
+            <SectionBlock key={index} section={section} index={index} />
+          ))}
+
         </div>
-      </div>
-        </motion.div>
+      </motion.div>
     </div>
   );
 };
 
-const SectionBlock = ({ section, index=1 }) => {
+const SectionBlock = ({ section, index = 1 }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.5

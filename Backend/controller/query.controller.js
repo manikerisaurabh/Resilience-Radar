@@ -1,4 +1,5 @@
 import Query from "../models/query.js"
+import User from "../models/user.js";
 import { getLocationData } from "../utils/getLocation.js";
 
 //returns all the queries present in db
@@ -178,6 +179,24 @@ export const pendinfForApprovationQueriess = async (req, res) => {
         res.status(200).json(pendingQueries);
     } catch (error) {
         console.log("error in pendinfForApprovationQueriess controller");
+        return res.state(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+export const getApprovationCount = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const pendingQueries = await Query.find({ raisedBy: id, status: 'Commit' });
+        const user = await User.findById(id);
+        res.status(200).json({
+            count: pendingQueries.length,
+            avatar: user.profilepic
+
+        });
+
+    } catch (error) {
+        console.log("error in getApprovationCount controller");
         return res.state(500).json({ error: "Internal Server Error" });
     }
 }

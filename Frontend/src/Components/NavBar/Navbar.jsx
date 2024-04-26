@@ -23,14 +23,21 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
   },
+  "& .MuiPaper-root": {
+    width: '80%', // Set your desired width percentage
+    maxHeight: '80vh', // Set your desired height percentage of viewport height
+  },
 }));
 
-const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
+const Navbar = ({ logged, dabba_ve, setDisplayQueryType }) => {
   // let [clicked, setClicked] = useState(false);
   let [showProfile, setShowProfile] = useState(false);
+  let [userid, setUserId] = useState("");
   let [showDialog, setShowDialog] = useState(false);
-
+  let [approveRequestCount, setCount] = useState(0);
+  const [avatar, setAvatar] = useState("https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=");
   const [open, setOpen] = React.useState(false);
+  const [user, setUser] = React.useState({});
 
   const handleClose = () => {
     setOpen(false);
@@ -42,8 +49,40 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
     setOpen(true);
   };
 
+  useEffect(() => {
+    let currUser = localStorage.getItem("currUser");
+    let user = JSON.parse(currUser);
+    console.log(user);
+    setUserId(user._id);
+  }, [])
+
+  useEffect(() => {
+
+    console.log(userid);
+    fetch(`http://localhost:8080/api/query/${userid}/approvationCount`)
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        console.log(data);
+        setCount(data.count);
+        setAvatar(data.avatar)
+      })
+
+    fetch(`http://localhost:8080/api/auth/${userid}/profile`)
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        console.log(data.user);
+        setUser(data.user);
+      })
+
+
+  }, [userid])
+
   console.log("Navbar");
-  console.log(user);
+  // console.log(user);
   return (
     // <!-- Navbar -->
     <nav className="fixed top-0 left-0 w-[100vw] z-20 bg-gray-800 border-b-[1px] border-b-black border-opacity-30 shadow-black">
@@ -148,7 +187,7 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
                   }}
                 >
                   <Badge
-                    badgeContent={4}
+                    badgeContent={approveRequestCount}
                     color="secondary"
                     max={4}
                     overlap="circular"
@@ -161,8 +200,8 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
                 </div>
               </Link>
               <Avatar
-                alt={user.userName}
-                src={user.profilepic}
+                alt={user?.userName}
+                src={avatar}
                 onClick={toggleProfile}
               />
             </div>
@@ -177,7 +216,7 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
           open={open}
         >
           <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-            Modal title
+            User Profile
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -192,25 +231,21 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
             <CloseIcon />
           </IconButton>
           <DialogContent dividers>
+            {/* Display user information */}
             <Typography gutterBottom>
-              Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-              dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-              ac consectetur ac, vestibulum at eros.
+              Username: {user.userName}
             </Typography>
             <Typography gutterBottom>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur
-              et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-              auctor.
+              Email: {user.email}
             </Typography>
             <Typography gutterBottom>
-              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-              cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-              dui. Donec ullamcorper nulla non metus auctor fringilla.
+              Gender: {user.gender}
             </Typography>
+            {/* Add more user information as needed */}
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={handleClose}>
-              Save changes
+              Close
             </Button>
           </DialogActions>
         </BootstrapDialog>

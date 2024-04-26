@@ -98,6 +98,7 @@ function App() {
                         profilepic: th,
                       }
                   }
+                  userid={userid}
                   setDisplayQueryType={setDisplayQueryType}
                 />
                 <Sidebar isEm={user.isGovEmp} visible={active} setSidebar={setSidebar} setDisplayQueryType={setDisplayQueryType} />
