@@ -109,8 +109,8 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
         const user = !isLogin
           ? {
             userName: username.value,
-            latitude: location[1],
-            longitude: location[0],
+            latitude: location[0],
+            longitude: location[1],
             email: email.value,
             password: password.value,
             gender: gender,
@@ -126,8 +126,8 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
         formData.password = password.value;
         formData.userName = username.value;
         if (!isLogin) {
-          formData.latitude = location[0];
-          formData.longitude = location[1];
+          formData.latitude = location[1];
+          formData.longitude = location[0];
         }
         console.log(user);
         console.log(formData);
@@ -165,7 +165,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
       (error) => {
         // Handle error when user denies location permission
         setOpen(true);
-
+        console.log(error);
         // Add a snackbar
         addSnackbar("Location is mandatory. Please allow location access.");
       }
@@ -176,7 +176,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
   return (
     <>
       {(choose) ? (
-        <>
+        <div className="">
           <Typography
             variant="h5"
             letterSpacing={isLogin ? 2 : 1}
@@ -286,7 +286,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                 />
               </div>
             )}
-            {(!isEmp && !isLogin) && (
+            {(!isEmp) && (
               <TextField
                 required
                 fullWidth
@@ -327,7 +327,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
               onChange={password.changeHandler}
             />
           </div> */}
-            {isLogin && (
+            {(!isLogin) && (
               <TextField
                 required
                 fullWidth
@@ -467,7 +467,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
               </Snackbar>
             )}
           </form>
-        </>
+        </div>
       ) : (
         <>
           <Button

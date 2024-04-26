@@ -7,6 +7,8 @@ export const signup = async (req, res) => {
     try {
         let { userName, latitude, longitude, email, password, confirmPassword, gender } = req.body;
 
+        console.log(req.body);
+
         if (!userName || !latitude || !longitude || !email || !password || !confirmPassword || !gender) {
             return res.status(400).json({ error: "all fields are required check for userName, latitude, longitude, email, password, confirmPassword, gender" })
         }
@@ -111,3 +113,18 @@ export const logout = (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 };
+
+export const getProfileinfo = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const user = await User.findById(id);
+        console.log(user);
+        if (!user) {
+            return res.status(400).json({ error: "not user" })
+        }
+        res.status(200).json(user)
+    } catch (error) {
+        console.log("Error in getProfileinfo controller : " + error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}

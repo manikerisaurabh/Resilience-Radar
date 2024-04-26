@@ -7,8 +7,8 @@
   padding: 0 2rem;
   background-color:white;
   margin-top: 68px;
-  background-image: url("./backImg.jpeg");
-  background-size: cover; /* This will make sure the image covers the entire div */
+  /* background-size:cover; This will make sure the image covers the entire div while maintaining aspect ratio */
+  /* background-position: center; This will make sure the image covers the entire div */
   height: 100%; /* Set the height of the div */
   width: 100%; /* Set the width of the div */
 }

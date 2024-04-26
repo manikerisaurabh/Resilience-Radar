@@ -1,11 +1,16 @@
-import React from 'react'
+import React from "react";
+import "./Footer.css";
 
 const Footer = () => {
   return (
-    <div className=' w-full bg-slate-950 justify-end items-end text-white text-center p-10'>
-        Blah Blah Blah Blah
-    </div>
-  )
-}
+    <footer className="footer">
+      <div className="footer-content">
+        <p>&copy; {new Date().getFullYear()} Resilience Radar</p>
+        <p>Address: 123 Main Street, City, Country</p>
+        <p>Email: contact@resilienceradar.com</p>
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

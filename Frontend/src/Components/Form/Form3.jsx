@@ -17,10 +17,6 @@ const Form3 = ({ setSwitch, setLogged, setUserId}) => {
 
   return (
     <div
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(200,200,200,0.5), rgba(120,110,220,0.5))",
-      }}
       className={!isLogin ? "py-8 h-screen overflow-auto" : "h-screen overflow-auto"}
     >
       <Container
@@ -32,7 +28,7 @@ const Form3 = ({ setSwitch, setLogged, setUserId}) => {
           justifyContent: "center",
           alignItems: "center",
         }}
-        className={!isLogin ? "my-[20vh]" : ""}
+        className={!isLogin ? "my-[]" : ""}
       >
         <Paper
           elevation={3}

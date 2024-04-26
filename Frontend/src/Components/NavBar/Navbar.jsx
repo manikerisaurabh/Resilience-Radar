@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MobileMenuBar from "./MobileMenuBar";
 import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
-import Profile from "../Profile/Profile";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -14,7 +12,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import Badge from "@mui/material/Badge";
-import th from "/th.jpeg";
+import { motion } from "framer-motion";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -23,27 +21,83 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
   },
+  "& .MuiPaper-root": {
+    width: '80%', // Set your desired width percentage
+    maxHeight: '80vh', // Set your desired height percentage of viewport height
+  },
 }));
 
-const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
+const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
   // let [clicked, setClicked] = useState(false);
   let [showProfile, setShowProfile] = useState(false);
+  let [userid, setUserId] = useState("");
   let [showDialog, setShowDialog] = useState(false);
-
+  let [approveRequestCount, setCount] = useState(0);
+  let [pendingQuery, setPendingQuery] = useState("");
+  let [resolvedQuery, setResolvedQuery] = useState("");
+  let [totalQuery, setTotalQuery] = useState("");
+  let [isEmp, setIsEmp] = useState("");
+  const [avatar, setAvatar] = useState("https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=");
   const [open, setOpen] = React.useState(false);
+  const [user, setUser] = React.useState({});
+  const [address, setAddress] = React.useState({});
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const logout = () => {
+    // let url = isEmp ? "http://localhost:8080/api/gov/auth/logout" : "http://localhost:8080/api/auth/logout"
+
+    // fetch()
+    localStorage.removeItem("currUser")
+    setLogged(false)
+    handleClose();
+  };
+
   const toggleProfile = () => {
+    fetch(`http://localhost:8080/api/auth/${userid}/profile`)
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        console.log(data);
+        setUser(data);
+        setAddress(data.address)
+        setPendingQuery(data.pendingToApprove.length)
+        setResolvedQuery(data.resolvedQueries.length)
+        setTotalQuery(data.totalQuery.length)
+      })
     setShowProfile((prevState) => !prevState);
     setShowDialog((prev) => !prev);
     setOpen(true);
   };
 
+  useEffect(() => {
+    if(logged) {
+      let currUser = localStorage.getItem("currUser");
+      let user = JSON.parse(currUser);
+      console.log(user);
+      setUserId(user._id);
+    }
+  }, [logged])
+
+  useEffect(() => {
+    
+    fetch(`http://localhost:8080/api/query/${userid}/approvationCount`)
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        console.log(data);
+        setCount(data.count);
+        setAvatar(data.avatar)
+      })
+
+  }, [userid])
+
   console.log("Navbar");
-  console.log(user);
+  // console.log(user);
   return (
     // <!-- Navbar -->
     <nav className="fixed top-0 left-0 w-[100vw] z-20 bg-gray-800 border-b-[1px] border-b-black border-opacity-30 shadow-black">
@@ -148,7 +202,7 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
                   }}
                 >
                   <Badge
-                    badgeContent={4}
+                    badgeContent={approveRequestCount}
                     color="secondary"
                     max={4}
                     overlap="circular"
@@ -161,7 +215,7 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
                 </div>
               </Link>
               <Avatar
-                alt={user.userName}
+                alt={user?.userName}
                 src={user.profilepic}
                 onClick={toggleProfile}
               />
@@ -169,7 +223,6 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
           )}
         </div>
       </div>
-      {/* {clicked && <MobileMenuBar />} */}
       {showDialog && (
         <BootstrapDialog
           onClose={handleClose}
@@ -177,7 +230,12 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
           open={open}
         >
           <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-            Modal title
+            <Avatar
+              alt={user?.userName}
+              src={user.profilepic}
+              style={{ marginRight: "10px" }}
+            />
+            {user.userName}'s Profile
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -186,31 +244,82 @@ const Navbar = ({ logged, dabba_ve, user, setDisplayQueryType }) => {
               position: "absolute",
               right: 8,
               top: 8,
-              color: (theme) => theme.palette.grey[500],
+              color: theme => theme.palette.grey[500],
             }}
           >
             <CloseIcon />
           </IconButton>
           <DialogContent dividers>
-            <Typography gutterBottom>
-              Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-              dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-              ac consectetur ac, vestibulum at eros.
-            </Typography>
-            <Typography gutterBottom>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur
-              et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-              auctor.
-            </Typography>
-            <Typography gutterBottom>
-              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-              cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-              dui. Donec ullamcorper nulla non metus auctor fringilla.
-            </Typography>
+            {/* Display user information */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Typography gutterBottom>
+                Username: {user.userName}
+              </Typography>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Typography gutterBottom>
+                Email: {user.email}
+              </Typography>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Typography gutterBottom>
+                Gender: {user.gender}
+              </Typography>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <Typography gutterBottom>
+                Address: {address.county}, {address.district},{" "}
+                {address.state}, {address.country}
+              </Typography>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <Typography gutterBottom>
+                Total Queries: {totalQuery}
+              </Typography>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+            >
+              <Typography gutterBottom>
+                Pending Queries: {pendingQuery}
+              </Typography>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 }}
+            >
+              <Typography gutterBottom>
+                Resolved Queries: {resolvedQuery}
+              </Typography>
+            </motion.div>
+            {/* Add more user information as needed */}
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={handleClose}>
-              Save changes
+            <Button autoFocus onClick={logout}>
+              Log out
             </Button>
           </DialogActions>
         </BootstrapDialog>
