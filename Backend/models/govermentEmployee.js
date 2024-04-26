@@ -12,6 +12,7 @@ const governmentEmployeeSchema = new Schema({
     },
     department: {
         type: String,
+        enum: ["Infrastructure", "Education", "Healthcare", "Environment", "Social Welfare"],
         required: true
     },
     email: {
@@ -38,7 +39,8 @@ const governmentEmployeeSchema = new Schema({
     isGovEmp: {
         type: String,
         required: true,
-        enum: ['true', 'false']
+        enum: ['true', 'false'],
+        default: true
     },
     queryIncharge: [{
         type: Schema.Types.ObjectId,

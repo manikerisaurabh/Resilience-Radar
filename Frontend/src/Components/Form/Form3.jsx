@@ -3,12 +3,12 @@ import { Container, Paper } from "@mui/material";
 import SL_Form from "./SL_Form";
 import { useParams } from "react-router-dom";
 
-const Form3 = () => {
+const Form3 = ({ setSwitch, setLogged, setUserId}) => {
   const [isLogin, setIsLogin] = useState(true);
   const { mode } = useParams();
 
   useEffect(() => {
-    setIsLogin(mode === "Login");
+    setIsLogin(mode === "login");
   }, [mode]);
 
   function toggleLogin() {
@@ -17,11 +17,7 @@ const Form3 = () => {
 
   return (
     <div
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(200,200,200,0.5), rgba(120,110,220,0.5))",
-      }}
-      className={!isLogin ? "py-8" : ""}
+      className={!isLogin ? "py-8 h-screen overflow-auto" : "h-screen overflow-auto"}
     >
       <Container
         component={"main"}
@@ -32,8 +28,8 @@ const Form3 = () => {
           justifyContent: "center",
           alignItems: "center",
         }}
-        className={!isLogin ? "my-[10vh]" : ""}
-        >
+        className={!isLogin ? "my-[]" : ""}
+      >
         <Paper
           elevation={3}
           sx={{
@@ -43,9 +39,9 @@ const Form3 = () => {
             alignItems: "center",
             marginTop: "1rem",
           }}
-          // className={!isLogin ? "my-[10vh]" : ""}
+        // className={!isLogin ? "my-[10vh]" : ""}
         >
-          {<SL_Form isLogin={isLogin} toggleLogin={toggleLogin} />}
+          {<SL_Form isLogin={isLogin} toggleLogin={toggleLogin} setSwitch={setSwitch} setLogged={setLogged} setUserId={setUserId}/>}
         </Paper>
       </Container>
     </div>

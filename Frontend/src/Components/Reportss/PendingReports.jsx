@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CardModel from '../Cards/CardModel';
 import th from '/th.jpeg';
 
-const Reports = () => {
-  
+const PendingReports = () => {
     let DB = [
       {
         id: 0,
@@ -59,7 +58,7 @@ const Reports = () => {
   useEffect(() => {
     let user = localStorage.getItem("currUser");
     user = JSON.parse(user);
-    // fetch(`http://localhost:8080/api/query/edit/${user._id}`, {
+    // fetch(`http://localhost:8080/api/query/pending/${user._id}`, {
     //   method: 'GET',
     //   headers: {
     //     'Content-Type': 'application/json',
@@ -86,7 +85,7 @@ const Reports = () => {
     // });
   }, []); // The empty dependency array ensures this effect runs once after the initial render
     return (
-      <div className="row row-cols-1 row-cols row-cols-sm-2 row-cols-md-3  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2">
+      <div className=" row row-cols-1 row-cols row-cols-sm-2 row-cols-md-3  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2">
         {reports.length > 0 ? (
           reports.map((report) => {
             return <CardModel key={report.id} {...report} _id={report.id} />;
@@ -98,5 +97,5 @@ const Reports = () => {
     );
   };
   
-  export default Reports;
+  export default PendingReports;
   

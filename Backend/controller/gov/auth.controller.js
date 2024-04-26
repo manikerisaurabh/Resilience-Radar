@@ -5,7 +5,8 @@ import generateTokenAndSetCookie from '../../utils/generateTokenAndSetCookie.js'
 export const signup = async (req, res) => {
     try {
         let { employeeId, name, department, email, phoneNumber, password, confirmPassword, gender } = req.body;
-
+        console.log(req.body);
+        //console.log(employeeId, name, department, email, phoneNumber, password, confirmPassword, gender);
         // Check if all required fields are provided
         if (!employeeId || !name || !department || !email || !phoneNumber || !password || !confirmPassword || !gender) {
             return res.status(400).json({ error: "All fields are required" });
@@ -57,7 +58,8 @@ export const signup = async (req, res) => {
             _id: newEmployee._id,
             employeeName: newEmployee.name,
             profilepic: newEmployee.profilePic,
-            isGovEmp: newEmployee.isGovEmp
+            isGovEmp: newEmployee.isGovEmp,
+            department: newEmployee.department
         });
 
     } catch (error) {
@@ -68,7 +70,9 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
+        console.log("login encountered")
         let { email, password } = req.body;
+        console.log(email, password);
         const employee = await GovernmentEmployee.findOne({ email });
         let isPasswordCorrect = await bcrypt.compare(password, employee.password || "");
 
@@ -83,7 +87,8 @@ export const login = async (req, res) => {
             name: employee.name,
             email: employee.email,
             profilepic: employee.profilePic,
-            isGovEmp: employee.isGovEmp
+            isGovEmp: employee.isGovEmp,
+            department: employee.department
         });
 
     } catch (error) {

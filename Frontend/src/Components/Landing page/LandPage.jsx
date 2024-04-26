@@ -1,81 +1,94 @@
-import React from 'react';
-import './LandingPage.css';
+import React from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import "./LandingPage.css";
 
 const LandingPage = () => {
+  // Dummy data for demonstration
+  const sections = [
+    {
+      title: "Be part of the solution",
+      description:
+        "Contribute to a thriving community by reporting and mapping community challenges."
+    },
+    {
+      title: "Shine a light on issues",
+      description:
+        "Report and map community challenges to raise awareness and prioritize solutions."
+    },
+    {
+      title: "Strength in numbers",
+      description:
+        "See what concerns your neighbors share and join forces to advocate for change."
+    },
+    {
+      title: "Awareness Raising",
+      description:
+        "Contribute to a thriving community by reporting and mapping community challenges"
+    },
+    {
+      title: "A Comprehensive Guide",
+      description:
+        "This platform is a powerful tool to build a stronger, more informed community"
+    }
+  ];
+
   return (
-
     <div className="landing-page">
-      <div className="landing-content">
-        <h1 className="title"><b><u>Residential - Radar</u></b></h1>
-        <p className="subtitle">
-        Welcome to the Community Challenge Platform, a dynamic website designed to address various social challenges faced by our community.
+      <motion.div
+        className="logo"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <motion.div
+          className="r-letter text-9xl mb-10"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          RESILIENCE RADAR
+        </motion.div>
+        <motion.div
+          className="r-letter mb-10"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+           Welcome to the Community Challenge Platform, a dynamic website designed to address various social challenges faced by our community.
+        </motion.div>
+      </motion.div>
 
-    <div className='p-4'>
-      <h1 className='title my-[64px] text-center '><b><u>Residential - Radar</u></b></h1>
-      <p>
-        Welcome to the Community Challenge Platform, a dynamic website designed to address various social challenges faced by our community. This platform is not only focused on water-related problems but also includes issues such as floods, droughts, road conditions, and other pressing concerns.
-      </p>
-      <h2>Key Features</h2>
-      <ul>
-        <li>Be part of the solution and contribute to a thriving community.</li>
-        <li>Shine a light on issues: Report and map community challenges to raise awareness and prioritize solutions.</li>
-        <li>Strength in numbers: See what concerns your neighbors share and join forces to advocate for change.</li>
-        <li>Awareness Raising</li>
-        <li>Data-driven decisions: Our platform leverages resident reports, open-source data, and expert insights to create a comprehensive picture of community needs.</li>
-        <li>This platform is a powerful tool to build a stronger, more informed community. </li>
-        <li>Valuable Resource for Authorities</li>
-      </ul>
-      <h2>Get Involved</h2>
-      <ul>
-        <li>Report a Challenge</li>
-        <li>Stay Informed</li>
-        <li>Spread the Word</li>
-      </ul>
-      <p>
-        *This platform is currently under development. Stay tuned for updates and the official launch.*
+      <motion.div
+        transition={{ delay: 5 }}
+      >
+      <div className="sections">
+        {sections.map((section, index) => (
+          <SectionBlock key={index} section={section} index={index} />
+        ))}
+      </div>
+        </motion.div>
+    </div>
+  );
+};
 
-      </p>
-      <div className="features">
-        <div className="feature">
-          <h3>Be part of the solution</h3>
-          <p>Contribute to a thriving community by reporting and mapping community challenges.</p>
-        </div>
-        <div className="feature">
-          <h3>Shine a light on issues</h3>
-          <p>Report and map community challenges to raise awareness and prioritize solutions.</p>
-        </div>
-        <div className="feature">
-          <h3>Strength in numbers</h3>
-          <p>See what concerns your neighbors share and join forces to advocate for change.</p>
-        </div>
-        <div className="feature">
-          <h3>Awareness Raising</h3>
-          <p>Contribute to a thriving community by reporting and mapping community challenges.</p>
-        </div>
-        <div className="feature">
-          <h3>Data-driven decisions</h3>
-          <p>Our platform leverages resident reports, open-source data, and expert insights to create a comprehensive picture of community needs.</p>
-        </div>
-        <div className="feature">
-          <h3>Be part of the solution</h3>
-          <p>This platform is a powerful tool to build a stronger, more informed community</p>
-        </div>
-        <div className="feature">
-          <h3>Be part of the solution</h3>
-          <p>Valuable Resource for Authorities</p>
-        </div>
-      </div>
-        </div>
-        <div className="get-involved">
-          <h2>Get Involved</h2>
-          <div className='get div b'>
-          <p className='get div'>Report a Challenge</p>
-          <p className='get div'>Stay Informed</p>
-          <p className='get div'>Spread the Word</p>
-        </div>
-          
-        </div>
-      </div>
+const SectionBlock = ({ section, index=1 }) => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.5
+  });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="section"
+      initial={{ opacity: 0, y: 100 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.2 }}
+    >
+      <h2>{section.title}</h2>
+      <p>{section.description}</p>
+    </motion.div>
   );
 };
 

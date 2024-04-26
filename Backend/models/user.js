@@ -56,7 +56,8 @@ const userSchema = new mongoose.Schema({
     isGovEmp: {
         type: String,
         required: true,
-        enum: ['true', 'false']
+        enum: ['true', 'false'],
+        default: false
     }
 });
 

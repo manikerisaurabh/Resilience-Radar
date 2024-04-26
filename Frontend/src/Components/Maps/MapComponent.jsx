@@ -43,7 +43,8 @@ const MapComponent = ({ loc, setLoc }) => {
       const clickedCoord = mapObj.getCoordinateFromPixel(event.pixel);
       const lonLat = toLonLat(clickedCoord);
       console.log("Clicked position (lon, lat):", lonLat);
-      setTempLoc(lonLat);
+      let location = [ lonLat[1], lonLat[0] ];
+      setTempLoc(location);
 
       const marker = new Feature({
         geometry: new Point(clickedCoord),
@@ -88,27 +89,33 @@ const MapComponent = ({ loc, setLoc }) => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center p-4">
+    <div className="flex h-screen justify-center items-center max-md:w-[100vw] p-3 md:p-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
         className="bg-white rounded-lg shadow-lg overflow-hidden"
       >
-        <div className="map h-[50vh] md:h-[68vh] w-full" ref={mapRef}></div>
+        <div className="map h-[50vh] md:h-[68vh] w-[100vw]" ref={mapRef}></div>
         <div className="p-4">
-          <div className="flex justify-between items-center mb-4">
-            <label className="text-gray-700">Marked Location: {TempLoc.join(", ")}</label>
-            <label className="text-gray-700">Confirmed Location: {loc.join(", ")}</label>
+          <div className="flex flex-col justify-between items-center mb-4">
+            <label className="text-gray-700">
+              Marked Location: {TempLoc.join(", ")}
+            </label>
+            <label className="text-gray-700">
+              Confirmed Location: {loc.join(", ")}
+            </label>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full bg-blue-600 text-white p-2 rounded"
-            onClick={handleConfirm}
-          >
-            Confirm Location
-          </motion.button>
+          <div className="flex justify-center">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="text-nowrap bg-blue-600 text-white py-2 px-4 rounded"
+              onClick={handleConfirm}
+            >
+              Confirm Location
+            </motion.button>
+          </div>
         </div>
       </motion.div>
     </div>

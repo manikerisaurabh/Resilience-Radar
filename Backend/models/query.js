@@ -56,8 +56,7 @@ const querySchema = new Schema({
     },
     location: {
         village: {
-            type: String,
-            required: true
+            type: String
         },
         county: {
             type: String
@@ -99,7 +98,7 @@ const querySchema = new Schema({
     },
     status: { // New attribute
         type: String,
-        enum: ["New", "In Progress", "Resolved"]    //"Under Investigation", "Proposed Solution",
+        enum: ["New", "In Progress", "Commit", "Resolved"]    //"Under Investigation", "Proposed Solution",
     },
     dateReported: { // New attribute (optional)
         type: Date,

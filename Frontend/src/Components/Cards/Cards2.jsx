@@ -1,146 +1,83 @@
 import React, { useState, useEffect } from "react";
-import viteLogo from "/vite.svg";
-import th from "/th.jpeg";
+import { Snackbar } from "@mui/material";
 import { cardDB } from "../../Temp/cardsData";
 import CardModel from "./CardModel";
 
-const Cards2 = () => {
+const Cards2 = ({ ul, canCommit, tooApprove }) => {
+  const [open, setOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [cardsData, setCardsData] = useState(cardDB);
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  console.log("this is url : " + ul)
   useEffect(() => {
-    // Replace 'your-api-route' with the actual route to your API
-    fetch("http://localhost:8080/api/query", {
-      method: "GET", // or 'POST'
-      headers: {
-        "Content-Type": "application/json",
-        // Include other headers as necessary
-        Authorization: "Basic " + btoa("username:password"), // Replace with actual credentials
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
+    try {
+      fetch(ul, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .then((data) => {
-        setCardsData(data);
-      })
-      .catch((error) => {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      });
-  }, []);
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          console.log(response);
+          return response.json();
+        })
+        .then((data) => {
+          // Check if data.message exists and show error if true
+          console.log(data)
+          if (data.error) {
+            setErrorMessage(data.error);
+            setOpen(true);
+          } else if (data.message) {
+            setErrorMessage(data.message);
+            setOpen(true);
+          } else {
+            // Remove extra quotes from img attribute
+            const formattedData = data.map((item) => ({
+              ...item,
+              img: item.img.replace(/"/g, ""), // Remove all quotes from img attribute
+            }));
+            setCardsData(formattedData);
+            console.log(formattedData);
+          }
+
+        })
+        .catch((error) => {
+          console.error(
+            "There has been a problem with your fetch operation:",
+            error
+          );
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [ul]);
 
   return (
-    <div>
-      <div className="row row-cols-1 row-cols-sm-3 row-cols-lg-5 gap-3 items-center justify-center my-4">
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-[#49108B] transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-[#000000] transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-amber-600 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-lime-500 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-[#49108B] transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-[#49108B] transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-[#49108B] transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-[#49108B] transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={th} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
-        <div className="card p-0  max-w-sm col-9 max-md:max-w-xs rounded-lg overflow-hidden shadow-md shadow-[#9400FF] hover:shadow-xl hover:shadow-[#49108B] transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105 bg-[#1e0345ea]">
-          <img className="w-full" src={"/th.jpeg"} alt="Image description" />
-          <div className="px-6 py-4 text-[#000]">
-            <div className="font-bold text-xl mb-2">Card Title</div>
-            <p className="text-[#000] text-base">
-              Your description goes here. It can be as long or as short as you
-              want it to be.
-            </p>
-          </div>
-        </div>
-
+    <>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000} // Adjust duration as needed
+        onClose={handleClose}
+        message={errorMessage}
+      />
+      <div className="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-5  row-cols-xl-5  gap-4 items-center justify-center my-4 p-2 ">
         {cardsData.map((card) => {
-          return <CardModel key={card.id} {...card} />;
+          return (
+            <CardModel key={card._id} {...card} _id={card._id} canCommit={canCommit} tooApprove={tooApprove} />
+          );
         })}
       </div>
-    </div>
+    </>
   );
 };
 

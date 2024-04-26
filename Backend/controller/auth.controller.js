@@ -7,14 +7,19 @@ export const signup = async (req, res) => {
     try {
         let { userName, latitude, longitude, email, password, confirmPassword, gender } = req.body;
 
+        if (!userName || !latitude || !longitude || !email || !password || !confirmPassword || !gender) {
+            return res.status(400).json({ error: "all fields are required check for userName, latitude, longitude, email, password, confirmPassword, gender" })
+        }
         //verifing password
         if (password !== confirmPassword) {
+            console.log(password);
+            console.log(confirmPassword);
             return res.status(400).json({ error: "Password do not matches" });
         }
 
 
         let user = await User.findOne({ userName });
-
+        console.log(user);
         //checking whether the username already exists or not
         if (user) {
             return res.status(400).json({ error: "username already exists" });
@@ -23,7 +28,7 @@ export const signup = async (req, res) => {
 
         //getting the actual address of user using latitude and longitude
         let address = await getLocationData(latitude, longitude);
-
+        console.log("this is address: " + address);
         //hashing the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -48,7 +53,7 @@ export const signup = async (req, res) => {
             profilepic: gender == "male" ? boyProfilepic : gitlProfilepic,
             isGovEmp: false
         });
-
+        console.log(newUser);
         if (newUser) {
             generateTokenAndSetCookie(newUser._id, res);
             await newUser.save();
@@ -70,6 +75,9 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         let { userName, password } = req.body;
+        if (!userName || !password) {
+            return res.status(400).json({ error: "password and userName is required" });
+        }
         let user = await User.findOne({ userName });
         let isPasswordCorrect = await bcrypt.compare(password, user.password || "");
 
