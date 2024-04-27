@@ -4,6 +4,7 @@ import useCurrentUser from "../../hooks/UseCurrentUser";
 const Sidebar = ({ isEm, visible, setSidebar, setDisplayQueryType }) => {
   const currentUser = useCurrentUser();
   const [isEmp, setIsEmp] = useState(false);
+  const [id, setId] = useState("");
 
   function setEMP(value) {
     setIsEmp(value);
@@ -15,6 +16,7 @@ const Sidebar = ({ isEm, visible, setSidebar, setDisplayQueryType }) => {
       console.log('isGovEmp:', currentUser.isGovEmp); // Check the value of currentUser.isGovEmp
       console.log('condition:', currentUser.isGovEmp == "true"); // Check the value of currentUser.isGovEmp
       setEMP(currentUser.isGovEmp == "true")
+      setId(currentUser._id)
       console.log('isEmp:', isEmp);
     }
   }, [currentUser, isEmp]);
@@ -44,7 +46,7 @@ const Sidebar = ({ isEm, visible, setSidebar, setDisplayQueryType }) => {
         <ul className="text-center p-0">
           {!isEmp && (
             <Link
-              to="/query"
+              to={`/query/1`}
               className="text-decoration-none text-white"
               onClick={setSidebar}
             >
