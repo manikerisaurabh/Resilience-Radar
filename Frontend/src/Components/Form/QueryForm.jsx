@@ -153,10 +153,12 @@ const QueryForm = ({
     console.log(formData, userInfo);
     console.log("this is image url : " + imageUrl);
     setFormData({ ...formData, img: imageUrl });
-    let ul = key
-      ? `http://localhost:8080/api/query/edit/${userInfo._id}`
-      : `http://localhost:8080/api/query/add/${userInfo._id}`;
-    let method = key ? "PUT" : "POST";
+    console.log(key == "1");
+    console.log(key);
+    let ul = (key == "1")
+     ? `http://localhost:8080/api/query/add/${userInfo._id}`
+      : `http://localhost:8080/api/query/edit/${userInfo._id}`
+    let method = key != 1 ? "PUT" : "POST";
     console.log("thus is  url: " + ul)
 
     console.log(formData, userInfo, JSON.stringify(formData), key, ul, method);

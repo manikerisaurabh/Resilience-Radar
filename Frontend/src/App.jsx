@@ -22,7 +22,7 @@ import th from "/th.jpeg";
 import "./App.css";
 import PendingReports from "./Components/Reportss/PendingReports";
 import useCurrentUser from "./hooks/UseCurrentUser";
-import { useSpring, animated } from 'react-spring';
+import { useSpring, animated } from "react-spring";
 import { Typography } from "@mui/material";
 
 function App() {
@@ -44,14 +44,13 @@ function App() {
     assignedQueries: false,
     toApproveQueries: false,
     completedQuerirs: false,
-  });   
+  });
   const fadeIn = useSpring({
-    from: { opacity: 0 },  
+    from: { opacity: 0 },
     to: { opacity: 1 },
     delay: 2000,
   });
 
-  
   useEffect(() => {
     try {
       const currUser = localStorage.getItem("currUser");
@@ -89,7 +88,7 @@ function App() {
   const id = user.id;
   console.log(id);
   return (
-    <Router>
+    <Router>       
       <>
         {console.log("App")}
         <Routes>
@@ -193,7 +192,7 @@ function App() {
                           setDisplayNoQ={setDisplayNoQ}
                         />
                       )}
-                      {(noQueries && displayNoQ) && (
+                      {noQueries && displayNoQ && (
                         <animated.div style={fadeIn}>
                           <Typography
                             variant="h1"
@@ -224,7 +223,7 @@ function App() {
               />
             }
           />
-          <Route path="/query" element={<Upload_issue />} />
+          <Route path="/query/:key" element={<Upload_issue />} />
           <Route path="/query/edit/:key" element={<Upload_issue />} />
           <Route path="/DetailedData/:key/:md" element={<DetailedCard />} />
           <Route path="/pending" element={<PendingReports />} />

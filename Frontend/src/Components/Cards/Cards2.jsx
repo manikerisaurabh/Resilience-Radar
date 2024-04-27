@@ -65,6 +65,7 @@ const Cards2 = ({ ul, canCommit, tooApprove, setNoQueries, setDisplayNoQ }) => {
     }, [ul]);
     
   useEffect(() => {
+    console.log(cardsData);
     console.log(cardsData.length > 3);
     if(cardsData.length > 3) {setNoQueries(false); setDisplayNoQ(false)}
     else if(cardsData.length >= 1) { setNoQueries(true); setDisplayNoQ(false)}

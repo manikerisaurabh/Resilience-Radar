@@ -16,6 +16,7 @@ import { emailValidator, usernameValidator } from "../../utils/validator";
 import { Link, useParams } from "react-router-dom";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import {InputLabel, Select, MenuItem} from "@mui/material";
 import { HiOutlineLockClosed, HiOutlineMail } from "react-icons/hi";
 import GovernmentSignUp from "./GovernmentSignUp";
 
@@ -76,6 +77,10 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
     setSnackbarQueue((oldQueue) => oldQueue.slice(1));
   };
 
+  const handleChange = (event) => {
+    setFormData({ ...formData, department: event.target.value });
+  };
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -89,13 +94,13 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
     e.target.disabled = true;
 
     // Check if password and confirm password are the same
-    if (!isLogin && (password.value !== formData.confirmPassword)) {
+    if (!isLogin && password.value !== formData.confirmPassword) {
       // Show Snackbar with error message
       setOpen(true);
       addSnackbar("Passwords do not match.");
       setTimeout(() => {
         setOpen(false);
-      }, 50000)
+      }, 50000);
       return;
     }
 
@@ -108,18 +113,18 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
         // Create the user object
         const user = !isLogin
           ? {
-            userName: username.value,
-            latitude: location[0],
-            longitude: location[1],
-            email: email.value,
-            password: password.value,
-            gender: gender,
-          }
+              userName: username.value,
+              latitude: location[0],
+              longitude: location[1],
+              email: email.value,
+              password: password.value,
+              gender: gender,
+            }
           : {
-            email: email.value,
-            password: password.value,
-            userName: username.value
-          };
+              email: email.value,
+              password: password.value,
+              userName: username.value,
+            };
 
         formData.email = email.value;
         formData.gender = gender;
@@ -135,7 +140,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
         console.log(isEmp);
         console.log(isEmp == "true");
         // Sending POST request
-        let ul = (isEmp)
+        let ul = isEmp
           ? `http://localhost:8080/api/gov/auth/${mode}`
           : `http://localhost:8080/api/auth/${mode}`;
         fetch(ul, {
@@ -154,7 +159,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
             localStorage.setItem("currUser", JSON.stringify(data));
             window.history.back();
             //console.log(JSON.parse(user));
-            setSwitch(prev => !prev)
+            setSwitch((prev) => !prev);
             setLogged(true);
             setUserId(data._id);
           })
@@ -175,7 +180,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
   console.log("Choice", choose);
   return (
     <>
-      {(choose) ? (
+      {choose ? (
         <div className="">
           <Typography
             variant="h5"
@@ -247,7 +252,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                 {avatar.error}
               </Typography>
             )}
-            {(isEmp && !isLogin) && (
+            {isEmp && !isLogin && (
               <div className="flex flex-col gap-4 mb-2 mt-4">
                 <TextField
                   required
@@ -267,14 +272,19 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                   onChange={handleInputChange}
                 />
 
-                <TextField
-                  required
-                  fullWidth
-                  label="Department"
-                  name="department"
+                <InputLabel>Department</InputLabel>
+                <Select
+                  variant="standard"
+                  name="category"
                   value={formData.department}
-                  onChange={handleInputChange}
-                />
+                  onChange={handleChange}
+                >
+                  <MenuItem value="Infrastructure">Infrastructure</MenuItem>
+                  <MenuItem value="Education">Education</MenuItem>
+                  <MenuItem value="Healthcare">Healthcare</MenuItem>
+                  <MenuItem value="Environment">Environment</MenuItem>
+                  <MenuItem value="Social Welfare">Social Welfare</MenuItem>
+                </Select>
 
                 <TextField
                   required
@@ -286,7 +296,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                 />
               </div>
             )}
-            {(!isEmp) && (
+            {!isEmp && (
               <TextField
                 required
                 fullWidth
@@ -358,16 +368,18 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
                 {password.error}
               </Typography>
             )}
-            {!isLogin && <TextField
-              required
-              fullWidth
-              label="Confirm Password"
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              className="my-3"
-            />}
+            {!isLogin && (
+              <TextField
+                required
+                fullWidth
+                label="Confirm Password"
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                className="my-3"
+              />
+            )}
             {!isLogin && (
               <>
                 <label className="block">

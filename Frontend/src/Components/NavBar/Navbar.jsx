@@ -45,6 +45,10 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
   const [user, setUser] = React.useState({});
   const [address, setAddress] = React.useState({});
 
+  useEffect(() => {
+    console.log(isEmp);
+  }, [isEmp])
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -59,7 +63,7 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
   };
 
   const toggleProfile = () => {
-    let url = `http://localhost:8080/api/auth/${userid}/profile`;
+    let url = !(isEmp == "true") ?  `http://localhost:8080/api/auth/${userid}/profile` : `http://localhost:8080/api/gov/auth/${userid}/profile`;
     fetch(url)
       .then((res) => {
         return res.json();
@@ -71,9 +75,12 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
         }
         setUser(data);
         setAddress(data.address);
-        setPendingQuery(data.pendingToApprove.length);
+        console.log(isEmp == "true");
+        if(!isEmp == "true") {
+          setPendingQuery(data.pendingToApprove.length);
         setResolvedQuery(data.resolvedQueries.length);
         setTotalQuery(data.totalQuery.length);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -81,7 +88,7 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
     setShowProfile((prevState) => !prevState);
     console.log(isEmp);
     console.log(!(isEmp == "true"));
-    if (!(isEmp == "true")) setShowDialog((prev) => !prev);
+    setShowDialog((prev) => !prev);
     setOpen(true);
   };
 
@@ -287,7 +294,8 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
               src={user.profilepic}
               sx={{ width: "105px", height: "105px", marginRight: "10px" }} // Increased avatar size with custom dimensions
             />
-            {user.userName}'s Profile
+            {!(isEmp == "true") && <>{user.userName}'s Profile</>}
+                {(isEmp == "true") && <>{user.name}'s Profile</>}
             <IconButton
               aria-label="close"
               onClick={handleClose}
@@ -309,7 +317,8 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
               transition={{ delay: 0.2 }}
             >
               <Typography gutterBottom sx={{ fontWeight: "bold" }}>
-                Username: {user.userName}
+                {!(isEmp == "true") && <>Username: {user.userName}</>}
+                {(isEmp == "true") && <>Username: {user.name}</>}
               </Typography>
             </motion.div>
             <motion.div
@@ -326,7 +335,8 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
             >
               <Typography gutterBottom>Gender: {user.gender}</Typography>
             </motion.div>
-            {isEmp == "true" && (
+            {!(isEmp == "true") && (
+              <>
               <motion.div
                 initial={{ opacity: 0, x: 150 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -337,32 +347,35 @@ const Navbar = ({ logged, setLogged, dabba_ve, setDisplayQueryType }) => {
                   {address?.state}, {address?.country}
                 </Typography>
               </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 150 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <Typography gutterBottom>
+                    Total Queries: {totalQuery}
+                  </Typography>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 150 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <Typography gutterBottom>
+                    Pending Queries: {pendingQuery}
+                  </Typography>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 150 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  <Typography gutterBottom>
+                    Resolved Queries: {resolvedQuery}
+                  </Typography>
+                </motion.div>
+              </>
             )}
-            <motion.div
-              initial={{ opacity: 0, x: 150 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <Typography gutterBottom>Total Queries: {totalQuery}</Typography>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 150 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <Typography gutterBottom>
-                Pending Queries: {pendingQuery}
-              </Typography>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 150 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              <Typography gutterBottom>
-                Resolved Queries: {resolvedQuery}
-              </Typography>
-            </motion.div>
             {/* Add more user information as needed */}
           </DialogContent>
           <DialogActions sx={{ justifyContent: "flex-start", padding: "20px" }}>

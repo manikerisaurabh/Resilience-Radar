@@ -106,3 +106,18 @@ export const logout = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 }
+
+export const getProfileinfo = async (req, res) => {
+    try {
+        let { id } = req.params;
+        const employee = await GovernmentEmployee.findById(id);
+        console.log(employee);
+        if (!employee) {
+            return res.status(400).json({ error: "not employee" })
+        }
+        res.status(200).json(employee)
+    } catch (error) {
+        console.log("Error in getProfileinfo controller : " + error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}

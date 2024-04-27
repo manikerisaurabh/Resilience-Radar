@@ -2,7 +2,7 @@ import React from "react";
 import th from "/th.jpeg";
 import { Link } from "react-router-dom";
 
-const CardModel = ({ category, description, img, _id, canCommit, tooApprove }) => {
+const CardModel = ({ category, description, targetPopulation, img, _id, canCommit, tooApprove }) => {
   // console.log(89);
   // console.log({  imgSrc, title, description });
   console.log(_id)
@@ -12,7 +12,8 @@ const CardModel = ({ category, description, img, _id, canCommit, tooApprove }) =
         <img className="w-full h-[23vh] p-0 m-0" src={img} alt="Image description" />
         <div className="px-6 py-4 text-[#000]">
           <div className="font-bold text-xl mb-2">{category}</div>
-          <p className="text-[#000] text-base">{description}</p>
+          <p className="text-[#000] text-sm mt-auto text-wrap">Target Population : {targetPopulation}</p>
+          <p className="text-[#000] text-sm">{description}</p>
         </div>
       </div>
     </Link>
