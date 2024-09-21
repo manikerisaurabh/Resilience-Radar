@@ -126,8 +126,8 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
         formData.password = password.value;
         formData.userName = username.value;
         if (!isLogin) {
-          formData.latitude = location[1];
-          formData.longitude = location[0];
+          formData.latitude = location[0];
+          formData.longitude = location[1];
         }
         console.log(user);
         console.log(formData);
@@ -149,7 +149,7 @@ const SL_Form = ({ isLogin, toggleLogin, setSwitch, setLogged, setUserId }) => {
           .then((data) => {
             console.log(data.error);
             if (data.error) {
-              return addSnackbar("User Already exists");
+              return addSnackbar(data.error);
             }
             localStorage.setItem("currUser", JSON.stringify(data));
             window.history.back();

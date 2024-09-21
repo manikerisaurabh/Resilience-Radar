@@ -1,12 +1,23 @@
 import bcrypt from 'bcryptjs';
 import GovernmentEmployee from "../../models/govermentEmployee.js";
 import generateTokenAndSetCookie from '../../utils/generateTokenAndSetCookie.js';
+import { isAlreadySignedUp, isValidGov } from '../../utils/isValidEmp.js';
+import onBoardGovEmp from '../../GovEmpDB/onBoardGovEmp.js';
 
 export const signup = async (req, res) => {
     try {
         let { employeeId, name, department, email, phoneNumber, password, confirmPassword, gender } = req.body;
         console.log(req.body);
         console.log(employeeId, name, department, email, phoneNumber, password, confirmPassword, gender);
+        let isVakidGovEmp = isValidGov(employeeId);
+        console.log(isAlreadySignedUp(employeeId))
+        if (isAlreadySignedUp(employeeId) == true) {
+            return res.status(400).json({ error: `using GOV ID : ${employeeId} someone is allready is onboard on our platform` });
+        }
+
+        if (isValidGov(employeeId) == false) {
+            return res.status(400).json({ error: "not valid Government enployee" });
+        }
         // Check if all required fields are provided
         if (!employeeId || !name || !department || !email || !phoneNumber || !password || !confirmPassword || !gender) {
             return res.status(400).json({ error: "All fields are required" });
@@ -50,6 +61,11 @@ export const signup = async (req, res) => {
 
         // Save new employee to database
         await newEmployee.save();
+
+        //adding gov employee in onboard employee
+
+        onBoardGovEmp.push(employeeId);
+        console.log("total gov emp : " + onBoardGovEmp);
 
         // Generate token and set cookie
         generateTokenAndSetCookie(newEmployee._id, res);

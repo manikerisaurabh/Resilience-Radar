@@ -30,6 +30,11 @@ export const signup = async (req, res) => {
 
         //getting the actual address of user using latitude and longitude
         let address = await getLocationData(latitude, longitude);
+
+        //checking that user is from india or from outside of the india
+        if (address.country != 'India') {
+            return res.status(400).json({ error: "You are not from india" })
+        }
         console.log("this is address: " + address);
         //hashing the password
         const salt = await bcrypt.genSalt(10);
