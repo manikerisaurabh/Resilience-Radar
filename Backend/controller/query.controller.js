@@ -6,6 +6,11 @@ import { getLocationData } from "../utils/getLocation.js";
 export const allQueries = async (req, res) => {
     try {
         let allQueries = await Query.find();
+
+        if (allQueries.length == 0) {
+            return res.status(200).json({ message: "No Queries Uploaded" });
+        }
+
         return res.status(201).json(allQueries);
     } catch (error) {
         console.log("error in addQuery controller");
@@ -74,6 +79,7 @@ export const editQuery = async (req, res) => {
         let { id } = req.params;
         let { raisedBy, queryId } = req.body;
 
+        console.log(req.body);
         if (!raisedBy || !queryId) {
             return res.status(400).json({ error: "raisedBy and queryId are required fields" });
         }
@@ -139,6 +145,7 @@ export const totalQueris = async (req, res) => {
     try {
         let { id } = req.params;
         const allQueries = await Query.find({ raisedBy: id });
+        
         if (allQueries.length == 0) {
             return res.status(200).json({ message: "No Queries" });
         }

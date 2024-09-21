@@ -29,6 +29,8 @@ const QueryForm = ({
   let [loc, setLoc] = useState([74.3501, 16.2229]);
   let [cam, setCam] = useState(false);
   let [userInfo, setUserInfo] = useState(null);
+  let [raisedBy, setRaisedBy] = useState("");
+  let [queryid, setQueryid] = useState("");
   const [formData, setFormData] = useState({
     _id: "1",
     img: "",
@@ -45,6 +47,21 @@ const QueryForm = ({
   const [imageUrl, setImageUrl] = useState(th);
   // const [imageUrl, setImageUrl] = useState(th);
   let { key } = useParams();
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/query/edit/${key}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setRaisedBy(data.raisedBy);
+        setQueryid(data._id);
+      })
+      .catch((error) => console.log(error))
+  }, [])
 
   useEffect(() => {
     try {
@@ -67,7 +84,7 @@ const QueryForm = ({
             location: loc,
           }
       );
-      setLoc(storedLoaction ? JSON.parse(storedLoaction) : loc);
+      // setLoc(storedLoaction ? JSON.parse(storedLoaction) : loc);
       setFormData(
         userInfo
           ? {
@@ -82,6 +99,8 @@ const QueryForm = ({
             proposedSolutions: proposedSolutions,
             attachments: attachments,
             location: loc,
+            raisedBy: raisedBy,
+            queryId: queryid
           }
           : {
             _id: "1",
@@ -95,6 +114,8 @@ const QueryForm = ({
             proposedSolutions: proposedSolutions,
             attachments: attachments,
             location: loc,
+            raisedBy: raisedBy,
+            queryId: queryid
           }
       );
       console.log(userInfo);
@@ -102,12 +123,13 @@ const QueryForm = ({
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [raisedBy, queryid]);
 
   useEffect(() => {
     const uImg = localStorage.getItem("imageURL");
     setImageUrl(uImg);
     setFormData({ ...formData, img: uImg, location: loc });
+
   }, [imageUrl]);
 
   useEffect(() => {
@@ -131,10 +153,12 @@ const QueryForm = ({
     console.log(formData, userInfo);
     console.log("this is image url : " + imageUrl);
     setFormData({ ...formData, img: imageUrl });
-    let ul = key
-      ? `http://localhost:8080/api/query/edit/${userInfo._id}`
-      : `http://localhost:8080/api/query/add/${userInfo._id}`;
-    let method = key ? "PUT" : "POST";
+    console.log(key == "1");
+    console.log(key);
+    let ul = (key == "1")
+     ? `http://localhost:8080/api/query/add/${userInfo._id}`
+      : `http://localhost:8080/api/query/edit/${userInfo._id}`
+    let method = key != 1 ? "PUT" : "POST";
     console.log("thus is  url: " + ul)
 
     console.log(formData, userInfo, JSON.stringify(formData), key, ul, method);
@@ -155,7 +179,7 @@ const QueryForm = ({
           _id: "",
           email: "",
           password: "",
-          imgUrl: "",
+          img: false,
           category: "",
           urgency: "",
           status: "",
@@ -168,7 +192,7 @@ const QueryForm = ({
           attachments: [],
         });
       } else {
-        console.error("Error submitting query:", response.statusText);
+        console.error("Error submitting query Text:", response.statusText);
         // Handle submission errors (optional)
       }
     } catch (error) {
@@ -196,9 +220,9 @@ const QueryForm = ({
               fullWidth
               size="small"
               name="imgUrl"
-              value={formData.imgUrl}
+              value={formData.img}
               onChange={handleChange}
-              label="Image Url"
+              label={formData.img ? "" : "Image Url"}
               className="mt-0 mb-1"
               disabled
             />

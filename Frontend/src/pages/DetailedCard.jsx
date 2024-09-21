@@ -106,7 +106,7 @@ const DetailedCard = () => {
         empId: userInfo.empId,
       });
       console.log("Successfull assigned");
-      // window.history.back();
+      window.history.back();
     } catch (error) {
       console.log(error);
     }
@@ -129,9 +129,9 @@ const DetailedCard = () => {
         },
       }).then((res) => {
         console.log(res)
-      })
+      }).catch((error) => console.log(error))
       console.log("commited");
-      //window.history.back();
+      window.history.back();
     } catch (error) {
       console.log(error);
     }
@@ -151,7 +151,7 @@ const DetailedCard = () => {
           "Content-Type": "application/json", // Specify content type
         },
       });
-      //window.history.back();
+      window.history.back();
     } catch (error) {
       console.log(error);
     }
@@ -230,7 +230,7 @@ const DetailedCard = () => {
             </ul>
 
             <div className=" flex gap-2 items-center justify-center">
-              {(isEmp == false) && (
+              {((isEmp == false) && (formData.status != "Resolved") ) && (
                 <Link
                   to={`/query/edit/${key}`}
                   className="text-white btn w-[70px] btn-primary col-3"
@@ -254,7 +254,7 @@ const DetailedCard = () => {
                   </button>
                 </div>
               )}
-              {(isEmp == false) && (md === "ApproveRequest") && (
+              {(isEmp == false) && (formData.status === "Commit") && (
                 <div className="text-white btn w-[70px] btn-success col-3">
                   <button onClick={ApproveTask} className="">
                     Approve
